@@ -1,0 +1,178 @@
+import React, { useEffect, useState } from 'react'
+import { db, firebaseApp } from '../../firebase';
+import './HandleAbout.css'
+import FileUploader from 'react-firebase-file-uploader';
+import { AddAPhoto, Edit } from '@material-ui/icons';
+import { useStateValue } from '../../StateProvider';
+import { useHistory } from 'react-router-dom';
+import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
+import { Modal } from '@material-ui/core';
+import AboutSvg from '../../icons/undraw_newspaper_k72w.svg';
+
+function HandleAbout() {
+    const [currImage,setCurrImage]= useState('');
+    const [currAbout,setCurrAbout]= useState('');
+    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const history= useHistory();
+
+    const handleGetStarted= () => {
+      db.collection('site').doc('site_preview').update({
+          about: true
+      }).then(refreshPage);
+  }
+  const refreshPage = ()=>{
+      window.location.reload();  }
+   
+   const [open,setOpen]= useState(false);
+   const [currentVideo,setCurrentVideo]= useState('');
+   const manageVideo= (link) => {
+    setOpen(true);
+    setCurrentVideo(link);
+  }
+    const[edit,setEdit]= useState(false);
+
+
+    useEffect(() => {
+        
+        db.collection("about").doc('about_wtf')
+        .get()
+        .then(function(doc) {
+          if (doc.exists) {
+               setCurrAbout(doc.data().about);
+               setCurrImage(doc.data().image);
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        }).catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+    
+     },[])
+
+    const handleUploadStart= () => {
+        alert('UPLOAD STARTED')
+    }
+
+    const handleUploadSuccess= (filename) =>{
+      
+    
+       firebaseApp.storage().ref('about').child(filename).getDownloadURL()
+       .then(url => setCurrImage(url)).then(alert('UPLOAD FINISH'));
+                     
+        
+       
+     };
+
+     const handleSubmit= (e) => {
+         e.preventDefault();
+
+         db.collection("about").doc('about_wtf').set({
+           image: currImage,
+           about: currAbout
+       }).then(alert('UPDATED')).then(() => setEdit(false));
+     }
+
+
+    return (
+        <div className='handleAbout'>
+           {site_preview.about ? (
+            <>
+               
+               <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>About Us</h1>
+             <img src={currImage} />
+             <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',marginTop: 20,display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
+              Select Your Photo <AddAPhoto style={{paddingLeft: '10px'}} />
+              <FileUploader
+                hidden
+                accept="image/*"
+                randomizeFilename
+                name="image"
+                storageRef={firebaseApp.storage().ref("about")}
+                onUploadStart={handleUploadStart}
+                onUploadSuccess={handleUploadSuccess}
+               />
+               </label>
+               <h1 className='handleAbout__title'>ABOUT US</h1>
+             
+             {!edit ? (
+               <p className='handleAbout__about'>{currAbout}</p>
+             ) : (
+               <div style={{display: 'flex',flexDirection: 'column',alignItems: 'center'}}>
+                 <div className='handleAbout__input'>
+                 <textarea  rows={5} cols={5} value={currAbout} onChange={e => setCurrAbout(e.target.value)} />
+                </div>
+                
+                  <button onClick={handleSubmit}>submit</button>
+              </div>
+             )}
+             {!edit ? (
+             <label onClick={() => setEdit(true)} style={{backgroundColor: 'rgba(66, 135, 245, 0.8)', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
+            Change Text <Edit style={{paddingLeft: '10px'}}/>  
+             </label>
+             ) : ''}
+
+<div className='guide_toast'>
+            <p>{site_settings.aboutUs ? 
+            'To turn off About Us, go to settings and disable About Us' : 
+            'About Us is disabled, go to settings and enable About Us'}</p> 
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+           </div>
+           <div className='guide_tutorial_toast'>
+            <p>
+            If you face any difficulties regarding About Us, then see our About Us guides
+            </p> 
+            <div  onClick={() => manageVideo(single_guides.about)}>Guides</div>
+           </div>
+
+           <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={open}
+  onClose={() => setOpen(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
+    <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+    </div>
+ 
+</Modal>
+             
+            </>
+           ) : (
+            <div className='site_preview'>
+            <div className='site_preview--top'>
+               <div className='site_preview--topContainer'>
+                      <div className='site_preview--topContainer--left'>
+                         <h1>Manage About Us Page</h1>
+                         <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                   
+                          <div className='site_preview--getStarted' onClick={handleGetStarted}>
+                             Get Started
+                          </div>
+                      </div>
+
+                      <div className='site_preview--topContainer--right'>
+                           <img src={AboutSvg} style={{fill:"#FFFFFF"}} />
+                      </div>
+              </div>
+           </div>
+           <div className='guide__learn--more'>
+               Learn More
+          </div>
+           <div className='site_preview--guide'>
+              <div className='site_preview--guide--left'>
+              <img src={AboutSvg} style={{fill:"#FFFFFF"}} />
+              <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+              </div>
+              <div className='site_preview--guide--right'>
+                <iframe src={single_guides.about} />
+              </div>
+          </div>
+          </div>
+           ) }
+        </div>
+    )
+}
+
+export default HandleAbout

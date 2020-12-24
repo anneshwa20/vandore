@@ -1,0 +1,19 @@
+.sidebarRowRestro{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+}
+.sidebarRowRestro:hover{
+    background-color: rgba(66, 135, 245, 1);
+    border-radius: 10px;
+}
+.sidebarRowRestro >h4 {
+    margin-left: 20px;
+    font-weight: 600;
+}
+
+.sidebarRowRestro > .MuiSvgIcon-root{
+    font-size: x-large;
+    color: white;
+}

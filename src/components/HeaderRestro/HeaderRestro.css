@@ -1,0 +1,25 @@
+.headerRestro {
+    display: flex;
+    flex: 0.8;
+    background-color: black;
+    opacity: 0.4;
+    width: 100%;
+   
+    justify-content: space-between;
+}
+.headerRestro > h1 {
+    color: #ffcc00;
+   text-transform: uppercase;
+   padding: 10px;
+   margin-left: 10px;
+}
+.headerRestro__right {
+   
+    color: #ffcc00;
+    padding: 10px;
+    margin-right: 10px;
+
+}
+.headerRestro__right > .MuiSvgIcon-root {
+    font-size: xx-large;
+}

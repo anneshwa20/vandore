@@ -1,0 +1,34 @@
+.handleSlider {
+    display: flex;
+    flex-direction: column;
+    flex: 0.8;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+.images__holder > img {
+  width: 200px;
+  height: 200px;
+}
+
+.slide {
+  align-self: center;
+}
+.images__container--slider {
+  display: flex;
+  flex-wrap: wrap;
+margin: 0 auto;
+}
+.slider__container {
+
+  color: white;
+ 
+}
+.slider__container> h1 {
+  padding: 10px;
+  font-size: xx-large;
+}
+.slider__container > hr {
+  width: 40%;
+  color: rgba(66, 135, 245, 1);
+}

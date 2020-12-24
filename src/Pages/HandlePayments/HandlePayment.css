@@ -1,0 +1,77 @@
+.handlePayment {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   flex: 0.8;
+   background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+   background-color: rgb(91, 87, 115);
+   height: 100vh;
+   overflow-y: scroll;
+
+}
+.handlePayment__container{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    width: 90%;
+
+}
+.guide_toast{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 10px;
+    margin-top: 5px;
+    width: 90%;
+    border: 1px solid  #f0c14b;
+    color: white;
+}
+.guide_toast > div {
+    background-color: #f0c14b;
+    padding: 8px;
+
+}
+
+.guide_tutorial_toast{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 10px;
+    margin-top: 5px;
+    width: 90%;
+    border: 1px solid #4287f5;
+    color: white;
+}
+.guide_tutorial_toast > div {
+    background-color:#4287f5;
+    padding: 8px;
+
+}
+
+.handlePayment > h1 {
+    text-align: center;
+}
+
+.handlePayment__payment {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    width: 300px;
+    min-height: 200px;
+    padding: 10px;
+    background-color: white;
+}
+
+.payment__date {
+    align-self: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0c14b;
+    margin-top: 10px;
+    color: black;
+    font-weight: 700;
+    
+}

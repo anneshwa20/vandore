@@ -1,0 +1,50 @@
+.handleUser {
+    display: flex;
+    flex-direction: column;
+    flex: 0.8;
+    height: 100vh;
+    overflow-y: scroll;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+    background-color: rgb(91, 87, 115);
+}
+
+.handleUser > h1 {
+    text-align: center;
+}
+
+.handleUser__user{
+    width: 90%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 20px auto;
+}
+
+.handleUser__user  th, .handleUser__user td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.handleUser__user > tr > td {
+   text-align: center;
+}
+.handleUser__user > tr:hover {
+    background-color: lightgray;
+}
+
+.handleUser__user th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: white;
+
+    color: rgb(73, 115, 130);
+  }
+.handleUser__user tr{
+    background-color: #f2f2f2;
+}
+
+
+.handleUser__user tr:hover {
+    background-color: #ddd;
+}

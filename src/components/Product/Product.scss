@@ -1,0 +1,113 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+.product{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
+    width: 230px;
+    min-height: 370px;
+    background-color: white;
+    z-index: 1;
+    border-radius: 12px;
+    box-shadow: 0px 10px 18px -9px rgba(0,0,0,0.75);
+
+    @include respond(tab-port) {
+        width: 38vw;
+        min-height: 200px;
+    }
+}
+.product > img {
+    width: 100%;
+    height: 200px;
+
+    @include respond(tab-port) {
+        height: 120px;
+    }
+}
+.product > h3 {
+    margin-top: 5px;
+}
+.product > p{
+    color: gray;
+}
+.product__rating {
+    display: flex;
+}
+.product__rating >  .MuiSvgIcon-root {
+    color: #ffcc00;
+}
+.product__bottom {
+   margin-top: 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 100%;
+}
+.product__bottom > h2 {
+
+    @include respond(tab-port) {
+        font-size: large;
+    }
+}
+.cartButton {
+    border-radius: 20px;
+ 
+    padding: 10px;
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    color: white;
+
+    @include respond(tab-port){
+        display: none;
+    }
+
+}
+.cartButtonMobile {
+    
+
+  display: none;
+    @include respond(tab-port){
+        border-radius: 20px;
+ 
+        padding: 10px;
+        display: flex;
+        cursor: pointer;
+        justify-content: center;
+        color: white;
+    }
+
+}
+.addedCart{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: tomato;
+    color: white;
+    margin-top: 5px;
+}
+
+
+
+.product > button {
+    background: #f0c14b;
+    border: 1px solid ;
+    margin-top: 10px;
+    border-color: #a88734 #9c7e31 #846a29;
+    color: #111;
+}

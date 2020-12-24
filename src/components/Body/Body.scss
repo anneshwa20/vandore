@@ -1,0 +1,91 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+.body{
+   
+
+    @include respond(tab-land) {
+     
+    display: none;
+    }
+    @include respond(big-desktop) {
+        display: none;
+    }
+
+    @include respond(tab-port) {
+        min-height: 100vh;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        min-width: 100%;
+        overflow-y: scroll;
+    }
+}
+
+.slide {
+    height: 400px;
+    width: 900px;
+    display: flex;
+
+    @include respond(tab-port){
+        height: 200px;
+        width: 100%;
+        margin-top: -55px;
+    }
+   
+}
+
+.item__preview{
+    height: 30%;
+    width: 100%;
+    background-color:white;
+
+    @include respond(tab-port){
+        
+      max-width: 100vw;
+    }
+}
+
+.slideImageTag{
+
+        width: 100vw;
+        height: 400px;
+        object-fit: contain;
+ 
+}
+.slide1 {
+   
+
+    @include respond(tab-land){
+        display: none;
+
+    }
+    @include respond(big-desktop){
+        display: none;
+    }
+    @include respond(tab-port) {
+        height: 100%;
+        width: 100%;
+        display: flex;
+    }
+}
+.slide2{
+    height: 400px;
+    width: 900px;
+     display: flex;
+    @include respond(tab-port) {
+      display:  none;
+    }
+}

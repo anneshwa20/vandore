@@ -1,0 +1,43 @@
+@mixin respond($breakpoint) {
+  @if $breakpoint == phone {
+      @media only screen and (max-width: 600px) { @content };    //600px
+  }
+  @if $breakpoint == tab-port {
+      @media only screen and (max-width: 900px) { @content };     //900px
+  }
+  @if $breakpoint == tab-land {
+      @media only screen and (max-width: 1200px) { @content };    //1200px
+  }
+  @if $breakpoint == big-desktop {
+      @media only screen and (min-width: 1800px) { @content };    //1800
+  }
+}
+
+.chatInput {
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+   margin-top: 10px;
+   background-color: rgba(250, 249, 249, 0.7);
+}
+
+
+
+.chatInput  > input {
+  
+    width: 55%;
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 20px;
+}
+
+.chatInput  > button {
+ display: flex;
+ justify-content: center;
+ padding: 15px;
+ border-radius: 99px;
+  margin-left: 10px;
+  width: max-content;
+  height: max-content;
+}

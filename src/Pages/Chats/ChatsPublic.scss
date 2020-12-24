@@ -1,0 +1,86 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+  .chatPc{
+    flex: 0.6;
+    @include respond(tab-port){
+        display: none;
+    }
+}
+.chatMobile {
+
+   display: none;
+
+    @include respond(tab-port){
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 100vw;
+    }
+}
+.chats {
+    display: flex;
+    flex-direction: column;
+}
+.chats__body{
+    display: flex;
+    
+}
+.chats__main{
+    height: 100vh;
+   
+    overflow-y: scroll;
+    padding-bottom: 150px;
+    background: white;
+    border-left: 1px solid gray;
+
+    @include respond(tab-port) {
+        height: 97vh;
+    }
+}
+.chats__main--chats{
+    height: 80%;
+    overflow-y: scroll;
+
+    @include respond(tab-port) {
+        height: 75%;
+    }
+}
+
+.chat__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid lightgray;
+}
+.chat__channelName {
+    display: flex;
+    text-transform: lowercase;
+}
+
+.chat__headerRight > p{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.chat__headerRight > p > .MuiSvgIcon-root {
+    margin-right: 5px !important;
+    font-size: 16px;
+}
+.chat__channelName > .MuiSvgIcon-root {
+     margin-left: 10px;
+     font-size: 18px;
+}

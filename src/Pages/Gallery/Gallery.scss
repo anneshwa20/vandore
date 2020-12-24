@@ -1,0 +1,60 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+  .galleryPc{
+    flex: 0.6;
+    @include respond(tab-port){
+        display: none;
+    }
+}
+.galleryMobile {
+
+   display: none;
+
+    @include respond(tab-port){
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 100vw;
+    }
+}
+.gallery {
+   display: flex;
+}
+
+.gallery__page {
+    height: 100vh;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    @include respond(tab-port) {
+        width: 95%;
+    }
+}
+
+.gallery__container{
+    display: flex;
+    flex-wrap: wrap;
+    width: 90%;
+   
+}
+
+.images__holder__image{
+    width: 250px;
+    height: 200px;
+    margin-top: 15px;
+}

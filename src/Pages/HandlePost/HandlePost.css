@@ -1,0 +1,71 @@
+.handlePost {
+     display: flex;
+     flex: 0.8;
+     flex-direction: column;
+     height: 100vh;
+     overflow-y: scroll;
+     background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+     background-color: rgb(91, 87, 115);
+}
+
+.handlePost__posts {
+     width: 100%;
+     display: flex;
+     flex-wrap: wrap;
+}
+
+.handlePost__posts--row{
+     display: flex;
+    padding: 25px;
+    margin-left: 20px;
+}
+.post__analytics{
+     width: 100px;
+     height: 400px;
+     background-color: white;
+     margin-left: 5px;
+     margin-right: 20px;
+     margin-top: 15px;
+     border-radius: 12px;
+     display: flex;
+     flex-direction: column;
+}
+
+.post__analytics--block {
+  width: 100%;
+  height: 133px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: 1px solid gray;
+}
+.handlePost__input {
+     display: flex;
+     align-items: center;
+     background-color: #eff2f5;
+     padding: 10px;
+    
+     width: 600px;
+     border-width: 1px;
+     border-color: yellow;
+     border-style: solid;
+     margin-top: 10px;
+ }
+ 
+ .handlePost__input > textarea {
+     border: none;
+     background-color: transparent;
+     outline-width: 0;
+     width: 100%;
+ }
+.handlePost__postUpload{
+     display: flex;
+     flex-direction: column;
+     background-color: white;
+     padding: 5px;
+     border-radius: 12px;
+     width: max-content;
+     height: max-content;
+     margin: 0 auto;
+}
