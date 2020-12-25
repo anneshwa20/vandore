@@ -1,10 +1,10 @@
 import React, { useState,useEffect } from 'react'
 import { db, firebaseApp } from '../../firebase';
-import './HandlePost.css'
+import './HandlePost.scss'
 import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 import Post from '../../components/Post/Post';
-import { AddAPhoto, Facebook, FolderShared, Save, Visibility, WhatsApp } from '@material-ui/icons';
+import { AddAPhoto, Facebook, FolderShared, Menu, Save, Visibility, WhatsApp } from '@material-ui/icons';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { useStateValue } from '../../StateProvider';
 import { Modal } from '@material-ui/core';
@@ -23,7 +23,7 @@ function HandlePost(props) {
    const [posts,setPosts]= useState([]);
 
    const history= useHistory();
-    const[{single_guides,site_preview},dispatch]= useStateValue();
+    const[{single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
    const [open,setOpen]= useState(false);
    const [currentVideo,setCurrentVideo]= useState('');
    const manageVideo= (link) => {
@@ -85,8 +85,18 @@ const refreshPage = ()=>{
         <div className='handlePost'>
      {site_preview.post ? (
        <>
-            <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Posts</h1>
-    
+           <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Posts</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>POSTS</h1>
+        </div>
     <div className='guide_tutorial_toast'>
      <p>
      If you face any difficulties regarding Posts, then see our Posts guides
@@ -220,6 +230,17 @@ aria-describedby="Guide Video description"
      ) : (
       <div className='site_preview'>
       <div className='site_preview--top'>
+      <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
          <div className='site_preview--topContainer'>
                 <div className='site_preview--topContainer--left'>
                    <h1>Posts</h1>

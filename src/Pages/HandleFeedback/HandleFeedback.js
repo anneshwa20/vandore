@@ -1,5 +1,5 @@
 import { Modal, withStyles } from '@material-ui/core';
-import { Call, Grade, Message, PeopleAlt, Person } from '@material-ui/icons';
+import { Call, Grade, Menu, Message, PeopleAlt, Person } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import Rating from '@material-ui/lab/Rating';
 import PropTypes from 'prop-types';
@@ -12,13 +12,13 @@ import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import './HandleFeedback.css';
+import './HandleFeedback.scss';
 import FeedbackSvg from '../../icons/undraw_feedback_h2ft.svg';
 
 
 function HandleFeedback() {
     const [feedbacks,setFeedbacks]= useState([]);
-    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
 
     const [open,setOpen]= useState(false);
@@ -102,7 +102,18 @@ function HandleFeedback() {
         <div className='handleFeedback'>
        {site_preview.feedback ? (
         <>
-          <h1 style={{color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Feedbacks</h1>
+            <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Feedbacks</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>Feedbacks</h1>
+        </div>
          <div className='guide_toast'>
             <p>{site_settings.feedback ? 
             'To turn off Feedbacks, go to settings and disable Feedbacks' : 
@@ -155,6 +166,17 @@ function HandleFeedback() {
        ) : (
         <div className='site_preview'>
         <div className='site_preview--top'>
+        <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
            <div className='site_preview--topContainer'>
                   <div className='site_preview--topContainer--left'>
                      <h1>Manage Your Feedbacks</h1>

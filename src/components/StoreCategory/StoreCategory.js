@@ -2,7 +2,7 @@ import { IconButton } from '@material-ui/core';
 import { ArrowBackIosSharp, ArrowForwardIosSharp, Delete, Edit, Update } from '@material-ui/icons';
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
-import './StoreCategory.css'
+import './StoreCategory.scss'
 
 function StoreCategory({category,updateCategory,deleteCategory}) {
     const [editCategory,setEditCategory]= useState(category.title);

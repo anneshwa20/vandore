@@ -1,3 +1,18 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
 .handleSettings {
     display: flex;
     flex-direction: column;
@@ -6,6 +21,11 @@
     overflow-y: scroll;
     background: linear-gradient(transparent, rgba(0, 0, 0, 1));
     background-color: rgb(91, 87, 115);
+
+    @include respond(tab-port) {
+        flex: 1;
+        width: 100vw;
+    }
 }
 .handleSettings__setting{
     margin: 20px auto;

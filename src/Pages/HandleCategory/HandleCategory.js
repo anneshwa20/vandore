@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import SidebarRestro from '../../components/SidebarRestro/SidebarRestro'
-import './HandleCategory.css'
+import './HandleCategory.scss'
 import FileUploader from 'react-firebase-file-uploader'
 import { db, firebaseApp } from '../../firebase'
 import firebase from 'firebase';
 import HandleItem from '../../components/HandleItem/HandleItem'
-import { Add, CloudUpload } from '@material-ui/icons'
+import { Add, CloudUpload, Menu } from '@material-ui/icons'
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro'
 import { Modal } from '@material-ui/core'
+import { useStateValue } from '../../StateProvider'
 
 
 function HandleCategory(props) {
@@ -19,6 +20,8 @@ function HandleCategory(props) {
   const [categoryTitle,setCategoryTitle]= useState('');
   const [items,setItems]= useState([]);
   const [show,setShow]= useState(false);
+  const [{sidebarVandore},dispatch]= useStateValue();
+
 
 
   useEffect(() => {
@@ -84,23 +87,60 @@ function HandleCategory(props) {
 
     return (
         <div className='handleCategory'>
-           <SidebarRestro />
-           <div className='handleCategory__body'>
-           <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>{categoryTitle}</h1>
+
+       <div className='categoryMobile'>
+         {sidebarVandore ? <SidebarRestro active='store' /> : (
+ <div className='handleCategory__body'>
+     <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>{categoryTitle}</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>{categoryTitle}</h1>
+        </div>
+   
+  {show ? '' : (
+<div  onClick={() => setShow(!show)} className='category__add--button'>
+    <Add /> Add New Product
+</div>
+  )}
+
+  <div className='handleCategory__items'>
+  {items.map(item => (
+        <HandleItem item={item} id={props.match.params.category}/>
+     ))}
+  </div>
+    
+ </div>
+         )}
+       </div>
+
+       <div className='categoryPc'>
+         <SidebarRestro active='store' />
+       <div className='handleCategory__body'>
+       <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>{categoryTitle}</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>{categoryTitle}</h1>
+        </div>
              
             {show ? '' : (
          <div  onClick={() => setShow(!show)} className='category__add--button'>
               <Add /> Add New Product
         </div>
             )}
-
-           
-
-         
-
-
-
-
 
             <div className='handleCategory__items'>
             {items.map(item => (
@@ -109,6 +149,10 @@ function HandleCategory(props) {
             </div>
               
            </div>
+       </div>
+
+         
+          
            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={show}
   onClose={() => setShow(false)}

@@ -1,3 +1,33 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+.chatVandorePc{
+    display: flex;
+    @include respond(tab-port){
+        display: none;
+    }
+}
+.chatVandoreMobile {
+
+   display: none;
+
+    @include respond(tab-port){
+        display: flex;
+        
+    }
+}
 .chats {
     display: flex;
     flex-direction: column;
@@ -13,10 +43,18 @@
     padding-bottom: 150px;
     background: white;
     border-left: 1px solid gray;
+
+    @include respond(tab-port) {
+        flex: 1;
+    }
 }
 .chats__main--chats--restro{
     height: 90vh;
     overflow-y: scroll;
+
+    @include respond(tab-port) {
+        height: 80vh;
+    }
 }
 
 .chat__header {

@@ -5,15 +5,16 @@ import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import StoreCategory from '../../components/StoreCategory/StoreCategory';
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import './HandleStore.css'
+import './HandleStore.scss'
 import StoreSvg from '../../icons/undraw_street_food_hm5i.svg';
+import { Menu } from '@material-ui/icons';
 
 function HandleStore() {
     const [category,setCategory]= useState('');
     const [categories,setCategories]= useState([]);
     const [editCategory,setEditCategory]= useState('');
     const colors= ['#FFA07A', '#FF0000','#FFDAB9','#F0E68C','#7CFC00','#8FBC8F','#808000','#E0FFFF','#00FFFF','#ADD8E6','#000080','#DDA0DD','#FF00FF','#FF1493','#FFC0CB','#8B4513','#FFD700','#E6E6FA','#FF6347','#40E0D0','#FFDAB9','#333300' ,'#C71585','#4B0082','#800000'];
-     const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
      const history= useHistory();
     
      
@@ -74,8 +75,16 @@ function HandleStore() {
         <div className='handleStore'>
          {site_preview.store ? (
          <>
-        
-         
+         <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>STORE</h1>
+        </div>
+       
             
       <div className='handleStore__categories' style={{backgroundImage: `url(https://i.ibb.co/wS48xmr/i-Phone-X-XS-11-Pro-36-1.png)`,backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}}>
           <h1>STORE CATEGORIES</h1>
@@ -122,6 +131,17 @@ function HandleStore() {
          ) : (
             <div className='site_preview'>
             <div className='site_preview--top'>
+            <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage Your Store</h1>

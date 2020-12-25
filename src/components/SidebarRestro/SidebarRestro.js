@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import './SidebarRestro.css';
+import './SidebarRestro.scss';
 import SidebarRowRestro from './../SidebarRow/SidebarRowRestro';
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined} from '@material-ui/icons'
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close} from '@material-ui/icons'
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import { Avatar } from '@material-ui/core';
+import { Avatar, Menu } from '@material-ui/core';
 
 
 function SidebarRestro({active}) {
@@ -17,7 +17,7 @@ function SidebarRestro({active}) {
   const [showCustomers,setShowCustomers]= useState(true);
   const [showManagement,setShowManagement]= useState(true);
   const [showSettings,setShowSettings]= useState(true);
-  const[{user_details},dispatch]= useStateValue();
+  const[{user_details,sidebarVandore},dispatch]= useStateValue();
 
   
   useEffect(() => {
@@ -31,11 +31,24 @@ function SidebarRestro({active}) {
      ))
   },[]);
 
+  const handleSidebarVandore= () => {
+
+    dispatch({
+        type: 'UPDATE_SIDEBAR_VANDORE',
+        sidebarVandore: !sidebarVandore
+    });
+  }
+
     return (
         <div className="sidebarRestro">
           <div className='sidebarRestro__header'>
+              <div className='sidebarRestroMobileTop' onClick={handleSidebarVandore}>
+              <SidebarRowRestro Icon={Close} />
+              </div>
+          
            <div className='sidebarRestro__header--top'>
-               <h2 style={{letterSpacing: '2px',fontWeight: 'bold'}}>RESTRO</h2>
+               
+               <h2 style={{letterSpacing: '0.5px',fontWeight: 'bold'}}>VANDORE</h2>
                <div onClick={() => history.push('/user')}>
                <Avatar src={user_details.image} />
                </div>

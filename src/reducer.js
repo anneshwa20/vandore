@@ -10,7 +10,8 @@ export const initialState={
     single_guides: {},
     sidebar: false,
     site_preview: {},
-    site_colors: {}
+    site_colors: {},
+    sidebarVandore: true
 };
 
 
@@ -113,6 +114,11 @@ const reducer = (state,action) => {
             return{
                 ...state,
                 sidebar: action.sidebar
+            }
+        case 'UPDATE_SIDEBAR_VANDORE':
+            return {
+                ...state,
+                sidebarVandore: action.sidebarVandore
             }
         default:  
             return state;

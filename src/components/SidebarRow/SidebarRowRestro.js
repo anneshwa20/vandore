@@ -26,7 +26,7 @@ function SidebarRowRestro({src,Icon,title,addChannelOption,id,deleteChannel,page
    console.log(page,title);
 
     return (
-        <div className="sidebarRowRestro" style={{backgroundColor: `${page===title ? 'lightgray' : ''}`,borderRadius: `${page===title ? '12px' : '0px'}`,backgroundColor: `${active ? 'rgba(66, 135, 245, 1)' : ''}`}}>
+        <div className="sidebarRowRestro" onClick={addChannelOption ? addChannel : () => {}} style={{backgroundColor: `${page===title ? 'lightgray' : ''}`,borderRadius: `${page===title ? '12px' : '0px'}`,backgroundColor: `${active ? 'rgba(66, 135, 245, 1)' : ''}`}}>
             {src && <Avatar src={src} />}
             {Icon && <Icon />}
             {deleteChannel ? <Delete onClick={deleteChannelHandler} /> : ''}

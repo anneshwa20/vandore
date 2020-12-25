@@ -1,3 +1,18 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
 .handleStore {
     display: flex;
     flex-direction: column;
@@ -6,6 +21,11 @@
     overflow-y: scroll;
     background: linear-gradient(transparent, rgba(0, 0, 0, 1));
     background-color: rgb(91, 87, 115);
+
+    @include respond(tab-port) {
+        flex: 1;
+        width:  100vw;
+    }
 }
 
 .handleStore__add{
@@ -13,6 +33,11 @@
     display: flex;
     width: 70%;
     border-radius: 12px;
+
+
+    @include respond(tab-port) {
+        width: 100vw;
+    }
     
 }
 
@@ -40,9 +65,13 @@
     height: 60px;
     border:1px solid;
     margin-top: 10px;
-    border-color: #a88734 #9c7e31 #846a29;
+    
   
     border-radius: 10px;
+
+    @include respond(tab-port) {
+        width: 20%;
+    }
 
 }
 
@@ -57,6 +86,10 @@
     border-color:rgba(66, 135, 245, 1);
     border-style: solid;
     margin: 10px;
+
+    @include respond(tab-port) {
+        width: 55%;
+    }
 }
 
 .handleStore__add--input > input{
@@ -92,6 +125,13 @@
     
     padding: 25px;
     border-radius: 10px;
+
+
+    @include respond(tab-port) {
+        width: 100%;
+
+        padding: 10px;
+    }
 }
 .handleStore__categories--categories::-webkit-scrollbar {
     display: none;

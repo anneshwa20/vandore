@@ -2,7 +2,7 @@ import { Modal } from '@material-ui/core';
 import React, { useState, useEffect } from 'react'
 
 
-import "./Banner.css"
+import "./Banner.scss"
 
 function Banner({bannerTitle,bannerDescription,bannerVideo,bannerImage}) {
   const [open,setOpen]= useState(false);

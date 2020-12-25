@@ -1,7 +1,28 @@
+@mixin respond($breakpoint) {
+  @if $breakpoint == phone {
+      @media only screen and (max-width: 600px) { @content };    //600px
+  }
+  @if $breakpoint == tab-port {
+      @media only screen and (max-width: 900px) { @content };     //900px
+  }
+  @if $breakpoint == tab-land {
+      @media only screen and (max-width: 1200px) { @content };    //1200px
+  }
+  @if $breakpoint == big-desktop {
+      @media only screen and (min-width: 1800px) { @content };    //1800
+  }
+}
 .banner {
   color: white;
   object-fit: cover;
   height: 448px;
+
+  @include respond(tab-port) {
+    width: 100vw;
+    height: 350px;
+   
+   
+  }
 }
 
 .banner_contents {
@@ -15,6 +36,11 @@
   background-color: rgba(91, 87, 115,0.4);;
   font-weight: 800;
   padding-bottom: 0.3rem;
+
+  @include respond(tab-port){
+    font-size: 2rem;
+    width: 20rem;
+  }
 }
 
 .banner_buttons {
@@ -29,21 +55,22 @@
   max-width: 360px;
   height: 80px;
   margin-top: 20px;
+
+  @include respond(tab-port) {
+    width: 20rem;
+    font-size: 0.7rem;
+  }
 }
 
 .banner_button {
   cursor: pointer;
-  color: white;
-  outline: none;
-  border: none;
+  color: black;
+  
   font-weight: 700;
   border-radius: 0.2vw;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+ 
   margin-right: 1rem;
-  background-color: rgb(51, 51, 51, 0.5);
+  background-color: white;
 
 }
 

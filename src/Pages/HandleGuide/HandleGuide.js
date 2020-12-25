@@ -2,14 +2,14 @@ import { Modal, Switch } from '@material-ui/core';
 import React,{useState,useEffect} from 'react'
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { useStateValue } from '../../StateProvider'
-import './HandleGuide.css'
+import './HandleGuide.scss'
 import Guide from '../../icons/undraw_youtube_tutorial_2gn3.svg';
 import { db } from '../../firebase';
 import Banner from '../../components/GuideHeader/Banner';
-import { PlayArrow } from '@material-ui/icons';
+import { Menu, PlayArrow } from '@material-ui/icons';
 
 function HandleGuide() {
-    const [{guides,hindi_guides,single_guides,site_preview},dispatch]= useStateValue();
+    const [{guides,hindi_guides,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
     const [hindi,setHindi]= useState(false);
@@ -38,6 +38,15 @@ function HandleGuide() {
         <div className='handleGuide'>
             {site_preview.guide ?  (
                <>
+                <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Guides</h1>
+        </div>
               <Banner bannerVideo={bannerVideo} bannerImage={bannerImage} bannerTitle={bannerTitle} bannerDescription={bannerDescription}/>
            <div className='handleGuide__switch'>
             <p>English</p>
@@ -59,7 +68,7 @@ function HandleGuide() {
                         
                       <div className='handleGuide__guide' style={{backgroundImage: `url(${item.image})`,backgroundSize: "contain"}} onClick={() => manageVideo(item)}>
                          
-                         <PlayArrow style={{margin: '90px auto',padding: '5px',width: '30px',height: '30px',backgroundColor: ' rgba(66, 135, 245, 1)',borderRadius: '99px'}}/>
+                       <PlayArrow />
                         
                       </div>
                            
@@ -98,6 +107,16 @@ function HandleGuide() {
             ) : (
               <div className='site_preview'>
               <div className='site_preview--top'>
+              <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+               </div>
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Guides</h1>

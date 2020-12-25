@@ -4,7 +4,7 @@ import React from 'react'
 import { db } from '../../firebase'
 import { useStateValue } from '../../StateProvider'
 import firebase from 'firebase';
-import './PostAdmin.css'
+import './PostAdmin.scss'
 import { useHistory } from 'react-router-dom'
 
 function PostAdmin({id,profilePic,image,username,timestamp,message,handleDelete,fclicks,wclicks,visits}) {

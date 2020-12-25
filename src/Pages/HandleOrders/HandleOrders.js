@@ -5,10 +5,10 @@ import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import Order from '../../components/Order/Order';
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import './HandleOrders.css';
+import './HandleOrders.scss';
 import OrderSvg from '../../icons/undraw_online_payments_luau.svg';
 import moment from 'moment';
-import { ReceiptOutlined } from '@material-ui/icons';
+import { Menu, ReceiptOutlined } from '@material-ui/icons';
 
 
 function HandleOrders() {
@@ -16,7 +16,7 @@ function HandleOrders() {
     const [orders,setOrders]= useState([]);
     const [openOrder,setOpenOrder]= useState(false);
     const [currentOrder,setCurrentOrder]= useState({});
-    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
 
     const [open,setOpen]= useState(false);
@@ -58,7 +58,18 @@ function HandleOrders() {
         <div className='handleOrders'>
           {site_preview.order ? (
           <>
-                  <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Orders</h1>
+                     <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Orders</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>Orders</h1>
+        </div>
             <div className='guide_toast'>
             <p>{site_settings.store ? 
             'To turn off store orders, go to settings and disable store' : 
@@ -72,13 +83,14 @@ function HandleOrders() {
             <div onClick={() => manageVideo(single_guides.order)}>Guides</div>
            </div>
 
-        <div className='orders__order'>
+     
         <table className='handleUser__user'>
                      <tr>
                          <th>Customer</th>
-                          <th>Transaction Date</th>
-                         <th>Phone</th>
                          <th>Amount</th>
+                        
+                         <th>Phone</th>
+                         <th>Transaction Date</th>
                        
                          <th>Status</th>
                          <th>Bill</th>
@@ -88,9 +100,10 @@ function HandleOrders() {
             
             <tr>
                     <td style={{display: 'flex', alignItems: 'center'}}>  <Avatar src={order.data?.image} style={{marginRight: '5px'}}/> {order.data?.name}</td>
-                    <td>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</td>
-                    <td>{order.data?.phone}</td>
                     <td>Rs.{order.data.amount / 100}</td>
+                    <td>{order.data?.phone}</td>
+                    
+                    <td>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</td>
                    
                     <td>
                     {order.data.delivery ? (
@@ -125,8 +138,7 @@ function HandleOrders() {
                 handleDelete
                 order={order} />
             ))} */}
-        </div>
-
+      
 
         <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -153,6 +165,17 @@ function HandleOrders() {
           ) : (
             <div className='site_preview'>
             <div className='site_preview--top'>
+            <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage Your Orders</h1>

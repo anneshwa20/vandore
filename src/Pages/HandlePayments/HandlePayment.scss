@@ -1,3 +1,17 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
 .handlePayment {
    display: flex;
    flex-direction: column;
@@ -7,6 +21,11 @@
    background-color: rgb(91, 87, 115);
    height: 100vh;
    overflow-y: scroll;
+   
+   @include respond(tab-port) {
+       flex: 1;
+       width: 100vw;
+   }
 
 }
 .handlePayment__container{
@@ -26,6 +45,15 @@
     width: 90%;
     border: 1px solid  #f0c14b;
     color: white;
+    cursor: pointer;
+
+    @include respond(tab-port) {
+        justify-self: center;
+        margin: 0px;
+        width: 90%;
+       font-size: 12px;
+    }
+ 
 }
 .guide_toast > div {
     background-color: #f0c14b;
@@ -43,6 +71,13 @@
     width: 90%;
     border: 1px solid #4287f5;
     color: white;
+    cursor: pointer;
+    @include respond(tab-port) {
+        justify-self: center;
+        margin: 0px;
+        width: 90%;
+       font-size: 12px;
+    }
 }
 .guide_tutorial_toast > div {
     background-color:#4287f5;

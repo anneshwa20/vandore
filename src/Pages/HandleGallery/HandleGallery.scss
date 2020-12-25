@@ -1,3 +1,17 @@
+@mixin respond($breakpoint) {
+  @if $breakpoint == phone {
+      @media only screen and (max-width: 600px) { @content };    //600px
+  }
+  @if $breakpoint == tab-port {
+      @media only screen and (max-width: 900px) { @content };     //900px
+  }
+  @if $breakpoint == tab-land {
+      @media only screen and (max-width: 1200px) { @content };    //1200px
+  }
+  @if $breakpoint == big-desktop {
+      @media only screen and (min-width: 1800px) { @content };    //1800
+  }
+}
 .handleSlider {
     display: flex;
     flex-direction: column;
@@ -6,6 +20,11 @@
     background-color: rgb(91, 87, 115);
     height: 100vh;
     overflow-y: scroll;
+    
+    @include respond(tab-port) {
+      flex: 1;
+      width: 100vw;
+    }
 }
 
 .images__holder > img {
@@ -29,6 +48,12 @@
   flex-wrap: wrap;
   margin: 10px;
   margin-left: 20px;
+
+  @include respond(tab-port) {
+    width: 100%;
+    justify-content: center;
+    margin: 0 -10px;
+  }
 }
 .images__holder--gallery {
   margin: 10px;
@@ -37,10 +62,20 @@
   display: flex;
   flex-direction: column;
 
+  @include respond(tab-port) {
+    width: 150px;
+    height: 100px;
+  }
+
 }
 .images__holder__image--gallery{
   width: 250px;
   height: 200px;
+
+  @include respond(tab-port) {
+    width: 150px;
+    height: 100px;
+  }
 
 }
 .gallery__delete {

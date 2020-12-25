@@ -1,9 +1,9 @@
 import { Switch } from '@material-ui/core'
-import { SettingsOverscanRounded } from '@material-ui/icons'
+import { Menu, SettingsOverscanRounded } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import './HandleSettings.css';
+import './HandleSettings.scss';
 import SettingsSvg from '../../icons/undraw_personal_settings_kihd.svg';
 
 function HandleSettings() {
@@ -19,7 +19,7 @@ function HandleSettings() {
     const [chatChannels,setChatChannels]= useState(true);
     const [userAuth,setUserAuth]= useState(true);
     const [feedback,setFeedback]= useState(true);
-    const[{site_settings,site_preview,single_guides},dispatch]= useStateValue();
+    const[{site_settings,site_preview,single_guides,sidebarVandore},dispatch]= useStateValue();
 
     useEffect(() => {
              setStore(site_settings.store);
@@ -203,7 +203,18 @@ function HandleSettings() {
         <div className='handleSettings'>
            {site_preview.setting ? (
             <>
-                <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Settings</h1>
+                   <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Settings</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>Settings</h1>
+        </div>
             <div className='handleSettings__setting'>
 
                <div className='setting__option'>
@@ -421,6 +432,17 @@ function HandleSettings() {
            ) : (
               <div className='site_preview'>
               <div className='site_preview--top'>
+              <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Manage Your Settings</h1>

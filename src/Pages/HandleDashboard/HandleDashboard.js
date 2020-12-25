@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
+import AwesomeSlider from 'react-awesome-slider';
+import 'react-awesome-slider/dist/styles.css';
+import 'react-awesome-slider/dist/custom-animations/cube-animation.css';
+import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import LineChart from '../../components/LineChart/LineChart';
 import OrdersAnalytics from '../../components/OrdersAnalytics/OrdersAnalytics';
 import { db, firebaseApp } from '../../firebase';
-import './HandleDashboard.css'
+import './HandleDashboard.scss'
 import firebase from 'firebase';
 import { useStateValue } from '../../StateProvider';
 import { Avatar, Modal } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import FileUploader from 'react-firebase-file-uploader';
-import { AddAPhoto } from '@material-ui/icons';
+import { AddAPhoto, Menu } from '@material-ui/icons';
 import Dashboard from '../../icons/undraw_dashboard_nklg.svg';
 import { ChromePicker } from 'react-color';
 import PostIcon from '../../icons/two-post-it.svg';
@@ -39,7 +43,7 @@ function HandleDashboard() {
     const[ordersPerDay,setOrdersPerDay]= useState('');
     const[visitsDate,setVisitsDate]= useState('');
     const[visitsPerday,setVisitsPerDay]= useState('');
-    const[{user_details,site_preview,single_guides,site_colors},dispatch]= useStateValue();
+    const[{user_details,site_preview,single_guides,site_colors,sidebarVandore},dispatch]= useStateValue();
     const[image,setImage]= useState('');
     const history= useHistory();
    const [openAlert,setOpenAlert]= useState(false);
@@ -51,6 +55,8 @@ function HandleDashboard() {
    const [iconColor,setIconColor]= useState('');
    const [currentColor,setCurrentColor]= useState('');
 
+
+   const AutoplaySlider= withAutoplay(AwesomeSlider);
    useEffect(() => {
         
     db.collection("site").doc('site_colors')
@@ -350,8 +356,20 @@ const handleChangeIconColor=(color) => {
         <div className='handleDashboard'>
            {site_preview.dashboard ? (
                <>
-             <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Insights</h1>
-     
+
+         <div className='vandoreHeaderPc'>
+            <h1>INSIGHTS</h1>
+        </div>
+            
+        <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+            {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>INSIGHTS</h1>
+        </div>
      <div className='handleDashboard__header'>
        <div className='handleDashboard__header--left'>
         <Avatar src={user_details.image} style={{height: '100px',width: '100px'}}/>
@@ -391,6 +409,86 @@ const handleChangeIconColor=(color) => {
         Analytics Overview
         <hr></hr>
      </div>
+
+     <div className='analytics__slide'>
+     <AutoplaySlider
+                   play={true}
+                   cancelOnInteraction={false} // should stop playing on user interaction
+                   interval={3000}
+                   animation='cubeAnimation'
+               >
+                      <div className='handleDashboard__insightPost' >
+               <div className='handleDashboard__insightPost--top'>
+                   <img src={PostIcon}  />
+                   <h3>Post</h3>
+                   <hr></hr>
+               </div>
+               <div className='handleDashboard__insightPost--center'>
+
+               </div>
+               <div className='handleDashboard__insightPost--bottom'>
+                  {posts.length}
+               </div>
+        </div>
+
+        <div className='handleDashboard__insightPost'>
+               <div className='handleDashboard__insightPost--top'>
+                   <img src={PaymentIcon} />
+                   <h3>Payments</h3>
+                   <hr></hr>
+               </div>
+               <div className='handleDashboard__insightPost--center'>
+
+               </div>
+               <div className='handleDashboard__insightPost--bottom'>
+                   {payments.length}
+               </div>
+        </div>
+
+        <div className='handleDashboard__insightPost' >
+               <div className='handleDashboard__insightPost--top'>
+                  <img src={OrderIcon} />
+                   <h3>Orders</h3>
+                   <hr></hr>
+               </div>
+               <div className='handleDashboard__insightPost--center'>
+
+               </div>
+               <div className='handleDashboard__insightPost--bottom'>
+                   {orders.length}
+               </div>
+        </div>
+
+        <div className='handleDashboard__insightPost' >
+               <div className='handleDashboard__insightPost--top'>
+                   <img src={UserIcon} />
+                   <h3>Users</h3>
+                   <hr></hr>
+               </div>
+               <div className='handleDashboard__insightPost--center'>
+
+               </div>
+               <div className='handleDashboard__insightPost--bottom'>
+                   {users.length}
+               </div>
+        </div>
+
+        <div className='handleDashboard__insightPost'>
+               <div className='handleDashboard__insightPost--top'>
+                   <img src={GalleryIcon} />
+                   <h3>Photos</h3>
+                   <hr></hr>
+               </div>
+               <div className='handleDashboard__insightPost--center'>
+
+               </div>
+               <div className='handleDashboard__insightPost--bottom'>
+                   {photos.length}
+               </div>
+        </div>
+       </AutoplaySlider> 
+     </div>
+
      
       <div className='handleDashboard__insight'>
          
@@ -679,7 +777,19 @@ const handleChangeIconColor=(color) => {
                </>
            ) : (
                <div className='site_preview'>
+                  
                   <div className='site_preview--top'>
+                <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                      <div className='site_preview--topContainer'>
                             <div className='site_preview--topContainer--left'>
                                <h1>Dashboard</h1>

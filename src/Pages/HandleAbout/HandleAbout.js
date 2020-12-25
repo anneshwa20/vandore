@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { db, firebaseApp } from '../../firebase';
-import './HandleAbout.css'
+import './HandleAbout.scss'
 import FileUploader from 'react-firebase-file-uploader';
-import { AddAPhoto, Edit } from '@material-ui/icons';
+import { AddAPhoto, Edit, Menu } from '@material-ui/icons';
 import { useStateValue } from '../../StateProvider';
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
@@ -12,7 +12,7 @@ import AboutSvg from '../../icons/undraw_newspaper_k72w.svg';
 function HandleAbout() {
     const [currImage,setCurrImage]= useState('');
     const [currAbout,setCurrAbout]= useState('');
-    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
 
     const handleGetStarted= () => {
@@ -79,7 +79,18 @@ function HandleAbout() {
            {site_preview.about ? (
             <>
                
-               <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>About Us</h1>
+               <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>About Us</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>About Us</h1>
+        </div>
              <img src={currImage} />
              <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',marginTop: 20,display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
               Select Your Photo <AddAPhoto style={{paddingLeft: '10px'}} />
@@ -107,7 +118,7 @@ function HandleAbout() {
               </div>
              )}
              {!edit ? (
-             <label onClick={() => setEdit(true)} style={{backgroundColor: 'rgba(66, 135, 245, 0.8)', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
+             <label onClick={() => setEdit(true)} style={{backgroundColor: 'rgba(66, 135, 245, 0.8)', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',display: 'flex',alignItems: 'center',width: 'max-content',margin: '10px auto'}}>
             Change Text <Edit style={{paddingLeft: '10px'}}/>  
              </label>
              ) : ''}
@@ -142,6 +153,17 @@ function HandleAbout() {
            ) : (
             <div className='site_preview'>
             <div className='site_preview--top'>
+            <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage About Us Page</h1>

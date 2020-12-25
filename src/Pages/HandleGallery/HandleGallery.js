@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import './HandleGallery.css'
+import './HandleGallery.scss'
 import FileUploader from 'react-firebase-file-uploader';
 import { db, firebaseApp } from '../../firebase';
 import { IconButton, Modal } from '@material-ui/core';
-import { AddAPhoto, Delete, Save } from '@material-ui/icons';
+import { AddAPhoto, Delete, Menu, Save } from '@material-ui/icons';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
@@ -15,7 +15,7 @@ function HandleGallery() {
     const [image,setImage]= useState('');
     const [images,setImages]= useState([]);
     const [show,setShow]= useState(false);
-    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
 
     const history= useHistory();
    const [open,setOpen]= useState(false);
@@ -76,7 +76,18 @@ const refreshPage = ()=>{
         <div className='handleSlider'>
           {site_preview.photoGallery ? (
            <>
-          <h1 style={{position: 'sticky',color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Gallery</h1>
+          <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Gallery</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>Gallery</h1>
+        </div>
            <div className='guide_toast'>
             <p>{site_settings.photoGallery ? 
             'To turn off Photo Gallery, go to settings and disable Photo gallery' : 
@@ -142,6 +153,17 @@ const refreshPage = ()=>{
           ): (
 <div className='site_preview'>
               <div className='site_preview--top'>
+              <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Photo Gallery</h1>

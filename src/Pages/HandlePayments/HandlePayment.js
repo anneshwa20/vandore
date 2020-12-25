@@ -1,17 +1,17 @@
 import { Avatar, Modal } from '@material-ui/core';
-import { Call, Delete, LocationOn, PaymentSharp } from '@material-ui/icons';
+import { Call, Delete, LocationOn, Menu, PaymentSharp } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import CurrencyFormat from 'react-currency-format';
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
-import './HandlePayment.css'
+import './HandlePayment.scss'
 import PaymentSvg from '../../icons/undraw_Payments_re_77x0.svg';
 
 function HandlePayment() {
   const [payments,setPayments]= useState([]);
-  const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+  const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
   const history= useHistory();
 
   const [open,setOpen]= useState(false);
@@ -56,7 +56,18 @@ function HandlePayment() {
         <div className='handlePayment'>
           {site_preview.payment ? (
            <>
-             <h1 style={{color: 'white',textTransform: 'uppercase',height: 50,width: `100%`,display: 'flex',justifyContent: 'space-between',padding: 10,backgroundColor: 'rgba(73, 115, 130,0.2)',paddingLeft: 30}}>Payments</h1>
+            <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>Payments</h1>
+        </div>
+        <div className='vandoreHeaderPc'>
+            <h1>Payments</h1>
+        </div>
            
            <div className='guide_toast'>
             <p>{site_settings.onlinePay ? 
@@ -70,13 +81,14 @@ function HandlePayment() {
             </p> 
             <div onClick={() => manageVideo(single_guides.payments)}>Guides</div>
            </div>
-           <div className='handlePayment__container'>
+
            <table className='handleUser__user'>
                      <tr>
                          <th>Customer</th>
-                          <th>Transaction Date</th>
-                         <th>Phone</th>
                          <th>Amount</th>
+                          
+                         <th>Phone</th>
+                         <th>Transaction Date</th>
                        
                          <th>Status</th>
                      </tr>
@@ -85,9 +97,10 @@ function HandlePayment() {
             
             <tr>
                     <td style={{display: 'flex',alignItems: 'center'}}><Avatar src={payment.image}  style={{marginRight: '5px'}}/>{payment.name}</td>
-                    <td>{new Date(payment.created?.toDate()).toUTCString()}</td>
-                    <td>{payment.phone}</td>
                     <td>Rs.{payment.amount*1 /100}</td>
+                    <td>{payment.phone}</td>
+                   
+                    <td>{new Date(payment.created?.toDate()).toUTCString()}</td>
                    
                     <td>
                     <div onClick={() => deletePayment(payment.id)} >
@@ -100,7 +113,7 @@ function HandlePayment() {
                      
                  </table>
            
-           </div>
+         
            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
   onClose={() => setOpen(false)}
@@ -117,6 +130,17 @@ function HandlePayment() {
           ) : (
             <div className='site_preview'>
             <div className='site_preview--top'>
+            <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage Your Payments</h1>

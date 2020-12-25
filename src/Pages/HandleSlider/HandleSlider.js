@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import './HandleSlider.css'
+import './HandleSlider.scss'
 import FileUploader from 'react-firebase-file-uploader';
 import AwesomeSlider from 'react-awesome-slider';
 import 'react-awesome-slider/dist/styles.css';
 import 'react-awesome-slider/dist/custom-animations/cube-animation.css';
 import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import { db, firebaseApp } from '../../firebase';
-import { AddAPhoto, Delete, Save } from '@material-ui/icons';
+import { AddAPhoto, Delete, Menu, Save } from '@material-ui/icons';
 import { IconButton, Modal } from '@material-ui/core';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { useHistory } from 'react-router-dom';
@@ -19,7 +19,7 @@ function HandleSlider() {
     const [image,setImage]= useState('');
     const [images,setImages]= useState([]);
     const [show,setShow]= useState(false);
-    const [{site_settings,single_guides,site_preview},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
 
 
@@ -82,6 +82,15 @@ function HandleSlider() {
         <div className='handleSlider'>
      {site_preview.slider ? (
        <>
+        <div className='vandoreHeaderMobile' onClick={() => {
+            dispatch({
+                type: 'UPDATE_SIDEBAR_VANDORE',
+                sidebarVandore: !sidebarVandore
+            })
+        }}>
+             {sidebarVandore ? '' :  <Menu  style={{width: '40px',height: '40px',color: 'white',marginRight: '10px'}}/> }
+            <h1>SLIDER</h1>
+        </div>
        <div className='slider__container' style={{backgroundImage: `url(https://i.ibb.co/wS48xmr/i-Phone-X-XS-11-Pro-36-1.png)`,backgroundRepeat: 'no-repeat',backgroundSize: 'cover'}}>
          <h1>SLIDER</h1>
          <hr></hr>
@@ -114,7 +123,22 @@ function HandleSlider() {
    ''
     ) : (
         <div className='slide' style={{margin: '10px auto'}}>
-        <AutoplaySlider
+          <div className='slide1Slider'>
+          <AutoplaySlider
+                   play={true}
+                   cancelOnInteraction={false} // should stop playing on user interaction
+                   interval={3000}
+                   animation='cubeAnimation'
+               >
+                        {images.map((image,key) => (
+                          <div key={key} style={{backgroundImage: `url(${image.image})`,backgroundSize: 'contain'}}>
+                             
+                          </div>
+                       ))}
+       </AutoplaySlider> 
+          </div>
+          <div className='slide2'>
+          <AutoplaySlider
                    play={true}
                    cancelOnInteraction={false} // should stop playing on user interaction
                    interval={3000}
@@ -126,6 +150,8 @@ function HandleSlider() {
                           </div>
                        ))}
        </AutoplaySlider> 
+       </div>
+       
        </div>
     )}
    </div>
@@ -171,6 +197,17 @@ function HandleSlider() {
      ) : (
 <div className='site_preview'>
               <div className='site_preview--top'>
+              <div className='preview__menu' onClick={() => {
+                    dispatch({
+                        type: 'UPDATE_SIDEBAR_VANDORE',
+                        sidebarVandore: !sidebarVandore
+                    })
+                }}>
+                  {sidebarVandore ? '' : (
+                    <Menu style={{color: 'white'}} fontSize='large'/>
+                  )}
+                  
+                </div>
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Slider</h1>
