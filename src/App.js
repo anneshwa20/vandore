@@ -26,6 +26,7 @@ import GuideContent from './Pages/GuideContent/GuideContent';
 import GuideUpload from './Pages/GuideUpload/GuideUpload';
 import moment from 'moment';
 import LineChart from './components/LineChart/LineChart';
+import VandoreBanner from './components/VandoreBanner/VandoreBanner';
 
 
 const promise= loadStripe("pk_test_51HhCb7Ks7edpRlOlanfeP933Rc1cT6evN35X3K0t9HCOmDHd5gtMo83sfnIchnEvPyqxnVDzCwQR31h2VyGzptLN00PyDR59DU");
@@ -271,22 +272,27 @@ if(visits != ''){
     
       <Switch>
       <Route path="/store">
+      <VandoreBanner />
       <Header store={true} />
            <Menu />
           </Route>
         <Route path='/login'>
+        <VandoreBanner />
         <Header login={true}/>
            <Login />
         </Route>
           <Route path="/checkout">
+          <VandoreBanner />
           <Header cart={true}/>
              <Checkout />
           </Route>
           <Route path="/orders">
+          <VandoreBanner />
           <Header orders={true}/>
            <Orders />
           </Route>
           <Route path="/user">
+          <VandoreBanner />
           <Header account={true}/>
            <User />
           </Route>
@@ -298,6 +304,7 @@ if(visits != ''){
           <Route exact  path="/chats/:roomId" component={Chats}></Route>
           <Route exact  path="/chatsPublic/:roomId" component={ChatsPublic}></Route>
           <Route path="/about">
+          <VandoreBanner />
           <Header />
           <About />
           </Route>
@@ -310,10 +317,12 @@ if(visits != ''){
           </Route>
           <Route exact  path="/handleGuideContent/:category" component={GuideContent}></Route>
           <Route path="/gallery">
+          <VandoreBanner />
           <Header />
           <Gallery />
           </Route>
           <Route path="/payment">
+          <VandoreBanner />
           <Header />
             <Elements stripe={promise}>
                <Payment />
@@ -321,6 +330,7 @@ if(visits != ''){
            </Route>
          
           <Route path="/">
+            <VandoreBanner />
           <Header home={true}/>
             <Home />
           </Route>

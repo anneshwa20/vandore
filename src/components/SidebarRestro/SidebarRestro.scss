@@ -39,6 +39,16 @@
         width: 70vw;
     }
 }
+.header__logo--text {
+    position: relative;
+}
+.header__logo--text > h2 {
+    position: absolute;
+    font-size: larger;
+    align-items: center;
+    bottom: 0;
+    left: 40px
+}
 
 .sidebarRestro__options__container {
     overflow-y: scroll;

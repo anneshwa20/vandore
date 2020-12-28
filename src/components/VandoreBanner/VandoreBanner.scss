@@ -1,0 +1,31 @@
+.vandoreBanner {
+    width: 100vw;
+    display: flex;
+    justify-content: space-around;
+    padding: 3px;
+}
+.vandoreBanner__left {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.vandoreBanner__left > h3 {
+    font-size: small;
+    margin-left: -2px;
+}
+.vandoreBanner__left > img {
+    margin-left: 10px;
+}
+.vandoreBanner__right {
+    display: flex;
+    align-items: center;
+}
+.vandoreBanner__right--button {
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    width: 120px;
+    padding: 5px;
+    color: white;
+    background-color: rgb(85, 207, 81);
+}

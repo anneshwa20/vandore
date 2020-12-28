@@ -43,6 +43,27 @@ function Payment() {
     
     const [clientSecret, setClientSecret] = useState(null);
     const [orders,setOrders]= useState('');
+    const [ordersNotification,setOrderNotification]= useState(0);
+
+    useEffect(() => {
+     
+      db.collection("site_orders_notification").doc(`orders`)
+      .get()
+      .then(function(doc) {
+        if (doc.exists) {
+           setOrderNotification(doc.data().order);
+        } else {
+          // doc.data() will be undefined in this case
+         
+          console.log("No such document!");
+        }
+      }).catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+ 
+   },[])
+
+
 
 
     useEffect(() => {
@@ -80,6 +101,9 @@ function Payment() {
     
    
     const payOff = (mode) => {
+
+
+
         db.collection('users')
         .doc(user?.uid)
         .collection('orders')
@@ -118,6 +142,10 @@ function Payment() {
                 orders: `${orders*1 + 1}`
               })
         }
+
+        db.collection('site_orders_notification').doc('orders').update({
+          order: ordersNotification + 1
+        });
 
         dispatch({
             type: 'EMPTY_BASKET'

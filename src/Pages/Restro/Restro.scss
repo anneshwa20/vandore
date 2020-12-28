@@ -29,6 +29,35 @@
     }
 }
 
+.notification__page{
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification__content {
+    width: 60%;
+    background-color: white;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.notification__content--button {
+    background-color: rgba(66, 135, 245, 1);
+    padding: 5px;
+    cursor: pointer;
+    color: white;
+    margin: 5px;
+
+}
+.notification__content--button:hover {
+    background-color: rgba(66, 135, 245, 0.7);
+}
+
+
 .restro {
     display: block;
     

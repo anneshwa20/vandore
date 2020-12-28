@@ -39,12 +39,10 @@
     width: 900px;
     display: flex;
 
-    @include respond(tab-port){
-        height: 200px;
-        width: 100%;
-        margin-top: -55px;
-    }
-   
+    
+   @include respond(tab-port) {
+       
+   }
 }
 
 .item__preview{
@@ -55,14 +53,16 @@
     @include respond(tab-port){
         
       max-width: 100vw;
+    
     }
 }
 
 .slideImageTag{
 
         width: 100vw;
-        height: 400px;
+        height: 500px;
         object-fit: contain;
+        margin-top: -10px;
  
 }
 .slide1 {
@@ -70,9 +70,10 @@
 
     display:  none;
     @include respond(tab-port) {
-        height: 100%;
+        height: 500px;
         width: 100%;
         display: flex;
+        
     }
 }
 .slide1Slider{
@@ -80,6 +81,14 @@
     display:  none;
     @include respond(tab-port) {
         height: 85%;
+        width: 100%;
+        display: flex;
+    }
+}
+.slide1SliderMobile {
+    display:  none;
+    @include respond(tab-port) {
+        height: 100%;
         width: 100%;
         display: flex;
     }

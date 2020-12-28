@@ -87,6 +87,24 @@
         font-size: large;
     }
 }
+
+.vandoreLogoHeader {
+    display: none;
+
+    @include respond(tab-port) {
+        display: flex;
+        background-color: black;
+        justify-content: center;
+        color: white;
+        width: 100%;
+        padding: 5px;
+        align-items: center;
+    }
+}
+.vandoreLogoHeader > h4 {
+    font-size: small;
+    margin-left: -2px;
+}
 .handleDashboard__social > form {
     width: 80%;
     padding: 15px;

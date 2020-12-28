@@ -11,7 +11,7 @@ export const initialState={
     sidebar: false,
     site_preview: {},
     site_colors: {},
-    sidebarVandore: true
+    sidebarVandore: false
 };
 
 

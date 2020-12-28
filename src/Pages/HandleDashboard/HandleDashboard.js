@@ -357,6 +357,11 @@ const handleChangeIconColor=(color) => {
            {site_preview.dashboard ? (
                <>
 
+         <div className='vandoreLogoHeader'>
+         <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
+         <h4>ANDORE</h4>
+         </div>
+
          <div className='vandoreHeaderPc'>
             <h1>INSIGHTS</h1>
         </div>
@@ -776,6 +781,11 @@ const handleChangeIconColor=(color) => {
 
                </>
            ) : (
+               <>
+               <div className='vandoreLogoHeader'>
+         <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
+         <h4>ANDORE</h4>
+         </div>
                <div className='site_preview'>
                   
                   <div className='site_preview--top'>
@@ -818,6 +828,7 @@ const handleChangeIconColor=(color) => {
                     </div>
                 </div>
                 </div>
+                </>
            )}
 </div>
     )

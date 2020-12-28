@@ -54,6 +54,10 @@ function HandlePayment() {
 
     return (
         <div className='handlePayment'>
+          <div className='vandoreLogoHeader'>
+         <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
+         <h4>ANDORE</h4>
+         </div>
           {site_preview.payment ? (
            <>
             <div className='vandoreHeaderMobile' onClick={() => {

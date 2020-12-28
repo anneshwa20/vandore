@@ -47,8 +47,11 @@ function SidebarRestro({active}) {
               </div>
           
            <div className='sidebarRestro__header--top'>
-               
-               <h2 style={{letterSpacing: '0.5px',fontWeight: 'bold'}}>VANDORE</h2>
+               <div style={{display: 'flex'}} className='header__logo--text'>
+               <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '40px',height: '30px'}}/>
+               <h2 style={{letterSpacing: '0.5px',fontWeight: 'bold',marginLeft: '-5px'}}>ANDORE</h2>
+               </div>
+             
                <div onClick={() => history.push('/user')}>
                <Avatar src={user_details.image} />
                </div>
