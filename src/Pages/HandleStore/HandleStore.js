@@ -3,27 +3,30 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import StoreCategory from '../../components/StoreCategory/StoreCategory';
-import { db } from '../../firebase';
+import { db, firebaseApp } from '../../firebase';
+import FileUploader from 'react-firebase-file-uploader';
 import { useStateValue } from '../../StateProvider';
 import './HandleStore.scss'
 import StoreSvg from '../../icons/undraw_street_food_hm5i.svg';
-import { Menu } from '@material-ui/icons';
+import { AddAPhoto, Menu } from '@material-ui/icons';
 
-function HandleStore() {
+function HandleStore({id}) {
     const [category,setCategory]= useState('');
     const [categories,setCategories]= useState([]);
     const [editCategory,setEditCategory]= useState('');
+    const [save,setSave]= useState(false);
+    const [cover,setCover]= useState('https://i.ibb.co/wWPx0KM/Handle-Your-Store.png');
     const colors= ['#FFA07A', '#FF0000','#FFDAB9','#F0E68C','#7CFC00','#8FBC8F','#808000','#E0FFFF','#00FFFF','#ADD8E6','#000080','#DDA0DD','#FF00FF','#FF1493','#FFC0CB','#8B4513','#FFD700','#E6E6FA','#FF6347','#40E0D0','#FFDAB9','#333300' ,'#C71585','#4B0082','#800000'];
      const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
      const history= useHistory();
-    
+    const pageId= id;
      
  
  
      const [open,setOpen]= useState(false);
      const [currentVideo,setCurrentVideo]= useState('');
      const handleGetStarted= () => {
-        db.collection('site').doc('site_preview').update({
+        db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             store: true
         }).then(refreshPage);
     }
@@ -36,7 +39,7 @@ function HandleStore() {
 
     useEffect(() => {
   
-        db.collection('store')
+        db.collection(pageId.toUpperCase()).doc('store').collection('store')
         .onSnapshot(snapshot => (
             setCategories(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -49,7 +52,7 @@ function HandleStore() {
         },[])
 
     const updateCategory= (id,category) =>{
-      db.collection('store').doc(id).update({
+      db.collection(pageId.toUpperCase()).doc('store').collection('store').doc(id).update({
           title: category
       }).then(alert('category updated'));
     }
@@ -59,17 +62,44 @@ function HandleStore() {
 
 
     const deleteCategory= (id) => {
-      db.collection('store').doc(id).delete().then(alert('category deleted')).then(refreshPage);
+      db.collection(pageId.toUpperCase()).doc('store').collection('store').doc(id).delete().then(alert('category deleted')).then(refreshPage);
     }
 
     const handleCategory= (e) => {
          e.preventDefault();
 
-         db.collection('store').add({
+         db.collection(pageId.toUpperCase()).doc('store').collection('store').add({
              title: category,
              items: []
          }).then(alert('category updated')).then(refreshPage);
     }
+
+    useEffect(() => {
+        db.collection(pageId.toUpperCase()).doc('site').collection("site").doc("site_store_cover")
+        .onSnapshot(function(doc) {
+            setCover(doc.data().cover);
+        });
+    },[]);
+
+    const handleUploadStart= () => {
+        alert('UPLOAD STARTED')
+    }
+
+    const handleUploadSuccess= (filename) =>{
+      
+    
+       firebaseApp.storage().ref('storeCover').child(filename).getDownloadURL()
+       .then(url => setCover(url)).then(alert('UPLOAD FINISH')).then(() => setSave(true));
+                     
+        
+       
+     };
+
+     const handleCoverUpload= () => {
+         db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_store_cover').update({
+             cover: cover
+         }).then(() => setSave(false))
+     }
 
     return (
         <div className='handleStore'>
@@ -95,7 +125,7 @@ function HandleStore() {
           <hr></hr>
           <div className='handleStore__categories--categories'>
                 {categories.map(category => (
-                        <StoreCategory category={category} deleteCategory={deleteCategory} updateCategory={updateCategory} />
+                        <StoreCategory pageId={pageId} category={category} deleteCategory={deleteCategory} updateCategory={updateCategory} />
                     ))}
           </div>
            
@@ -106,6 +136,32 @@ function HandleStore() {
             </div>
                 <button onClick={handleCategory}>Submit</button>
            </div>
+
+      <div className='store__cover'>
+         <div className='store__cover--left'>
+             <img src={cover} />
+             <h3>Change Your Store Cover Photo</h3>
+         </div>
+    {save ? (
+     <div className='store__cover--right' onClick={handleCoverUpload}>
+       Save Photo
+     </div>
+    ) : (
+        <label className='store__cover--right'>
+        Select Your Photo <AddAPhoto style={{paddingLeft: '10px'}} />
+        <FileUploader
+          hidden
+          accept="image/*"
+          randomizeFilename
+          name="image"
+          storageRef={firebaseApp.storage().ref("storeCover")}
+          onUploadStart={handleUploadStart}
+          onUploadSuccess={handleUploadSuccess}
+         />
+         </label>
+    )}
+       
+      </div>
       <div className='guide_toast'>
             <p>{site_settings.store ? 
             'To turn off store , go to settings and disable store' : 

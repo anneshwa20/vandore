@@ -9,11 +9,11 @@ import { useStateValue } from '../../StateProvider';
 import './HandlePayment.scss'
 import PaymentSvg from '../../icons/undraw_Payments_re_77x0.svg';
 
-function HandlePayment() {
+function HandlePayment({id}) {
   const [payments,setPayments]= useState([]);
   const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
   const history= useHistory();
-
+  const pageId= id;
   const [open,setOpen]= useState(false);
   const [currentVideo,setCurrentVideo]= useState('');
   const manageVideo= (link) => {
@@ -22,7 +22,7 @@ function HandlePayment() {
  }
 
  const handleGetStarted= () => {
-  db.collection('site').doc('site_preview').update({
+  db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
       payment: true
   }).then(refreshPage);
 }
@@ -32,7 +32,7 @@ function HandlePayment() {
 
   useEffect(() => {
   
-    db.collection('payments')
+    db.collection(pageId.toUpperCase()).doc('payments').collection('payments')
     .onSnapshot(snapshot => (
         setPayments(snapshot.docs.map(doc => ({
             id: doc.id,
@@ -49,7 +49,7 @@ function HandlePayment() {
     },[])
 
     const deletePayment= (id) => {
-        db.collection('payments').doc(id).delete().then(alert('deleted'));
+        db.collection(pageId.toUpperCase()).doc('payments').collection('payments').doc(id).delete().then(alert('deleted'));
     }
 
     return (

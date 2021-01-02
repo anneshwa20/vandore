@@ -7,22 +7,22 @@ import firebase from 'firebase';
 import './Post.scss'
 import { useHistory } from 'react-router-dom'
 
-function Post({id,profilePic,image,username,timestamp,message,handleDelete,fclicks,wclicks,visits}) {
+function Post({pageId,id,profilePic,image,username,timestamp,message,handleDelete,fclicks,wclicks,visits}) {
     const [{user_details},dispatch]= useStateValue();
     const history= useHistory();
 
     const postDelete= () => {
-      db.collection('posts').doc(id).delete().then(alert('Deleted'));
+      db.collection(pageId.toUpperCase()).doc('posts').collection('posts').doc(id).delete().then(alert('Deleted'));
     }
 
     const updateFacebook= () => {
         
-       db.collection('posts').doc(id).update({
+       db.collection(pageId.toUpperCase()).doc('posts').collection('posts').doc(id).update({
          fclicks: `${fclicks*1 + 1}`
        })
 
             if(!user_details?.admin){
-                db.collection("posts").doc(id).update({
+                db.collection(pageId.toUpperCase()).doc('posts').collection("posts").doc(id).update({
                     userSharing: firebase.firestore.FieldValue.arrayUnion({
                         id: getRandomText(20),
                         name: user_details.name,
@@ -36,12 +36,12 @@ function Post({id,profilePic,image,username,timestamp,message,handleDelete,fclic
  }
 
  const updateWhatsapp= () => {
-    db.collection('posts').doc(id).update({
+    db.collection(pageId.toUpperCase()).doc('posts').collection('posts').doc(id).update({
       wclicks: `${wclicks*1 + 1}`
     })
 
          if(!user_details?.admin){
-             db.collection("posts").doc(id).update({
+             db.collection(pageId.toUpperCase()).doc('posts').collection("posts").doc(id).update({
                  userSharing: firebase.firestore.FieldValue.arrayUnion({
                      id: getRandomText(20),
                      name: user_details.name,
@@ -71,10 +71,10 @@ function Post({id,profilePic,image,username,timestamp,message,handleDelete,fclic
                </div>
                {handleDelete  ? <button onClick={postDelete} style={{width: 50,height:50,marginLeft: 20}}><Delete /></button> : ''}
            </div>
-           <div className="post__bottom" onClick={() => history.push(`/posts/${id}`)}>
+           <div className="post__bottom" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
                <p>{message}</p>
            </div>
-           <div className="post__image" onClick={() => history.push(`/posts/${id}`)}>
+           <div className="post__image" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
                <img src={image} alt="" style={{width: '100%',height: '400px'}} />
                
               

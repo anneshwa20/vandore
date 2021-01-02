@@ -9,14 +9,14 @@ import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { Modal } from '@material-ui/core';
 import AboutSvg from '../../icons/undraw_newspaper_k72w.svg';
 
-function HandleAbout() {
+function HandleAbout({id}) {
     const [currImage,setCurrImage]= useState('');
     const [currAbout,setCurrAbout]= useState('');
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
-
+    const pageId= id;
     const handleGetStarted= () => {
-      db.collection('site').doc('site_preview').update({
+      db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
           about: true
       }).then(refreshPage);
   }
@@ -34,7 +34,7 @@ function HandleAbout() {
 
     useEffect(() => {
         
-        db.collection("about").doc('about_wtf')
+        db.collection(pageId.toUpperCase()).doc('about').collection("about").doc('about_site')
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -67,7 +67,7 @@ function HandleAbout() {
      const handleSubmit= (e) => {
          e.preventDefault();
 
-         db.collection("about").doc('about_wtf').set({
+         db.collection(pageId.toUpperCase()).doc('about').collection("about").doc('about_site').set({
            image: currImage,
            about: currAbout
        }).then(alert('UPDATED')).then(() => setEdit(false));

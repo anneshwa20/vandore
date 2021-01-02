@@ -14,7 +14,7 @@
   }
 
 .sidebar{
-    height: 100vh;
+    height: 120vh;
     overflow-y: scroll;
     background-color: white;
     display: flex;
@@ -24,17 +24,21 @@
    position: sticky;
    left: 0;
    z-index: 99;
-    justify-content: space-between;
+    
 
     @include respond(tab-port) {
         display: none;
     }
 }
 
+.external {
+    justify-self: flex-end;
+}
+
 .sidebar__ratings {
   width: 100%;
-  height: 200px;
-  margin-top: 20px;
+  min-height: 200px;
+  margin-top: 80px;
   margin-bottom: 20px;
   background-color: white;
 }
@@ -71,4 +75,13 @@
 .sidebar__youtube > iframe{
    width: 100%;
    height: 100%;
+}
+
+.rateForm {
+    background-color: white;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

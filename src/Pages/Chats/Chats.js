@@ -8,15 +8,17 @@ import { db } from '../../firebase';
 import './Chats.scss';
 import ChatSvg from '../../icons/undraw_add_file_4gfw.svg';
 import { useStateValue } from '../../StateProvider';
+import StateFill from '../StateFill';
 
 function Chats() {
-    const { roomId }= useParams();
+    const { roomId,id }= useParams();
     const [roomDetails,setRoomDetails]= useState(null);
      const [roomMessages,setRoomMessages]= useState([]);
   const[{single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
+     const pageId= id;
 
      const handleGetStarted= () => {
-        db.collection('site').doc('site_preview').update({
+        db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             chatChannel: true
         }).then(refreshPage);
     }
@@ -26,13 +28,13 @@ function Chats() {
 
    useEffect(()=>{
         if(roomId){
-            db.collection('rooms').doc(roomId)
+            db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(roomId)
             .onSnapshot(snapshot => (
                setRoomDetails(snapshot.data())
             ))
 
         }
-        db.collection('rooms').doc(roomId)
+        db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(roomId)
         .collection('messages')
         .orderBy('timestamp','asc')
         .onSnapshot((snapshot) => 
@@ -49,13 +51,15 @@ function Chats() {
 
 
     return (
+        <>
+        <StateFill id={pageId} />
         <div className='chats'>
            
         <div className='chatVandoreMobile'>
         <div className='chats__body'>
 
    
-   {sidebarVandore ? <SidebarRestro /> : ''}
+   {sidebarVandore ? <SidebarRestro id={pageId} /> : ''}
 {site_preview.chatChannel ? (
 <>
 <div className='chats__main--restro'>
@@ -88,7 +92,7 @@ function Chats() {
    </div>
 </div>
 
-  <ChatInput channelName={roomDetails?.name} channelId={roomId} />
+  <ChatInput pageId={pageId} channelName={roomDetails?.name} channelId={roomId} />
 
  </div>
 </>
@@ -132,7 +136,7 @@ function Chats() {
          <div className='chats__body'>
 
    
-<SidebarRestro />
+<SidebarRestro id={pageId} />
 {site_preview.chatChannel ? (
 <>
 <div className='chats__main--restro'>
@@ -167,7 +171,7 @@ function Chats() {
    </div>
 </div>
 
-  <ChatInput channelName={roomDetails?.name} channelId={roomId} />
+  <ChatInput pageId={pageId} channelName={roomDetails?.name} channelId={roomId} />
 
  </div>
 </>
@@ -222,6 +226,7 @@ function Chats() {
             
             
         </div>
+        </>
     )
 }
 

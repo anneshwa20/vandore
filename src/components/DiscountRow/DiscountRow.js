@@ -14,7 +14,7 @@ function DiscountRow() {
         <div className='discountRow' style={{backgroundImage: `linear-gradient(to left top,${site_colors.primary},transparent)`}}>
 
 
-          {store.length !== 0 ? store[1].items.map(item => (
+          {store.length !== 0 ? store[0].items.map(item => (
             <DiscountItem title={item.name} image={item.image} price={item.price}  id={item.id} rating={item.rating}/>
           )) : ''}
 

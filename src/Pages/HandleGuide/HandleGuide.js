@@ -8,7 +8,7 @@ import { db } from '../../firebase';
 import Banner from '../../components/GuideHeader/Banner';
 import { Menu, PlayArrow } from '@material-ui/icons';
 
-function HandleGuide() {
+function HandleGuide({id}) {
     const [{guides,hindi_guides,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
@@ -20,7 +20,7 @@ function HandleGuide() {
 
 
     const handleGetStarted= () => {
-      db.collection('site').doc('site_preview').update({
+      db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
           guide: true
       }).then(refreshPage);
   }

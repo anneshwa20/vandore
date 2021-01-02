@@ -47,7 +47,8 @@
     border-left: 1px solid gray;
 
     @include respond(tab-port) {
-        height: 97vh;
+        max-height: 88vh;
+       
     }
 }
 .chats__main--chats{

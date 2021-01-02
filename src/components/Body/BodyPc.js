@@ -10,7 +10,7 @@ import Post from '../Post/Post';
 import { useStateValue } from '../../StateProvider';
 
 
-function BodyPc() {
+function BodyPc({pageId}) {
     const [images,setImages]= useState([]);
     const [posts,setPosts]= useState([]);
     const AutoplaySlider = withAutoplay(AwesomeSlider);
@@ -19,7 +19,7 @@ function BodyPc() {
 
     useEffect(() => {
   
-        db.collection('slider')
+        db.collection(pageId).doc('slider').collection('slider')
         .onSnapshot(snapshot => (
             setImages(snapshot.docs.map(doc => doc.data().image))
         ))
@@ -28,7 +28,7 @@ function BodyPc() {
 
     
     useEffect(() => {
-        db.collection('posts')
+        db.collection(pageId).doc('posts').collection('posts')
         .orderBy("timestamp","desc")
         .onSnapshot(snapshot => {
             setPosts(snapshot.docs.map(doc => ({ id: doc.id,data:doc.data()})))
@@ -93,6 +93,7 @@ function BodyPc() {
      <div className='body__post--list'>
             {posts.map((post) => (
                 <Post
+                pageId={pageId}
                 id={post.id} 
                  key={post.id}
                  fclicks={post.data.fclicks}

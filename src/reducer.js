@@ -11,7 +11,8 @@ export const initialState={
     sidebar: false,
     site_preview: {},
     site_colors: {},
-    sidebarVandore: false
+    sidebarVandore: false,
+    social: {}
 };
 
 
@@ -84,6 +85,11 @@ const reducer = (state,action) => {
             return {
                 ...state,
                 site_info: action.site_info
+            }
+        case 'ADD_SOCIAL_LINKS':
+            return {
+                ...state,
+                social_links: action.social_links
             }
         case 'ADD_SITE_PREVIEW':
             return{

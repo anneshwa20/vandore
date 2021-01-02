@@ -99,6 +99,64 @@
     width: 80%;
 }
 
+
+.store__cover {
+    width: 90%;
+    height: 100px;
+    border: 1px solid rgba(66, 135, 245, 1);
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    align-self: center;
+    justify-content: space-between;
+
+
+    @include respond(tab-port) {
+        height: 80px;
+        width: 90vw;
+        align-self: flex-start;
+    }
+} 
+
+.store__cover--left > img {
+    height: 80px;
+    width: 100px;
+    margin-right: 10px;
+
+    @include respond(tab-port) {
+        height: 60px;
+        width: 90px;
+    }
+}
+.store__cover--left > h3 {
+   @include respond(tab-port) {
+       font-size: small;
+   }
+}
+.store__cover--left {
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.store__cover--right {
+    background-color:  rgba(66, 135, 245, 1);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+   cursor: pointer;
+
+   @include respond(tab-port) {
+       padding: 5px;
+       font-size: small;
+   }
+}
+.store__cover--right:hover {
+    background-color: rgba(66, 135, 245, 0.4);
+}
+
 .handleStore__categories {
   width: 100%;
   background-color: rgba(73, 115, 130, 0.2);

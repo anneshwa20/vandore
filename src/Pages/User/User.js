@@ -8,9 +8,11 @@ import FileUploader from 'react-firebase-file-uploader';
 import Social from '../../components/Social/Social';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
+import { useHistory } from 'react-router-dom';
+import { Fastfood, Home, PeopleAltOutlined, PhotoAlbum, Store } from '@material-ui/icons';
 
-function User() {
-    const [{user,site_colors,sidebar},dispatch]= useStateValue();
+function User({pageId}) {
+    const [{user,site_colors,sidebar,site_settings,user_details},dispatch]= useStateValue();
     const [phone,setPhone]= useState('');
     const [name,setName]= useState('');
     const [address,setAddress]= useState('');
@@ -18,9 +20,11 @@ function User() {
     const [open,setOpen]= useState(false);
     const [openImage,setOpenImage]= useState(false);
 
+    const history= useHistory();
+
     useEffect(() => {
         if(user){
-            db.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`)
+            db.collection(pageId).doc('users').collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`)
             .get()
             .then(function(doc) {
               if (doc.exists) {
@@ -57,14 +61,14 @@ function User() {
           const handleSubmit= (e) => {
               e.preventDefault();
 
-              db.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+              db.collection(pageId).doc('users').collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
                 name: name,
                 image: image,
                 address: address,
                 phone: phone
             });
 
-            db.collection("userList").doc(user.uid).update({
+            db.collection(pageId).doc('userList').collection("userList").doc(user.uid).update({
                 name: name,
                 image: image,
                 address: address,
@@ -103,11 +107,52 @@ function User() {
 
     return (
         <div className='user'>
-            <Sidebar />
+            <Sidebar pageId={pageId} />
             <div className='userMobile'>
-           {sidebar ? <SidebarMobile /> : (
+           {sidebar ? <SidebarMobile pageId={pageId} /> : (
                  <div className='user__page'>
-                 <div className='user__details' style={{backgroundColor: `${site_colors.primary}`}}>
+                         <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
+                 <div className='user__details' style={{backgroundColor: `white`}}>
                      <Avatar src={image} className='user__dp' />
                      <label style={{backgroundColor: `${site_colors.button}`, color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
                      Select Your Photo
@@ -157,7 +202,7 @@ function User() {
             </div>
          <div className='userPc'>
          <div className='user__page'>
-          <div className='user__details' style={{backgroundColor: `${site_colors.primary}`}}>
+          <div className='user__details' style={{backgroundColor: `white`}}>
               <Avatar src={image} className='user__dp' />
               <label style={{backgroundColor: `${site_colors.button}`, color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
               Select Your Photo

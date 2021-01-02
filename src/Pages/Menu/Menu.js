@@ -1,24 +1,83 @@
-import { ShoppingBasket } from '@material-ui/icons';
-import React from 'react'
-import { Link } from 'react-router-dom';
+import { Avatar } from '@material-ui/core';
+import { Fastfood, Home, PeopleAltOutlined, PhotoAlbum, ShoppingBasket, Store } from '@material-ui/icons';
+import React, { useEffect } from 'react'
+import { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import Header from '../../components/Header/Header';
 import Product from '../../components/Product/Product'
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
 import Social from '../../components/Social/Social';
+import VandoreBanner from '../../components/VandoreBanner/VandoreBanner';
+import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider'
+import StateFill from '../StateFill';
 import './Menu.scss'
 
-function Menu() {
-  const [{store,basket,sidebar},dispatch]= useStateValue();
+function Menu({pageId}) {
+  const [{store,basket,sidebar,site_settings,site_colors,user,user_details},dispatch]= useStateValue();
+  const [cover,setCover]= useState('');
+  const history= useHistory();
+ 
+
+  useEffect(() => {
+    db.collection(pageId).doc('site').collection("site").doc("site_store_cover")
+    .onSnapshot(function(doc) {
+        setCover(doc.data().cover);
+    });
+   },[]);
 
     return (
+     
+    
         <div className='menu'>
           
-          <Sidebar page='Store' />
+          <Sidebar page='Store' pageId={pageId} />
          <div className='storeMobile'>
-           {sidebar ? <SidebarMobile /> : (
+           {sidebar ? <SidebarMobile  pageId={pageId} /> : (
  <div className='menu__body'>
- <img src='https://img.freepik.com/free-psd/top-view-fast-food-black-background-mock-up_23-2148321326.jpg?size=626&ext=jpg' />
+       <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
+ <img src={cover} />
  
  <div className='menu__category'>
  {store.length !== 0 ? store.map(category => (
@@ -48,7 +107,7 @@ function Menu() {
 
          <div className='storePc'>
          <div className='menu__body'>
-              <img src='https://img.freepik.com/free-psd/top-view-fast-food-black-background-mock-up_23-2148321326.jpg?size=626&ext=jpg' />
+              <img src={cover} />
               
               <div className='menu__category'>
               {store.length !== 0 ? store.map(category => (
@@ -79,6 +138,7 @@ function Menu() {
 
        <Social />
         </div>
+   
     )
 }
 

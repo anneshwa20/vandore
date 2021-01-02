@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './SidebarRestro.scss';
 import SidebarRowRestro from './../SidebarRow/SidebarRowRestro';
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close} from '@material-ui/icons'
-import { db } from '../../firebase';
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close, ExitToApp} from '@material-ui/icons'
+import { authMain, db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import { Avatar, Menu } from '@material-ui/core';
 
 
-function SidebarRestro({active}) {
+function SidebarRestro({active,id}) {
   const history= useHistory();
   const [channels,setChannels]= useState([]);
   const [showChannel,setShowChannel]= useState(true);
@@ -17,11 +17,11 @@ function SidebarRestro({active}) {
   const [showCustomers,setShowCustomers]= useState(true);
   const [showManagement,setShowManagement]= useState(true);
   const [showSettings,setShowSettings]= useState(true);
-  const[{user_details,sidebarVandore},dispatch]= useStateValue();
-
+  const[{user_details,sidebarVandore,user},dispatch]= useStateValue();
+  const pageId= id;
   
   useEffect(() => {
-     db.collection('rooms').onSnapshot(snapshot => (
+     db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').onSnapshot(snapshot => (
          setChannels(
              snapshot.docs.map(doc => ({
                  id: doc.id,
@@ -39,6 +39,13 @@ function SidebarRestro({active}) {
     });
   }
 
+  const handleAuthentication= () => {
+    if(user){
+        authMain.signOut();
+        history.push('/');
+    }
+}
+
     return (
         <div className="sidebarRestro">
           <div className='sidebarRestro__header'>
@@ -52,8 +59,8 @@ function SidebarRestro({active}) {
                <h2 style={{letterSpacing: '0.5px',fontWeight: 'bold',marginLeft: '-5px'}}>ANDORE</h2>
                </div>
              
-               <div onClick={() => history.push('/user')}>
-               <Avatar src={user_details.image} />
+               <div onClick={handleAuthentication}>
+               <ExitToApp style={{width: '30px',height: '30px'}}/>
                </div>
               </div>
              
@@ -66,12 +73,12 @@ function SidebarRestro({active}) {
             </div>
               
        {showManagement ? (
-           <div onClick={() => history.push('/restro/dashboard')}>
+           <div onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
            <SidebarRowRestro Icon={DashboardOutlined} title="Dashboard" active={active==='dashboard' ? true : false}/>
            </div>
        ) : ''}
        {showManagement ? (
-            <div onClick={() => history.push('/restro/guides')}>
+            <div onClick={() => history.push(`/restro/guides/${pageId}`)}>
             <SidebarRowRestro Icon={LibraryBooksOutlined} title="Guides" active={active==='guides' ? true : false}/>
             </div> 
        ) : ''}
@@ -86,13 +93,13 @@ function SidebarRestro({active}) {
          
    
        {showCreative ? (
-        <div onClick={() => history.push('/restro/post')}>
+        <div onClick={() => history.push(`/restro/post/${pageId}`)}>
         <SidebarRowRestro Icon={PostAddOutlined} title="Posts" active={active==='post' ? true : false}/>
         </div>
        ) : ''}
 
         {showCreative ? (
-           <div onClick={() => history.push('/restro/gallery')}>
+           <div onClick={() => history.push(`/restro/gallery/${pageId}`)}>
            <SidebarRowRestro Icon={PhotoLibraryOutlined} title="Photo Gallery" active={active==='gallery' ? true : false}/>
            </div>      
          ) : ''}
@@ -100,14 +107,14 @@ function SidebarRestro({active}) {
 
 
         {showCreative ? (
-                <div onClick={() => history.push('/restro/slider')}>
+                <div onClick={() => history.push(`/restro/slider/${pageId}`)}>
                 <SidebarRowRestro Icon={BurstModeOutlined} title="Slider" active={active==='slider' ? true : false}/>
             </div>
          ) : ''}
 
 
         {showCreative ? (
-           <div onClick={() => history.push('/restro/about')}>
+           <div onClick={() => history.push(`/restro/about/${pageId}`)}>
            <SidebarRowRestro Icon={InfoOutlined} title="About Section" active={active==='about' ? true : false}/>
            </div>     
          ) : ''}
@@ -121,20 +128,20 @@ function SidebarRestro({active}) {
 
 
     {showStore ? (
-        <div onClick={() => history.push('/restro/store')}>
+        <div onClick={() => history.push(`/restro/store/${pageId}`)}>
            <SidebarRowRestro Icon={StorefrontOutlined} title="Store" active={active==='store' ? true : false}/>
                </div>
     ) : ''}
 
     {showStore ? (
-        <div onClick={() => history.push('/restro/orders')}>
+        <div onClick={() => history.push(`/restro/orders/${pageId}`)}>
         <SidebarRowRestro Icon={FastfoodOutlined} title="Orders" active={active==='orders' ? true : false}/>
         </div>
         ) : ''}
 
 
     {showStore ? (
-        <div onClick={() => history.push('/restro/payments')}>
+        <div onClick={() => history.push(`/restro/payments/${pageId}`)}>
         <SidebarRowRestro Icon={PaymentOutlined} title="Payments" active={active==='payments' ? true : false}/>
             </div>
         ) : ''}
@@ -147,13 +154,13 @@ function SidebarRestro({active}) {
 
 
      {showCustomers ? (
-        <div onClick={() => history.push('/restro/users')}>
+        <div onClick={() => history.push(`/restro/users/${pageId}`)}>
             <SidebarRowRestro Icon={PeopleAltOutlined} title="Users" active={active==='users' ? true : false}/>
             </div>
      ) : ''}
 
      {showCustomers ? (
-          <div onClick={() => history.push('/restro/feedback')}>
+          <div onClick={() => history.push(`/restro/feedback/${pageId}`)}>
           <SidebarRowRestro Icon={FeedbackOutlined} title="Feedbacks" active={active==='feedback' ? true : false}/>
           </div> 
          ) : ''}
@@ -169,7 +176,7 @@ function SidebarRestro({active}) {
 
 
         {showSettings ? (
-            <div onClick={() => history.push('/restro/settings')}>
+            <div onClick={() => history.push(`/restro/settings/${pageId}`)}>
             <SidebarRowRestro Icon={SettingsOutlined} title="Settings" active={active==='settings' ? true : false}/>
                 </div>
         ) : ''}
@@ -182,13 +189,13 @@ function SidebarRestro({active}) {
               
 
             {showChannel ? (
-            <SidebarRowRestro Icon={AddOutlined} addChannelOption title='Add Channel' />
+            <SidebarRowRestro Icon={AddOutlined} addChannelOption pageId={pageId} title='Add Channel' />
             ) : ''}
 
              
            {showChannel ? channels.map(channel => (
-                <div onClick={() => history.push(`/chats/${channel.id}`)}>
-               <SidebarRowRestro  title={channel.name}  id={channel.id}  deleteChannel/>
+                <div onClick={() => history.push(`/chats/${pageId}/${channel.id}`)}>
+               <SidebarRowRestro  title={channel.name}  id={channel.id}  deleteChannel pageId={pageId} />
                </div>
            ))  : ''}
          

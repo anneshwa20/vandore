@@ -5,14 +5,14 @@ import { useHistory } from 'react-router-dom'
 import { db } from '../../firebase';
 import { Delete } from '@material-ui/icons';
 
-function SidebarRowRestro({src,Icon,title,addChannelOption,id,deleteChannel,page,admin,active}) {
+function SidebarRowRestro({src,Icon,title,addChannelOption,id,deleteChannel,page,admin,active,pageId}) {
     const history= useHistory();
 
     const addChannel= () => {
        const channelName= prompt('Please enter the channel name');
        const channelDescription= prompt('Please enter the Channel Descrition')
        if(channelName && channelDescription){
-           db.collection('rooms').add({
+           db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').add({
                name: channelName,
                description: channelDescription
            })
@@ -21,7 +21,7 @@ function SidebarRowRestro({src,Icon,title,addChannelOption,id,deleteChannel,page
 
     const deleteChannelHandler= () => {
        
-         db.collection('rooms').doc(id).delete().then(alert('deleted'));
+         db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(id).delete().then(alert('deleted'));
     }
    console.log(page,title);
 

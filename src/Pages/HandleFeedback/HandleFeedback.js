@@ -16,11 +16,11 @@ import './HandleFeedback.scss';
 import FeedbackSvg from '../../icons/undraw_feedback_h2ft.svg';
 
 
-function HandleFeedback() {
+function HandleFeedback({id}) {
     const [feedbacks,setFeedbacks]= useState([]);
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
-
+    const pageId= id;
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
     const manageVideo= (link) => {
@@ -29,7 +29,7 @@ function HandleFeedback() {
    }
 
    const handleGetStarted= () => {
-    db.collection('site').doc('site_preview').update({
+    db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
         feedback: true
     }).then(refreshPage);
 }
@@ -39,7 +39,7 @@ function HandleFeedback() {
     
     useEffect(() => {
   
-        db.collection('messages')
+        db.collection(pageId.toUpperCase()).doc('messages').collection('messages')
         .onSnapshot(snapshot => (
             setFeedbacks(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -96,7 +96,7 @@ function HandleFeedback() {
           };
 
         const feedbackDelete= (id) => {
-            db.collection('messages').doc(id).delete().then(alert('deleted'));
+            db.collection(pageId.toUpperCase()).doc('messages').collection('messages').doc(id).delete().then(alert('deleted'));
         }
     return (
         <div className='handleFeedback'>

@@ -8,13 +8,13 @@ import { useStateValue } from '../../StateProvider';
 import './HandleUser.scss';
 import UserSvg from '../../icons/undraw_newspaper_k72w.svg';
 
-function HandleUser() {
+function HandleUser({id}) {
     const [users,setUsers]= useState([]);
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
-
+    const pageId= id;
     const handleGetStarted= () => {
-        db.collection('site').doc('site_preview').update({
+        db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             user: true
         }).then(refreshPage);
     }
@@ -30,7 +30,7 @@ function HandleUser() {
     
     useEffect(() => {
   
-        db.collection('userList')
+        db.collection(pageId.toUpperCase()).doc('userList').collection('userList')
         .onSnapshot(snapshot => (
             setUsers(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -46,11 +46,11 @@ function HandleUser() {
         },[])
 
      const onDelete= (id,active) => {
-        db.collection('userList').doc(id).update({
+        db.collection(pageId.toUpperCase()).doc('userList').collection('userList').doc(id).update({
            active: !active
         });
 
-        db.collection('users').doc(id).collection('details').doc(`details_${id}`).update({
+        db.collection(pageId.toUpperCase()).doc('users').collection('users').doc(id).collection('details').doc(`details_${id}`).update({
             active: !active
          });
      }

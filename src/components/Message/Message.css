@@ -1,20 +1,22 @@
 .message {
     display: flex;
     align-items: center;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .message > img {
     height: 50px;
     width: 50px;
     object-fit: contain;
+    align-self: flex-start;
+    border-radius: 99px;
 }
 
 .message__info{
     padding-left: 10px;
 }
 .message__info > img {
-    width: 150px;
+    width: 200px;
     height: 150px;
 }
 

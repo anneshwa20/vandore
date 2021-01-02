@@ -11,14 +11,14 @@ import moment from 'moment';
 import { Menu, ReceiptOutlined } from '@material-ui/icons';
 
 
-function HandleOrders() {
+function HandleOrders({id}) {
   
     const [orders,setOrders]= useState([]);
     const [openOrder,setOpenOrder]= useState(false);
     const [currentOrder,setCurrentOrder]= useState({});
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
-
+    const pageId= id;
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
     const manageVideo= (link) => {
@@ -27,7 +27,7 @@ function HandleOrders() {
    }
 
    const handleGetStarted= () => {
-    db.collection('site').doc('site_preview').update({
+    db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
         order: true
     }).then(refreshPage);
 }
@@ -37,7 +37,7 @@ function HandleOrders() {
 
     useEffect(() => {
   
-    db.collection('orders')
+    db.collection(pageId.toUpperCase()).doc('orders').collection('orders')
     .orderBy('created','desc')
     .onSnapshot(snapshot => (
         setOrders(snapshot.docs.map(doc => ({
@@ -110,7 +110,18 @@ function HandleOrders() {
                     <td>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</td>
                    
                     <td>
-                    {order.data.delivery ? (
+                        {
+                            order.data.cancelled ? (
+                                <div className='order__delivered' style={{display: 'flex',alignItems: 'center'}}>
+                                <div style={{width: '10px',height: '10px',backgroundColor: 'red',borderRadius: '99px',marginRight: '10px'}}>
+    
+                                </div>
+                                Cancelled
+                            </div>
+                            ) :
+                            (
+                                <>
+                {order.data.delivery ? (
                         <div className='order__delivered' style={{display: 'flex',alignItems: 'center'}}>
                             <div style={{width: '10px',height: '10px',backgroundColor: 'green',borderRadius: '99px',marginRight: '10px'}}>
 
@@ -125,6 +136,10 @@ function HandleOrders() {
                        Not Delivered
                     </div>
                     )}
+                                </>
+                            )
+                        }
+                   
                    </td>
                    <td>
                        <div onClick={() => handleOrderBill(order)} style={{display: 'flex',alignItems: 'center'}}>
@@ -162,7 +177,7 @@ function HandleOrders() {
   aria-labelledby="Guide Video"
   aria-describedby="Guide Video description"
 >
-    <Order delivery handleDelete order={currentOrder} />
+    <Order pageId={pageId} delivery handleDelete cancel order={currentOrder}  handleModal={setOpenOrder} />
  
 </Modal>
           </>

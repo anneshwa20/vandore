@@ -1,35 +1,84 @@
 import { Avatar } from '@material-ui/core';
-import { Delete, ShoppingCartOutlined, Star, StorefrontOutlined } from '@material-ui/icons';
+import { Delete, Fastfood, Home, PeopleAltOutlined, PhotoAlbum, ShoppingCartOutlined, Star, Store, StorefrontOutlined } from '@material-ui/icons';
 import userEvent from '@testing-library/user-event';
 import React from 'react'
 import { useHistory } from 'react-router-dom';
 import CheckoutProduct from '../../components/CheckoutProduct/CheckoutProduct';
+import Header from '../../components/Header/Header';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
 import Social from '../../components/Social/Social';
 import Subtotal from '../../components/Subtotal/Subtotal'
+import VandoreBanner from '../../components/VandoreBanner/VandoreBanner';
 import { getBasketTotal } from '../../reducer';
 import { useStateValue } from '../../StateProvider'
+import StateFill from '../StateFill';
 import './Checkout.scss'
 
-function Checkout() {
-    const [{user,basket,site_colors,sidebar},dispatch]=useStateValue();
+function Checkout({pageId}) {
+    const [{user,basket,site_colors,sidebar,site_settings,user_details},dispatch]=useStateValue();
     const history= useHistory();
+    
+
     const handleCheckout=() => {
     if(getBasketTotal(basket)===0){
         alert('Your cart is empty, try adding some products');
-        history.push('/store');
+        history.push(`/vandore/${pageId}/store`);
     }else{
-        history.push('/payment');
+        history.push(`/vandore/${pageId}/payment`);
     }
     }
 
     return (
+       
+       
+    
         <div className='checkout'>
-   <Sidebar />
+   <Sidebar pageId={pageId} />
            <div className='checkoutMobile'>
-               {sidebar ? <SidebarMobile /> : (
+               {sidebar ? <SidebarMobile pageId={pageId} /> : (
   <div className='checkout__page'>
+             <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
   <div className='checkout__products'>
        <div className='checkout__products--title'>
            Your Shopping Basket
@@ -37,7 +86,7 @@ function Checkout() {
        {basket.length===0 ? (
            <div className='cartEmpty'>
          Your cart is empty, try adding some products
-           <div className='cartEmpty--button' onClick={() => history.push('/store')}  style={{backgroundColor: `${site_colors.button}`}}>
+           <div className='cartEmpty--button' onClick={() => history.push(`/vandore/${pageId}/store`)}  style={{backgroundColor: `${site_colors.button}`}}>
              Store <StorefrontOutlined />
           </div>
            </div>
@@ -83,17 +132,10 @@ function Checkout() {
            </div>
        <Social />
         </div>
+      
     )
 }
 
-{/* {basket.map(item => (
-                <CheckoutProduct
-                 id={item.id}
-                 title={item.title}
-                 image={item.image}
-                 price={item.price}
-                 rating={item.rating}
-                 />
-            ))} */}
+
 
 export default Checkout

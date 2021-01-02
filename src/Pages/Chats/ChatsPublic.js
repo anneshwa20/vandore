@@ -10,23 +10,27 @@ import SidebarRestro from '../../components/SidebarRestro/SidebarRestro';
 import Social from '../../components/Social/Social';
 import { db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
+import StateFill from '../StateFill';
 import './ChatsPublic.scss'
 
 function ChatsPublic() {
-    const { roomId }= useParams();
+    const { roomId,id }= useParams();
     const [roomDetails,setRoomDetails]= useState(null);
      const [roomMessages,setRoomMessages]= useState([]);
      const [{sidebar},dispatch]= useStateValue();
 
+     const pageId= id;
+
+
    useEffect(()=>{
         if(roomId){
-            db.collection('rooms').doc(roomId)
+            db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(roomId)
             .onSnapshot(snapshot => (
                setRoomDetails(snapshot.data())
             ))
 
         }
-        db.collection('rooms').doc(roomId)
+        db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(roomId)
         .collection('messages')
         .orderBy('timestamp','asc')
         .onSnapshot((snapshot) => 
@@ -43,12 +47,14 @@ function ChatsPublic() {
 
 
     return (
+        <>
+        <StateFill id={pageId.toUpperCase()} />
         <div className='chats'>
-            <Header />
+            <Header pageId={pageId.toUpperCase()} />
              <div className='chats__body'>
-             <Sidebar page='Chat With Us'/>
+             <Sidebar page='Chat With Us' pageId={pageId.toUpperCase()} />
            <div className='chatMobile'>
-               {sidebar ? <SidebarMobile /> : (
+               {sidebar ? <SidebarMobile pageId={pageId.toUpperCase()}/> : (
  <div className='chats__main'>
           
  <div className='chats__main--chats'>
@@ -56,7 +62,7 @@ function ChatsPublic() {
            <div className='chat__headerLeft'>
                 <h4 className='chat__channelName'>
                      <strong># {roomDetails?.name}</strong>
-                     <StarBorderOutlined />
+                   
                 </h4>
            </div>
 
@@ -79,7 +85,7 @@ function ChatsPublic() {
       </div>
  </div>
 
-     <ChatInput channelName={roomDetails?.name} channelId={roomId} />
+     <ChatInput pageId={pageId.toUpperCase()} channelName={roomDetails?.name} channelId={roomId} />
 
     </div>
                )}
@@ -92,7 +98,7 @@ function ChatsPublic() {
                     <div className='chat__headerLeft'>
                          <h4 className='chat__channelName'>
                               <strong># {roomDetails?.name}</strong>
-                              <StarBorderOutlined />
+                        
                          </h4>
                     </div>
  
@@ -115,7 +121,7 @@ function ChatsPublic() {
                </div>
           </div>
  
-              <ChatInput channelName={roomDetails?.name} channelId={roomId} />
+              <ChatInput pageId={pageId.toUpperCase()} channelName={roomDetails?.name} channelId={roomId} />
  
              </div>
            </div>
@@ -123,6 +129,8 @@ function ChatsPublic() {
              </div>
             
         </div>
+
+        </>
     )
 }
 

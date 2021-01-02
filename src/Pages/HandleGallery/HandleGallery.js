@@ -11,12 +11,12 @@ import { useStateValue } from '../../StateProvider';
 import { useHistory } from 'react-router-dom';
 import GallerySvg from '../../icons/undraw_online_gallery_dmv3.svg';
 
-function HandleGallery() {
+function HandleGallery({id}) {
     const [image,setImage]= useState('');
     const [images,setImages]= useState([]);
     const [show,setShow]= useState(false);
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
-
+    const pageId= id;
     const history= useHistory();
    const [open,setOpen]= useState(false);
    const [currentVideo,setCurrentVideo]= useState('');
@@ -26,7 +26,7 @@ function HandleGallery() {
   }
 
   const handleGetStarted= () => {
-    db.collection('site').doc('site_preview').update({
+    db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
         photoGallery: true
     }).then(refreshPage);
 }
@@ -36,7 +36,7 @@ const refreshPage = ()=>{
     
     useEffect(() => {
   
-        db.collection('gallery')
+        db.collection(pageId.toUpperCase()).doc('gallery').collection('gallery')
         .onSnapshot(snapshot => (
             setImages(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -47,7 +47,7 @@ const refreshPage = ()=>{
         },[])
     
     const sliderDelete= (id) => {
-        db.collection('gallery').doc(id).delete().then(alert('deleted'));
+        db.collection(pageId.toUpperCase()).doc('gallery').collection('gallery').doc(id).delete().then(alert('deleted'));
     }
 
     const handleUploadStart= () => {
@@ -67,7 +67,7 @@ const refreshPage = ()=>{
      const handleSubmit= () => {
          
 
-         db.collection("gallery").add({
+         db.collection(pageId.toUpperCase()).doc('gallery').collection("gallery").add({
            image: image
        }).then(alert('Upload Finish')).then(() => setImage('')).then(() => setShow(false));
      }

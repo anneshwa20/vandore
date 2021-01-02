@@ -11,7 +11,7 @@ import { db } from '../../firebase';
 import moment from 'moment';
 import firebase from 'firebase';
 import { Avatar } from '@material-ui/core';
-import { LocalActivity, PaymentOutlined, Phone } from '@material-ui/icons';
+import { Fastfood, Home, LocalActivity, PaymentOutlined, PeopleAltOutlined, Phone, PhotoAlbum, Store } from '@material-ui/icons';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Social from '../../components/Social/Social';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
@@ -35,7 +35,7 @@ function loadScript(src) {
 
 
 
-function Payment() {
+function Payment({pageId}) {
     const [{ basket, user,user_details,site_settings ,site_colors,sidebar}, dispatch] = useStateValue();
     const history = useHistory();
    
@@ -45,9 +45,11 @@ function Payment() {
     const [orders,setOrders]= useState('');
     const [ordersNotification,setOrderNotification]= useState(0);
 
+    console.log('payment status',site_settings.onlinePay);
+
     useEffect(() => {
      
-      db.collection("site_orders_notification").doc(`orders`)
+      db.collection(pageId).doc('site_orders_notification').collection("site_orders_notification").doc(`orders`)
       .get()
       .then(function(doc) {
         if (doc.exists) {
@@ -68,7 +70,7 @@ function Payment() {
 
     useEffect(() => {
      
-        db.collection("OrdersAnalytics").doc(`${moment(new Date()).format('DD-MM-YYYY')}`)
+        db.collection(pageId).doc('OrdersAnalytics').collection("OrdersAnalytics").doc(`${moment(new Date()).format('DD-MM-YYYY')}`)
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -102,12 +104,12 @@ function Payment() {
    
     const payOff = (mode) => {
 
+   const docId= Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
-
-        db.collection('users')
+        db.collection(pageId).doc('users').collection('users')
         .doc(user?.uid)
         .collection('orders')
-        .doc(Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15))
+        .doc(docId)
         .set({
             basket: basket,
             amount: clientSecret.data.amount.toString(),
@@ -116,7 +118,7 @@ function Payment() {
             cancelled: false
         })
         
-        db.collection('orders')
+        db.collection(pageId).doc('orders').collection('orders')
           .add({
             basket: basket,
             amount: clientSecret.data.amount.toString(),
@@ -129,28 +131,29 @@ function Payment() {
             phone: user_details.phone,
             address: user_details.address,
             delivered: false,
+            docId: docId,
             cancelled: false
         })
 
         if(orders==''){
-            db.collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                orders: '1'
-              })
-        }else{
-            db.collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
-                orders: `${orders*1 + 1}`
-              })
-        }
+          db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              orders: '1'
+            })
+      }else{
+          db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+              orders: `${orders*1 + 1}`
+            })
+      }
 
-        db.collection('site_orders_notification').doc('orders').update({
+        db.collection(pageId).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
           order: ordersNotification + 1
         });
 
         dispatch({
             type: 'EMPTY_BASKET'
         })
-        history.replace('/orders')
+        history.replace(`/vandore/${pageId}/orders`)
     }
   
 
@@ -179,7 +182,7 @@ function Payment() {
 			/* 	alert(response.razorpay_payment_id)
 				alert(response.razorpay_order_id)
                 alert(response.razorpay_signature) */
-                db.collection('users')
+                db.collection(pageId).doc('users').collection('users')
                 .doc(user?.uid)
                 .collection('orders')
                 .doc(response.razorpay_payment_id)
@@ -191,7 +194,7 @@ function Payment() {
                     cancelled: false
                 })
                 
-                db.collection('orders')
+                db.collection(pageId).doc('orders').collection('orders')
                   .add({
                     basket: basket,
                     amount: clientSecret.data.amount.toString(),
@@ -204,10 +207,11 @@ function Payment() {
                     image: user_details.image,
                     address: user_details.address,
                     delivered: false,
+                    docId: response.razorpay_payment_id,
                     cancelled: false
                 })
     
-                db.collection('payments')
+                db.collection(pageId).doc('payments').collection('payments')
                 .add({
                   amount: clientSecret.data.amount.toString(),
                   created: firebase.firestore.FieldValue.serverTimestamp(),
@@ -219,12 +223,12 @@ function Payment() {
               })
     
               if(orders==''){
-                db.collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+                db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     orders: '1'
                   })
             }else{
-                db.collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+                db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
                     orders: `${orders*1 + 1}`
                   })
             }
@@ -236,7 +240,7 @@ function Payment() {
                 })
     
     
-                history.replace('/orders')
+                history.replace(`/vandore/${pageId}/orders`)
 			},
 			prefill: {
 				name: user_details.name,
@@ -251,10 +255,51 @@ function Payment() {
   
     return (
         <div className='payment'>
-    <Sidebar />
+    <Sidebar pageId={pageId} />
   <div className='paymentMobile'>
-      {sidebar ? <SidebarMobile /> : (
+      {sidebar ? <SidebarMobile pageId={pageId} /> : (
   <div className='payment__page'>
+           <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
   <div className='payment__container'>
         <div className='checkout__products--title'>
                   Payment and Delivery

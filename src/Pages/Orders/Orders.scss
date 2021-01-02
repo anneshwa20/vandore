@@ -39,10 +39,15 @@ display: flex;
     overflow-y: scroll;
    
     @include respond(tab-port) {
-        width: 95%;
+        width: 100%;
     }
 }
 
 .orders__page > h1 {
     margin: 20px 20px;
+
+    @include respond(tab-port) {
+        margin: 10px;
+        text-align: center;
+    }
 }

@@ -13,7 +13,7 @@ import PostSvg from '../../icons/undraw_share_online_r87b.svg';
 import PostAdmin from '../../components/Post/PostAdmin';
 
 
-function HandlePost(props) {
+function HandlePost({id}) {
    
    const [message,setMessage]= useState('');
    const [image, setImage]= useState('');
@@ -21,7 +21,7 @@ function HandlePost(props) {
    const [openImage,setOpenImage]= useState(false);
    const [show,setShow]= useState(false);
    const [posts,setPosts]= useState([]);
-
+  const pageId= id;
    const history= useHistory();
     const[{single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
    const [open,setOpen]= useState(false);
@@ -32,7 +32,7 @@ function HandlePost(props) {
   }
 
   const handleGetStarted= () => {
-    db.collection('site').doc('site_preview').update({
+    db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
         post: true
     }).then(refreshPage);
 }
@@ -41,7 +41,7 @@ const refreshPage = ()=>{
 
 
     useEffect(() => {
-        db.collection('posts')
+        db.collection(id.toUpperCase()).doc('posts').collection('posts')
         .orderBy("timestamp","desc")
         .onSnapshot(snapshot => {
             setPosts(snapshot.docs.map(doc => ({ id: doc.id,data:doc.data()})))
@@ -67,7 +67,7 @@ const refreshPage = ()=>{
      const handleSubmit= (e) => {
          e.preventDefault();
 
-         db.collection("posts").add({
+         db.collection(id.toUpperCase()).doc('posts').collection("posts").add({
            message: message,
            image: image,
            fclicks: '0',
@@ -145,6 +145,7 @@ const refreshPage = ()=>{
  {posts.map((post) => (
       <div className='handlePost__posts--row'>
          <PostAdmin  
+         pageId={pageId}
           handleDelete
           id={post.id}
           key={post.id}

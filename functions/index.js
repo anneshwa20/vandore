@@ -5,8 +5,13 @@ const Razorpay = require('razorpay')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
+
+
 app.use(cors({ origin: true}));
 app.use(bodyParser.json())
+
+
+
 
 const razorpay = new Razorpay({
 	key_id: 'rzp_test_Yw9rV4usIyk5O1',

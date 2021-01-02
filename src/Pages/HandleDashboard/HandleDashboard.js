@@ -23,7 +23,7 @@ import UserIcon from '../../icons/user.svg';
 import GalleryIcon from '../../icons/gallery(1).svg'
 
 
-function HandleDashboard() {
+function HandleDashboard({id}) {
     const[facebookLink,setFacebookLink]= useState('');
     const[zomatoLink,setZomatoLink]= useState('');
     const[swiggyLink,setSwiggyLink]= useState('');
@@ -59,7 +59,7 @@ function HandleDashboard() {
    const AutoplaySlider= withAutoplay(AwesomeSlider);
    useEffect(() => {
         
-    db.collection("site").doc('site_colors')
+    db.collection(id.toUpperCase()).doc('site').collection("site").doc('site_colors')
     .get()
     .then(function(doc) {
       if (doc.exists) {
@@ -79,7 +79,7 @@ function HandleDashboard() {
 
     useEffect(() => {
         
-        db.collection("social").doc('social_links')
+        db.collection(id.toUpperCase()).doc('social').collection("social").doc('social_links')
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -99,7 +99,7 @@ function HandleDashboard() {
 
      useEffect(() => {
         
-        db.collection("site").doc('site_info')
+        db.collection(id.toUpperCase()).doc('site').collection("site").doc('site_info')
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -119,7 +119,7 @@ function HandleDashboard() {
 
      useEffect(() => {
         
-        db.collection("site").doc('payment_gateway')
+        db.collection(id.toUpperCase()).doc('site').collection("site").doc('payment_gateway')
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -137,7 +137,7 @@ function HandleDashboard() {
 
      useEffect(() => {
   
-        db.collection('userList')
+        db.collection(id.toUpperCase()).doc('userList').collection('userList')
         .onSnapshot(snapshot => (
             setUsers(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -155,7 +155,7 @@ function HandleDashboard() {
 
      useEffect(() => {
   
-        db.collection('gallery')
+        db.collection(id.toUpperCase()).doc('gallery').collection('gallery')
         .onSnapshot(snapshot => (
             setPhotos(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -168,7 +168,7 @@ function HandleDashboard() {
 
         useEffect(() => {
   
-            db.collection('orders')
+            db.collection(id.toUpperCase()).doc('orders').collection('orders')
             .orderBy('created','desc')
             .onSnapshot(snapshot => (
                 setOrders(snapshot.docs.map(doc => ({
@@ -181,7 +181,7 @@ function HandleDashboard() {
 
             useEffect(() => {
   
-                db.collection('payments')
+                db.collection(id.toUpperCase()).doc('payments').collection('payments')
                 .onSnapshot(snapshot => (
                     setPayments(snapshot.docs.map(doc => ({
                         id: doc.id,
@@ -197,7 +197,7 @@ function HandleDashboard() {
 
                 useEffect(() => {
   
-                    db.collection('analytics')
+                    db.collection(id.toUpperCase()).doc('analytics').collection('analytics')
                     .orderBy("createdAt","desc")
                     .limit(7)
                     .onSnapshot(snapshot => (
@@ -208,7 +208,7 @@ function HandleDashboard() {
   
                     useEffect(() => {
   
-                        db.collection('analytics')
+                        db.collection(id.toUpperCase()).doc('analytics').collection('analytics')
                         .orderBy("createdAt","desc")
                         .limit(7)
                         .onSnapshot(snapshot => (
@@ -219,7 +219,7 @@ function HandleDashboard() {
                  
                       useEffect(() => {
   
-                        db.collection('OrdersAnalytics')
+                        db.collection(id.toUpperCase()).doc('OrdersAnalytics').collection('OrdersAnalytics')
                         .orderBy("createdAt","desc")
                         .limit(7)
                         .onSnapshot(snapshot => (
@@ -230,7 +230,7 @@ function HandleDashboard() {
 
                         useEffect(() => {
   
-                            db.collection('OrdersAnalytics')
+                            db.collection(id.toUpperCase()).doc('OrdersAnalytics').collection('OrdersAnalytics')
                             .orderBy("createdAt","desc")
                             .limit(7)
                             .onSnapshot(snapshot => (
@@ -242,7 +242,7 @@ function HandleDashboard() {
 
 
                 useEffect(() => {
-                    db.collection('posts')
+                    db.collection(id.toUpperCase()).doc('posts').collection('posts')
                     .orderBy("timestamp","desc")
                     .onSnapshot(snapshot => {
                         setPosts(snapshot.docs.map(doc => ({ id: doc.id,data:doc.data()})))
@@ -251,7 +251,7 @@ function HandleDashboard() {
 
 
     const handleSubmit= () => {
-       db.collection('social').doc('social_links').update({
+       db.collection(id.toUpperCase()).doc('social').collection('social').doc('social_links').update({
            facebookLink: facebookLink,
            zomatoLink: zomatoLink,
            swiggyLink: swiggyLink,
@@ -260,7 +260,7 @@ function HandleDashboard() {
     }
 
     const handleSubmitPayment= () => {
-        db.collection('site').doc('payment_gateway').update({
+        db.collection(id.toUpperCase()).doc('site').collection('site').doc('payment_gateway').update({
             keyId: keyId,
             keySecret: keySecret,
             
@@ -270,7 +270,7 @@ function HandleDashboard() {
    
 
     const handleSubmitSite= () => {
-      db.collection('site').doc('site_info').update({
+      db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_info').update({
           siteName: siteName,
           siteDescription: siteDescription,
           siteKeyword: siteKeyword
@@ -290,13 +290,13 @@ function HandleDashboard() {
     };
 
     const handleCover= () => {
-      db.collection('site').doc('site_info').update({
+      db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_info').update({
           siteCover: image
       }).then(() => setCoverUpload(false));
     }
 
     const handleGetStarted= () => {
-        db.collection('site').doc('site_preview').update({
+        db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             dashboard: true
         }).then(refreshPage);
     }
@@ -330,21 +330,21 @@ const handleChangeIconColor=(color) => {
 
    const handleSaveColor=(color) => {
     if(color==='primary'){
-        db.collection('site').doc('site_colors').update({
+        db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_colors').update({
             primary: primaryColor
         });
         setCurrentColor('');
         setOpenColor(false);
       }
       else if(color==='button') {
-        db.collection('site').doc('site_colors').update({
+        db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_colors').update({
             button: buttonColor
         });
         setCurrentColor('');
         setOpenColor(false);
       }
       else if(color === 'icon'){
-        db.collection('site').doc('site_colors').update({
+        db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_colors').update({
             icons: iconColor
         });
         setCurrentColor('');
@@ -380,8 +380,8 @@ const handleChangeIconColor=(color) => {
         <Avatar src={user_details.image} style={{height: '100px',width: '100px'}}/>
         <h2 style={{color: 'white',marginTop:'5px'}}>{user_details.name}</h2>
         <h3 style={{color: 'white',marginTop:'5px',width: '300px',fontSize: '12px',marginBottom: '10px',textAlign: 'center'}}>{user_details.address}</h3>
-         <div    onClick={() => history.push('/user')} style={{cursor: 'pointer',color: 'white',width: '150px',height: '50px', border: '1px solid white', borderRadius: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-             Edit Profile
+         <div  className='visitShop' style={{cursor: 'pointer',color: 'white',padding: '10px',height: '50px', border: '1px solid white', borderRadius: '12px', display: 'flex', justifyContent: 'space-between',alignItems: 'center'}}>
+             <p style={{marginRight: '30px'}}>Visit Your Shop:</p>  <a href={`https://restro-e4874.firebaseapp.com/${id}`} target="_blank" >vandore.in/{id}</a>
          </div>
        </div>
        <div className='handleDashboard__header--right' style={{backgroundImage: `url(${image})`}}>

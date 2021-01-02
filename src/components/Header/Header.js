@@ -6,7 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useStateValue } from '../../StateProvider';
 import { auth, authMain } from '../../firebase';
 
-function Header({home,cart,orders,store,account,login}) {
+function Header({home,cart,orders,store,account,login,pageId}) {
     const [{user,basket,user_details,sidebar,site_settings,site_info,site_colors},dispatch]= useStateValue(); 
      const history= useHistory();
     const handleAuthentication= () => {
@@ -34,7 +34,7 @@ function Header({home,cart,orders,store,account,login}) {
                   </div>
 
     {site_settings.store ? (
- <Link to='/checkout' style={{textDecoration: 'none'}} className='headerCart'>
+ <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}} className='headerCart'>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
         <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '20px',height:'20px',display: 'flex', justifyContent: 'center'}}>
           {basket.length}
@@ -58,14 +58,14 @@ function Header({home,cart,orders,store,account,login}) {
             </div>
 
             <div className="header__center">
-            <Link to='/home' style={{textDecoration: 'none'}}>
+            <Link to={`/vandore/${pageId}/home`} style={{textDecoration: 'none'}}>
             <div className={`header__option  ${home ? 'header__option--active' : ''}`} style={{borderBottom: `${home ? `4px solid ${site_colors.icons}` : ''}`}}>
                   <Home fontSize="large" style={{color: `${site_colors.icons}`}}/>
                   <span>Home</span>
              </div> 
             </Link>
     {site_settings.store ? (
- <Link to='/checkout' style={{textDecoration: 'none'}}>
+ <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}}>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
         <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '20px',height:'20px',display: 'flex', justifyContent: 'center'}}>
           {basket.length}
@@ -79,7 +79,7 @@ function Header({home,cart,orders,store,account,login}) {
      
      
       {!user ? '' : (
-            <Link to='/orders' style={{textDecoration: 'none'}}>
+            <Link to={`/vandore/${pageId}/orders`} style={{textDecoration: 'none'}}>
               {site_settings.userAuth ? (
                  <div className={`header__option  ${orders ? 'header__option--active' : ''}`} style={{borderBottom: `${orders ? `4px solid ${site_colors.icons}` : ''}`}}>
                  <Fastfood fontSize="large" style={{color: `${site_colors.icons}`}}/>
@@ -91,7 +91,7 @@ function Header({home,cart,orders,store,account,login}) {
       )}
            
         {site_settings.store ? (
-            <Link to='/store' style={{textDecoration: 'none'}}>
+            <Link to={`/vandore/${pageId}/store`} style={{textDecoration: 'none'}}>
             <div className={`header__option  ${store ? 'header__option--active' : ''}`} style={{borderBottom: `${store ? `4px solid ${site_colors.icons}` : ''}`}}>
                   <StorefrontOutlined fontSize="large" style={{color: `${site_colors.icons}`}}/>
                   <span>Store</span>
@@ -101,7 +101,7 @@ function Header({home,cart,orders,store,account,login}) {
             
                
              {!user ? '' : (
-                    <Link to='/user' style={{textDecoration: 'none'}}>
+                    <Link to={`/vandore/${pageId}/user`} style={{textDecoration: 'none'}}>
                     {site_settings.userAuth ? (
                       <div className={`header__option  ${account ? 'header__option--active' : ''}`} style={{borderBottom: `${account ? `4px solid ${site_colors.icons}` : ''}`}}>
                       <Avatar src={user_details.image} />
@@ -111,7 +111,7 @@ function Header({home,cart,orders,store,account,login}) {
                     </Link> 
              )}
           {site_settings.userAuth ? (
-          <Link to={!user && '/login'} style={{textDecoration: 'none'}}>
+          <Link to={!user && `/vandore/${pageId}/login`} style={{textDecoration: 'none'}}>
           <div className={`header__option  ${login ? 'header__option--active' : ''}`} onClick={handleAuthentication} style={{borderBottom: `${login ? `4px solid ${site_colors.icons}` : ''}`}}>
                 {!user ? (
                  <>

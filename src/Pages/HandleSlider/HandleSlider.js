@@ -15,13 +15,13 @@ import { useStateValue } from '../../StateProvider';
 import SliderSvg from '../../icons/undraw_slider_5bgj.svg';
 
 
-function HandleSlider() {
+function HandleSlider({id}) {
     const [image,setImage]= useState('');
     const [images,setImages]= useState([]);
     const [show,setShow]= useState(false);
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
-
+    const pageId=id;
 
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
@@ -31,7 +31,7 @@ function HandleSlider() {
    }
 
    const handleGetStarted= () => {
-    db.collection('site').doc('site_preview').update({
+    db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
         slider: true
     }).then(refreshPage);
 }
@@ -42,7 +42,7 @@ function HandleSlider() {
     useEffect(() => {
   
      
-            db.collection('slider')
+            db.collection(pageId.toUpperCase()).doc('slider').collection('slider')
             .onSnapshot(snapshot => (
                 setImages(snapshot.docs.map(doc => ({
                     id: doc.id,
@@ -53,7 +53,7 @@ function HandleSlider() {
   },[])
     
     const sliderDelete= (id) => {
-        db.collection('slider').doc(id).delete().then(alert('deleted'));
+        db.collection(pageId.toUpperCase()).doc('slider').collection('slider').doc(id).delete().then(alert('deleted'));
     }
 
     const handleUploadStart= () => {
@@ -73,7 +73,7 @@ function HandleSlider() {
      const handleSubmit= () => {
         
 
-         db.collection("slider").add({
+         db.collection(pageId.toUpperCase()).doc('slider').collection("slider").add({
            image: image
        }).then(alert('Upload Finish')).then(() => setImage('')).then(() => setShow(false));
      }

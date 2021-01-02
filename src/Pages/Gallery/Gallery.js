@@ -7,13 +7,17 @@ import Sidebar from '../../components/Sidebar/Sidebar';
 import Social from '../../components/Social/Social';
 import { useStateValue } from '../../StateProvider';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
+import { Fastfood, Home, PeopleAltOutlined, PhotoAlbum, Store } from '@material-ui/icons';
+import { Avatar } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 
-function Gallery() {
+function Gallery({pageId}) {
     const [images,setImages]= useState([]);
-    const [{sidebar},dispatch]= useStateValue();
+    const [{sidebar,site_settings,site_colors,user,user_details},dispatch]= useStateValue();
+    const history= useHistory();
+
     useEffect(() => {
-  
-        db.collection('gallery')
+        db.collection(pageId).doc('gallery').collection('gallery')
         .onSnapshot(snapshot => (
             setImages(snapshot.docs.map(doc => ({
                 id: doc.id,
@@ -24,17 +28,58 @@ function Gallery() {
         },[])
     return (
         <div className='gallery'>
-            <Sidebar page='Photo Gallery'/>
+            <Sidebar page='Photo Gallery' pageId={pageId} />
            <div className='galleryMobile'>
-            {sidebar ? <SidebarMobile /> : (
+            {sidebar ? <SidebarMobile pageId={pageId} /> : (
  <div className='gallery__page'>
- <h1 style={{marginTop: '10px',textTransform: 'uppercase'}}>Gallery</h1>
+            <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
+ <h1 style={{marginTop: '10px',textTransform: 'uppercase',marginBottom: '10px'}}>Gallery</h1>
  <div className='gallery__container'>
    {images.map(image => (
-        <div className='images__holder' style={{height: '230px'}}>
-         <Zoom><img src={image.image} className='images__holder__image'/></Zoom>   
+       
+         <Zoom><img src={image.image} className='images__holder__imageGallery'/></Zoom>   
           
-         </div>
+        
     ))}
  </div>
  </div>
@@ -42,13 +87,13 @@ function Gallery() {
            </div>
            <div className='galleryPc'>
            <div className='gallery__page'>
-            <h1 style={{marginTop: '10px',textTransform: 'uppercase'}}>Gallery</h1>
+            <h1 style={{marginTop: '10px',textTransform: 'uppercase',marginBottom: '10px'}}>Gallery</h1>
             <div className='gallery__container'>
               {images.map(image => (
-                   <div className='images__holder' style={{height: '230px'}}>
-                    <Zoom><img src={image.image} className='images__holder__image'/></Zoom>   
+                   
+                    <Zoom><img src={image.image} className='images__holder__imageGallery'/></Zoom>   
                      
-                    </div>
+                 
                ))}
             </div>
             </div>

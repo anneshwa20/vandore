@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom';
 import './StoreCategory.scss'
 
-function StoreCategory({category,updateCategory,deleteCategory}) {
+function StoreCategory({pageId,category,updateCategory,deleteCategory}) {
     const [editCategory,setEditCategory]= useState(category.title);
     const [edit,setEdit]= useState(false);
     const history= useHistory();
@@ -43,7 +43,7 @@ function StoreCategory({category,updateCategory,deleteCategory}) {
                 <IconButton onClick={() => setEdit(true)}><Edit style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}} /></IconButton>
               
                 
-                <IconButton onClick={() => history.push(`/handleCategory/${category.id}`)}><ArrowForwardIosSharp style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}}/></IconButton>
+                <IconButton onClick={() => history.push(`/handleCategory/${pageId}/${category.id}`)}><ArrowForwardIosSharp style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}}/></IconButton>
                 
             </div>
             </div>

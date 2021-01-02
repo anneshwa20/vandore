@@ -15,6 +15,7 @@ import './SidebarMobile.scss';
 import SidebarRow from './../SidebarRow/SidebarRow';
 import Leftqoute from '../../icons/lq.svg';
 import Rightqoute from '../../icons/rq.svg';
+import firebase from 'firebase';
 
 
 import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Home, Fastfood, AccountCircle, ExitToApp} from '@material-ui/icons'
@@ -24,7 +25,7 @@ import { useStateValue } from '../../StateProvider';
 
 
 
-function SidebarMobile({page}) {
+function SidebarMobile({page,pageId}) {
   const history= useHistory();
   const [show,setShow]=useState(false);
   const [siteDescription,setSiteDescription]= useState('');
@@ -38,6 +39,12 @@ function SidebarMobile({page}) {
   const [youtubeLink,setYoutubeLink]= useState('');
   const [feedbacks,setFeedbacks]= useState([]);
   const [open,setOpen]= useState(false);
+  const [openRate,setOpenRate]= useState(false);
+  const [name,setName]= useState('');
+  const [value,setValue]= useState(1);
+  const [phone,setPhone]= useState('');
+  const [message, setMessage]= useState('');
+  const [image,setImage]= useState('');
 
   const AutoplaySlider= withAutoplay(AwesomeSlider);
 
@@ -91,7 +98,7 @@ function SidebarMobile({page}) {
 
   useEffect(() => {
         
-    db.collection("social").doc('social_links')
+    db.collection(pageId).doc('social').collection("social").doc('social_links')
     .get()
     .then(function(doc) {
       if (doc.exists) {
@@ -112,7 +119,7 @@ function SidebarMobile({page}) {
 
  useEffect(() => {
   
-  db.collection('messages')
+  db.collection(pageId).doc('messages').collection('messages')
   .orderBy('timestamp','desc')
   .limit(5)
   .onSnapshot(snapshot => (
@@ -144,7 +151,7 @@ function SidebarMobile({page}) {
  
 
   useEffect(() => {
-     db.collection('rooms').onSnapshot(snapshot => (
+     db.collection(pageId).doc('rooms').collection('rooms').onSnapshot(snapshot => (
          setChannels(
              snapshot.docs.map(doc => ({
                  id: doc.id,
@@ -158,7 +165,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/user');
+  history.push(`/vandore/${pageId}/user`);
   
   }
 
@@ -167,7 +174,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/home');
+  history.push(`/vandore/${pageId}/home`);
   
   }
   const handleOrders= () => {
@@ -175,7 +182,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/orders');
+  history.push(`/vandore/${pageId}/orders`);
   
   }
 
@@ -184,7 +191,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/about');
+  history.push(`/vandore/${pageId}/about`);
   
   }
   const handleStore= () => {
@@ -192,7 +199,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/store');
+  history.push(`/vandore/${pageId}/store`);
   
   }
   const handleGallery= () => {
@@ -200,7 +207,7 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/gallery');
+  history.push(`/vandore/${pageId}/gallery`);
   
   }
   const handleLogin= () => {
@@ -208,9 +215,37 @@ function SidebarMobile({page}) {
       type: 'UPDATE_SIDEBAR',
       sidebar: !sidebar
   })
-  history.push('/login');
+  history.push(`/vandore/${pageId}/login`);
   
   }
+  const handleSubmit= (e) => {
+    e.preventDefault();
+
+    if(user){
+
+      db.collection(pageId).doc('messages').collection('messages')
+      .doc()
+      .set({
+         name: user_details.name,
+         phone: user_details.phone,
+         message: message,
+         image: user_details.image,
+         rating: value,
+         timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => setOpenRate(false));
+    }else{
+      db.collection(pageId).doc('messages').collection('messages')
+      .doc()
+      .set({
+         name: name,
+         image: 'https://cdn0.iconfinder.com/data/icons/face-characters/512/happy_face_character-512.png',
+         phone: phone,
+         message: message,
+         rating: value,
+         timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => setOpenRate(false));
+    }
+}
 
     return (
         <div className="sidebarMobile">
@@ -252,7 +287,12 @@ function SidebarMobile({page}) {
           
              
                 {show ? channels.map(channel => (
-                    <div onClick={() => history.push(`/chatsPublic/${channel.id}`)} page={page}>
+                    <div onClick={() => {
+                      dispatch({
+                        type: 'UPDATE_SIDEBAR',
+                        sidebar: !sidebar
+                      })
+                      history.push(`/chatsPublic/${pageId}/${channel.id}`)}} page={page}>
                    <SidebarRow  title={`# ${channel.name}`} />
                    </div>
                )) : ''}
@@ -287,63 +327,123 @@ function SidebarMobile({page}) {
          </div>
           {site_settings.feedback ? (
  <div className='sidebar__ratings'>
- <div className='sidebar__ratings--bottom' onClick={() => history.push('about')} style={{width: '100%',height: 'max-content',padding: '5px',display: 'flex',justifyContent: 'center',color: 'white', backgroundColor: `${site_colors.primary}`,cursor: 'pointer'}}>
+ <div className='sidebar__ratings--bottom' onClick={() => setOpenRate(!openRate)} style={{width: '100%',height: 'max-content',padding: '5px',display: 'flex',justifyContent: 'center',color: 'white', backgroundColor: `${site_colors.primary}`,cursor: 'pointer'}}>
   Rate Us Now
  </div>  
- <AutoplaySlider
-           play={true}
-           cancelOnInteraction={false} // should stop playing on user interaction
-           interval={3000}
-           animation='cubeAnimation'
-       >
-               {feedbacks.map((feedback,key) => (
-                  <div className='sidebar__feedback'>
-                      <div className='sidebar__feedback--top' style={{borderBottom: `2px solid ${site_colors.primary}`,borderTop: `2px solid${site_colors.primary}`}}>
-                          <Avatar src={feedback.image} style={{marginRight: '15px'}}/> 
-                          <div className='sidebar__feedback--topRight'>
-                           <h4 style={{fontWeight: 'lighter'}}>{feedback.name}</h4>
-                          <StyledRating
-                                    name="customized-icons"
+ {openRate ? (
+    <>
+    {site_settings.feedback ? (
+      <form className='rateForm'>
+      <h1>Rate Us</h1>
+          {!user ? (
+         <>
+         <div className='user__input'>
+                <p>Enter Your Name</p>
+                <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
+                    <input type='text'  placeholder='Enter Your Name' value={name} onChange={e => setName(e.target.value)}/>
+                </div>
+            </div>
+     
+            <div className='user__input'>
+                <p>Enter Your Phone</p>
+                <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
+                    <input type='text'  placeholder='Enter Your Phone' value={phone} onChange={e => setPhone(e.target.value)} />
+                </div>
+            </div>
+         </>
+          ) : (
+            <>
+            <Avatar src={user_details.image} style={{width: '50px',height: '50px',marginTop: '15px',marginBottom: '15px'}}/> 
+            </>
+          )}
+            
+     
+            <div className='user__input'>
+                <p>Enter Your Feedback</p>
+                <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
+                    <input type='text'  placeholder='Enter Your Feedback'  value={message} onChange={e => setMessage(e.target.value)} />
+                </div>
+            </div>
+            <div>
+           
+             
+             <StyledRating
+               name="customized-icons"
+     
+               value={value}
+               onChange={(event, newValue) => {
+                
+                 setValue(newValue);
+               }}
+               getLabelText={(value) => customIcons[value].label}
+               IconContainerComponent={IconContainer}
+             />
+         
+            </div>
+     
+     
+            <button onClick={handleSubmit} style={{backgroundColor: `${site_colors.button}`,color: 'white'}}>Save</button>
+           
+             </form>
+                 ) : ''}
+                 </>
+  ) : (
+     <AutoplaySlider
+     play={true}
+     cancelOnInteraction={false} // should stop playing on user interaction
+     interval={3000}
+     animation='cubeAnimation'
+ >
+         {feedbacks.map((feedback,key) => (
+            <div className='sidebar__feedback'>
+                <div className='sidebar__feedback--top' style={{borderBottom: `2px solid ${site_colors.primary}`,borderTop: `2px solid${site_colors.primary}`}}>
+                    <Avatar src={feedback.image} style={{marginRight: '15px'}}/> 
+                    <div className='sidebar__feedback--topRight'>
+                     <h4 style={{fontWeight: 'lighter'}}>{feedback.name}</h4>
+                    <StyledRating
+                              name="customized-icons"
 
-                                    value={feedback.rating}
-                                    
-                                    getLabelText={(value) => customIcons[value].label}
-                                    IconContainerComponent={IconContainer}
-                                    readOnly
-                                  />
+                              value={feedback.rating}
+                              
+                              getLabelText={(value) => customIcons[value].label}
+                              IconContainerComponent={IconContainer}
+                              readOnly
+                            />
 
-                          </div>
-                          </div>
+                    </div>
+                    </div>
 
-                          <div className='sidebar__feedback--bottom'>
-                          <img src={Leftqoute} style={{width: '20px',height: '20px'}}/>
-                          <p style={{padding: '5px'}}>{feedback.message.substr(0,60)}</p> <span onClick={() => { setOpen(true); setCurrentFeedback({image: feedback.image,name: feedback.name,rating: feedback.rating,message: feedback.message})}}  style={{color: 'blue', textDecoration: 'underline',cursor: 'pointer'}}>see more</span>
-                           <img src={Rightqoute} style={{width: '20px',height: '20px'}}/>
+                    <div className='sidebar__feedback--bottom'>
+                    <img src={Leftqoute} style={{width: '20px',height: '20px'}}/>
+                    <p style={{padding: '5px'}}>{feedback.message.substr(0,60)}</p> <span onClick={() => { setOpen(true); setCurrentFeedback({image: feedback.image,name: feedback.name,rating: feedback.rating,message: feedback.message})}}  style={{color: 'blue', textDecoration: 'underline',cursor: 'pointer'}}>see more</span>
+                     <img src={Rightqoute} style={{width: '20px',height: '20px'}}/>
 
-                          </div>
-                      </div>
-              
-               ))}
-</AutoplaySlider>   
-
+                    </div>
+                </div>
+        
+         ))}
+</AutoplaySlider> 
+  )}  
  </div>
           ) : ''}
         
-
-         <div className='external'>
-           {zomatoLink==='' ? '' : (
-            <div className='external__option' onClick={() => handleExternal('zomato')}>
-             <SidebarRow src='data:image/png;base64,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' title="Order with zomato"/>
-             </div>
-           )}
-           {swiggyLink==='' ? '' : (
-              <div className='external__option' onClick={() => handleExternal('swiggy')}>
-              <SidebarRow src='https://www.theindianwire.com/wp-content/uploads/2017/07/swiggy-logo.png' title="Order with swiggy"/>
-              </div>
-           )}
-            
-             
-         </div> 
+   
+        {openRate ? '' : (
+ <div className='external' style={{marginTop: '70px'}}>
+ {zomatoLink==='' ? '' : (
+  <div className='external__option' onClick={() => handleExternal('zomato')}>
+   <SidebarRow src='data:image/png;base64,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' title="Order with zomato"/>
+   </div>
+ )}
+ {swiggyLink==='' ? '' : (
+    <div className='external__option' onClick={() => handleExternal('swiggy')}>
+    <SidebarRow src='https://www.theindianwire.com/wp-content/uploads/2017/07/swiggy-logo.png' title="Order with swiggy"/>
+    </div>
+ )}
+  
+   
+</div>  
+    )}
          <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
   onClose={() => setOpen(false)}

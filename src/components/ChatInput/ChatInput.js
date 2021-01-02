@@ -8,7 +8,7 @@ import FileUploader from 'react-firebase-file-uploader';
 import { CloudUpload, Photo, Send } from '@material-ui/icons';
 
 
-function ChatInput({channelName,channelId}) {
+function ChatInput({channelName,channelId,pageId}) {
   const [input,setInput]= useState('');
   const [{user,user_details},dispatch]= useStateValue();
   const [image,setImage]= useState('');
@@ -17,7 +17,7 @@ function ChatInput({channelName,channelId}) {
        e.preventDefault();
 
        if(channelId){
-          db.collection('rooms').doc(channelId).collection('messages').add({
+          db.collection(pageId.toUpperCase()).doc('rooms').collection('rooms').doc(channelId).collection('messages').add({
               message: input,
               timestamp: firebase.firestore.FieldValue.serverTimestamp(),
               user: user_details.name,

@@ -22,23 +22,30 @@ import { Modal } from '@material-ui/core'
 import ReactAudioPlayer from 'react-audio-player'
 import notification from '../../audio/notification.ogg'
 import { useHistory } from 'react-router-dom'
+import StateFill from './../StateFill'
+
 
 function Restro(props) {
-    const [{sidebarVandore},dispatch]= useStateValue();
+    const [{sidebarVandore,user,user_details},dispatch]= useStateValue();
     const [orderNotifications,setOrderNotification]= useState(0);
     const history= useHistory();
- 
+    const [show,setShow]= useState(true);
+
+    const id= props.match.params.id;
 
 
      useEffect(() => {
-        db.collection("site_orders_notification").doc("orders")
+        db.collection(id.toUpperCase()).doc('site_orders_notification').collection("site_orders_notification").doc("orders")
         .onSnapshot(function(doc) {
             setOrderNotification(doc.data().order);
         });
     },[]); 
 
 
-   
+    
+       
+        
+    
     
    
          
@@ -46,91 +53,97 @@ function Restro(props) {
     console.log(orderNotifications);
 
     const handleNotification= () => {
-        db.collection('site_orders_notification').doc('orders').update({
+        db.collection(id.toUpperCase()).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
             order: 0
         });
 
-        history.push('/restro/orders');
+        history.push(`/restro/orders/${id}`);
     }
 
     return (
-        <div className='restro'>
+        <>
+      <StateFill authorization='restro' id={id.toUpperCase()} />
+    
+ <div className='restro'>
      
-        <div className='vandoreMobile'>
-            {sidebarVandore ? <SidebarRestro active={props.match.params.page} /> : ''}
-            {orderNotifications > 0 ? (
-                <div className='notification__page'>
-                <ReactAudioPlayer
-                src={notification}
-                autoPlay
-                
-             />
-                  <div className='notification__content'>
-                      {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
-                      
-                      <div className='notification__content--button' onClick={handleNotification}>
-                            OK
-                       </div>
-                  </div>
+ <div className='vandoreMobile'>
+     {sidebarVandore ? <SidebarRestro id={id} active={props.match.params.page} /> : ''}
+     {orderNotifications > 0 ? (
+         <div className='notification__page'>
+         <ReactAudioPlayer
+         src={notification}
+         autoPlay
+         
+      />
+           <div className='notification__content'>
+               {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
+               
+               <div className='notification__content--button' onClick={handleNotification}>
+                     OK
+                </div>
            </div>
-            ) : (
-             <>
+    </div>
+     ) : (
+      <>
 
-       {props.match.params.page === 'post' ? <HandlePost /> : ''}
-       {props.match.params.page === 'store' ? <HandleStore /> : ''}
-       {props.match.params.page === 'orders' ? <HandleOrders /> : ''}
-       {props.match.params.page === 'slider' ? <HandleSlider /> : ''}
-       {props.match.params.page === 'about' ? <HandleAbout /> : ''}
-       {props.match.params.page === 'feedback' ? <HandleFeedback /> : ''}
-       {props.match.params.page === 'gallery' ? <HandleGallery /> : ''}
-       {props.match.params.page === 'users' ? <HandleUser /> : ''}
-       {props.match.params.page === 'payments' ? <HandlePayment /> : ''}
-       {props.match.params.page === 'dashboard' ? <HandleDashboard /> : ''}
-       {props.match.params.page === 'settings' ? <HandleSettings /> : ''}
-       {props.match.params.page === 'guides' ? <HandleGuide /> : ''}
-             </>
-            )}
-       
-        </div>
-        <div className='vandorePc'>
-        <SidebarRestro active={props.match.params.page} />
-        {orderNotifications > 0 ? (
-            <div className='notification__page'>
-                <ReactAudioPlayer
-                src={notification}
-                autoPlay
-                
-             />
-                  <div className='notification__content'>
-                      {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
-                      
-                      <div className='notification__content--button' onClick={handleNotification}>
-                            OK
-                       </div>
-                  </div>
+{props.match.params.page === 'post' ? <HandlePost id={id}/> : ''}
+{props.match.params.page === 'store' ? <HandleStore id={id}/> : ''}
+{props.match.params.page === 'orders' ? <HandleOrders id={id}/> : ''}
+{props.match.params.page === 'slider' ? <HandleSlider id={id}/> : ''}
+{props.match.params.page === 'about' ? <HandleAbout id={id}/> : ''}
+{props.match.params.page === 'feedback' ? <HandleFeedback id={id}/> : ''}
+{props.match.params.page === 'gallery' ? <HandleGallery id={id}/> : ''}
+{props.match.params.page === 'users' ? <HandleUser id={id}/> : ''}
+{props.match.params.page === 'payments' ? <HandlePayment id={id}/> : ''}
+{props.match.params.page === 'dashboard' ? <HandleDashboard id={id}/> : ''}
+{props.match.params.page === 'settings' ? <HandleSettings id={id}/> : ''}
+{props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
+      </>
+     )}
+
+ </div>
+ <div className='vandorePc'>
+ <SidebarRestro  id={id} active={props.match.params.page} />
+ {orderNotifications > 0 ? (
+     <div className='notification__page'>
+         <ReactAudioPlayer
+         src={notification}
+         autoPlay
+         
+      />
+           <div className='notification__content'>
+               {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
+               
+               <div className='notification__content--button' onClick={handleNotification}>
+                     OK
+                </div>
            </div>
-        ) : (
-       <>
-       {props.match.params.page === 'post' ? <HandlePost /> : ''}
-       {props.match.params.page === 'store' ? <HandleStore /> : ''}
-       {props.match.params.page === 'orders' ? <HandleOrders /> : ''}
-       {props.match.params.page === 'slider' ? <HandleSlider /> : ''}
-       {props.match.params.page === 'about' ? <HandleAbout /> : ''}
-       {props.match.params.page === 'feedback' ? <HandleFeedback /> : ''}
-       {props.match.params.page === 'gallery' ? <HandleGallery /> : ''}
-       {props.match.params.page === 'users' ? <HandleUser /> : ''}
-       {props.match.params.page === 'payments' ? <HandlePayment /> : ''}
-       {props.match.params.page === 'dashboard' ? <HandleDashboard /> : ''}
-       {props.match.params.page === 'settings' ? <HandleSettings /> : ''}
-       {props.match.params.page === 'guides' ? <HandleGuide /> : ''}
-       </>
-        ) }
-      
-        </div>
-     
-      
-     
-        </div>
+    </div>
+ ) : (
+<>
+{props.match.params.page === 'post' ? <HandlePost id={id}/> : ''}
+{props.match.params.page === 'store' ? <HandleStore id={id}/> : ''}
+{props.match.params.page === 'orders' ? <HandleOrders id={id}/> : ''}
+{props.match.params.page === 'slider' ? <HandleSlider id={id}/> : ''}
+{props.match.params.page === 'about' ? <HandleAbout id={id}/> : ''}
+{props.match.params.page === 'feedback' ? <HandleFeedback id={id}/> : ''}
+{props.match.params.page === 'gallery' ? <HandleGallery id={id}/> : ''}
+{props.match.params.page === 'users' ? <HandleUser id={id}/> : ''}
+{props.match.params.page === 'payments' ? <HandlePayment id={id}/> : ''}
+{props.match.params.page === 'dashboard' ? <HandleDashboard id={id}/> : ''}
+{props.match.params.page === 'settings' ? <HandleSettings id={id}/> : ''}
+{props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
+</>
+ ) }
+
+ </div>
+
+
+
+ </div>
+  
+       
+        </>
     )
 }
 

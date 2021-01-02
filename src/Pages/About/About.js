@@ -14,10 +14,12 @@ import { useStateValue } from '../../StateProvider';
 import './About.scss'
 import firebase from 'firebase';
 import SidebarMobile from '../../components/Sidebar/SidebarMobile';
+import { Fastfood, Home, PeopleAltOutlined, PhotoAlbum, Store } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 
 
 
-function About() {
+function About({pageId}) {
     const [name,setName]= useState('');
     const [value,setValue]= useState(1);
     const [phone,setPhone]= useState('');
@@ -29,11 +31,11 @@ function About() {
     const [open,setOpen]= useState(false);
     
 
-
+   const history= useHistory();
 
     useEffect(() => {
         
-            db.collection("about").doc('about_wtf')
+            db.collection(pageId).doc('about').collection("about").doc('about_site')
             .get()
             .then(function(doc) {
               if (doc.exists) {
@@ -54,7 +56,7 @@ function About() {
 
         if(user){
 
-          db.collection('messages')
+          db.collection(pageId).doc('messages').collection('messages')
           .doc()
           .set({
              name: user_details.name,
@@ -65,7 +67,7 @@ function About() {
              timestamp: firebase.firestore.FieldValue.serverTimestamp()
           }).then(() => setOpen(true));
         }else{
-          db.collection('messages')
+          db.collection(pageId).doc('messages').collection('messages')
           .doc()
           .set({
              name: name,
@@ -120,10 +122,51 @@ function About() {
 
     return (
         <div className='about'>
-              <Sidebar page='About Us'/>
+              <Sidebar page='About Us' pageId={pageId}/>
               <div className='aboutMobile'>
-              {sidebar ? <SidebarMobile /> : (
+              {sidebar ? <SidebarMobile pageId={pageId}/> : (
                 <div className='about__page'>
+                        <div className='shortNav' >
+             <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
+            <Home style={{color: `${site_colors.icons}`}}/>
+            <p>Home</p>
+            </div>
+            {site_settings.photoGallery ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/gallery`)}>
+            <PhotoAlbum style={{color: `${site_colors.icons}`}}/>
+            <p>Gallery</p>
+            </div>
+            ) : ''}
+           
+            {user && site_settings.userAuth? (
+                <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/orders`)}>
+                <Fastfood style={{color: `${site_colors.icons}`}}/>
+                <p>Orders</p>
+            </div>
+            )
+             : ''}
+            
+          {site_settings.store ? (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/store`)}>
+            <Store style={{color: `${site_colors.icons}`}}/>
+            <p>Store</p>
+            </div>
+          ) : ''}
+
+           {site_settings.userAuth && user ? (
+        <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/user`)}>
+        <Avatar src={user_details.image}  style={{width: '40px',height: '40px',alignSelf:'center',margin: '5px'}}/>
+        <p>Your Profile</p>
+        </div>
+           ) : (
+            <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/login`)}>
+            <PeopleAltOutlined style={{color: `${site_colors.icons}`}}/>
+            <p>Login</p>
+            </div>
+           )}
+           
+
+        </div>
               <div className='about__image' style={{backgroundColor: `${site_colors.primary}`}}>
                   <img src={image} />
               </div>
@@ -197,7 +240,7 @@ function About() {
               <div className='about__desc'>
                   <p>{about}</p>
               </div>
-            {site_settings.feedback ? (
+              {site_settings.feedback ? (
  <form>
  <h1>Rate Us</h1>
      {!user ? (
@@ -250,6 +293,7 @@ function About() {
       
         </form>
             ) : ''}
+             
              
               </div>
              </div>

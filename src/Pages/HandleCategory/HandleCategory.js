@@ -21,12 +21,12 @@ function HandleCategory(props) {
   const [items,setItems]= useState([]);
   const [show,setShow]= useState(false);
   const [{sidebarVandore},dispatch]= useStateValue();
-
+  const pageId= props.match.params.id;
 
 
   useEffect(() => {
     
-        db.collection("store").doc(props.match.params.category)
+        db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(props.match.params.category)
         .get()
         .then(function(doc) {
           if (doc.exists) {
@@ -65,7 +65,7 @@ function HandleCategory(props) {
      const handleSubmit= (e) => {
          e.preventDefault();
 
-         db.collection("store").doc(props.match.params.category).update({
+         db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(props.match.params.category).update({
           items: firebase.firestore.FieldValue.arrayUnion({
               id: getRandomText(20),
               name: name,
@@ -86,10 +86,11 @@ function HandleCategory(props) {
    
 
     return (
+
         <div className='handleCategory'>
 
        <div className='categoryMobile'>
-         {sidebarVandore ? <SidebarRestro active='store' /> : (
+         {sidebarVandore ? <SidebarRestro id={pageId} active='store' /> : (
  <div className='handleCategory__body'>
    <div className='vandoreLogoHeader'>
          <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
@@ -116,7 +117,7 @@ function HandleCategory(props) {
 
   <div className='handleCategory__items'>
   {items.map(item => (
-        <HandleItem item={item} id={props.match.params.category}/>
+        <HandleItem pageId={pageId} item={item} id={props.match.params.category}/>
      ))}
   </div>
     
@@ -125,7 +126,7 @@ function HandleCategory(props) {
        </div>
 
        <div className='categoryPc'>
-         <SidebarRestro active='store' />
+         <SidebarRestro active='store' id={pageId} />
        <div className='handleCategory__body'>
        <div className='vandoreHeaderMobile' onClick={() => {
             dispatch({
@@ -148,7 +149,7 @@ function HandleCategory(props) {
 
             <div className='handleCategory__items'>
             {items.map(item => (
-                  <HandleItem item={item} id={props.match.params.category}/>
+                  <HandleItem pageId={pageId} item={item} id={props.match.params.category}/>
                ))}
             </div>
               

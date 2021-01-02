@@ -27,7 +27,7 @@ function Product({id, title,image,price,rating}) {
            },
        });
 
-       setTimeout(() => setShow(false),2000);
+       setTimeout(() => setShow(false),3000);
     };
   
     return (

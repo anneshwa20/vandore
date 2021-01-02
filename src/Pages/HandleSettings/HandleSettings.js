@@ -6,7 +6,7 @@ import { useStateValue } from '../../StateProvider';
 import './HandleSettings.scss';
 import SettingsSvg from '../../icons/undraw_personal_settings_kihd.svg';
 
-function HandleSettings() {
+function HandleSettings({id}) {
     const[store,setStore]=useState(true);
     const [slider,setSlider]= useState(true);
     const [discount,setDiscount]=useState(true);
@@ -20,6 +20,8 @@ function HandleSettings() {
     const [userAuth,setUserAuth]= useState(true);
     const [feedback,setFeedback]= useState(true);
     const[{site_settings,site_preview,single_guides,sidebarVandore},dispatch]= useStateValue();
+
+      const pageId= id;
 
     useEffect(() => {
              setStore(site_settings.store);
@@ -39,7 +41,7 @@ function HandleSettings() {
 
    
     const handleGetStarted= () => {
-       db.collection('site').doc('site_preview').update({
+       db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
            setting: true
        }).then(refreshPage);
    }
@@ -51,7 +53,7 @@ function HandleSettings() {
     const handleOptions=  (name) =>{
            
        if(name === 'store'){
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      store: !store,
               }).then(() => (
                      dispatch({
@@ -65,7 +67,7 @@ function HandleSettings() {
               
           }
        else if(name === 'slider'){
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      slider: !slider,
               }).then(() => (
                      dispatch({
@@ -77,7 +79,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'feedback'){
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      feedback: !feedback,
               }).then(() => (
                      dispatch({
@@ -89,7 +91,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'discount') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      discount: !discount,
               }).then(() => (
                      dispatch({
@@ -101,7 +103,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'cashOnDel'){
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      cashOnDel: !cashOnDel,
               }).then(() => (
                      dispatch({
@@ -113,7 +115,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'onlinePay') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      onlinePay: !onlinePay,
               }).then(() => (
                      dispatch({
@@ -125,7 +127,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'takeAway') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      takeAway: !takeAway,
               }).then(() => (
                      dispatch({
@@ -137,7 +139,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'photoGallery') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      photoGallery: !photoGallery,
               }).then(() => (
                      dispatch({
@@ -149,7 +151,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'aboutUs') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      aboutUs: !aboutUs,
               }).then(() => (
                      dispatch({
@@ -161,7 +163,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'chatChannels') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      chatChannels: !chatChannels,
               }).then(() => (
                      dispatch({
@@ -173,7 +175,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'userAuth') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      userAuth: !userAuth,
               }).then(() => (
                      dispatch({
@@ -185,7 +187,7 @@ function HandleSettings() {
               ));
        }
        else if(name === 'cover') {
-              db.collection('site').doc('site_settings').update({
+              db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_settings').update({
                      cover: !cover,
               }).then(() => (
                      dispatch({

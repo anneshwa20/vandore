@@ -7,7 +7,7 @@ import { CloudUpload, Delete, Edit, EventAvailable, EventBusy, Update } from '@m
 import { IconButton } from '@material-ui/core';
 
 
-function HandleItem({item,id}) {
+function HandleItem({item,id,pageId}) {
 
     const [name,setName]= useState(item.name);
     const [price,setPrice]= useState(item.price);
@@ -20,7 +20,7 @@ function HandleItem({item,id}) {
     const updateItem= (e) => {
         e.preventDefault();
 
-        db.collection("store").doc(id).update({
+        db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
          items: firebase.firestore.FieldValue.arrayUnion({
              id: getRandomText(20),
              name: name,
@@ -32,7 +32,7 @@ function HandleItem({item,id}) {
          })
       });
 
-      db.collection("store").doc(id).update({
+      db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
         items: firebase.firestore.FieldValue.arrayRemove({
             id: item.id,
             name: item.name,
@@ -51,7 +51,7 @@ function HandleItem({item,id}) {
      const updateAvailability= (e) => {
         e.preventDefault();
 
-        db.collection("store").doc(id).update({
+        db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
             items: firebase.firestore.FieldValue.arrayUnion({
                 id: getRandomText(20),
                 name: name,
@@ -63,7 +63,7 @@ function HandleItem({item,id}) {
             })
          });
    
-         db.collection("store").doc(id).update({
+         db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
            items: firebase.firestore.FieldValue.arrayRemove({
                id: item.id,
                name: item.name,
@@ -79,7 +79,7 @@ function HandleItem({item,id}) {
    }
 
      const deleteItem= () => {
-        db.collection("store").doc(id).update({
+        db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
             items: firebase.firestore.FieldValue.arrayRemove({
                 id: item.id,
                 name: item.name,

@@ -8,15 +8,19 @@ import { isMobile } from 'react-device-detect';
 import './Home.scss'
 import SidebarMobile from '../../components/Sidebar/SidebarMobile'
 import BodyPc from '../../components/Body/BodyPc'
+import VandoreBanner from '../../components/VandoreBanner/VandoreBanner'
+import Header from '../../components/Header/Header'
+import StateFill from '../StateFill'
 
-function Home() {
+
+function Home({pageId}) {
     const [{sidebar,dispatch}]= useStateValue();
     const[facebookLink,setFacebookLink]= useState(false);
 
     
   useEffect(() => {
         
-    db.collection("social").doc('social_links')
+    db.collection(pageId).doc('social').collection("social").doc('social_links')
     .get()
     .then(function(doc) {
       if (doc.exists) {
@@ -38,20 +42,24 @@ function Home() {
  },[])
     
     return (
+    
+     
         <div className='home'>
             
-           <Sidebar />
+           <Sidebar pageId={pageId}/>
          <div className='manageMobileHome'>
-           {sidebar ? <SidebarMobile /> : <Body />}  
+           {sidebar ? <SidebarMobile pageId={pageId} /> : <Body pageId={pageId} />}  
          </div>
         
-         <BodyPc />
+         <BodyPc pageId={pageId} />
           
       {facebookLink ?  <Social /> : ''}
           
            
         </div>
+    
     )
+    
 }
 
 export default Home

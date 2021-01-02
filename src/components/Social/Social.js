@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../../firebase';
+import { useStateValue } from '../../StateProvider';
 import './Social.scss'
 
 function Social() {
-    const [facebookLink,setFacebookLink]= useState('');
+    /* const [facebookLink,setFacebookLink]= useState('');
     const [zomatoLink,setZomatoLink]= useState('');
-    const [swiggyLink,setSwiggyLink]= useState('');
+    const [swiggyLink,setSwiggyLink]= useState(''); */
+
+    const [{social_links},dispatch]= useStateValue();
   
-    useEffect(() => {
+    /* useEffect(() => {
           
       db.collection("social").doc('social_links')
       .get()
@@ -24,12 +27,12 @@ function Social() {
         console.log("Error getting document:", error);
       });
   
-   },[])
+   },[]) */
   
     return (
         <div className='social'>
            <iframe 
-           src={`https://www.facebook.com/plugins/page.php?href=${facebookLink}&tabs=timeline&width=340&height=1500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
+           src={`https://www.facebook.com/plugins/page.php?href=${social_links?.facebookLink}&tabs=timeline&width=340&height=1500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`}
              width="340" 
              height="100%"
               style={{border: "none",overflow:"hidden"}} 
