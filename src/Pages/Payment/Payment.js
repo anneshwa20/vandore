@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Payment.scss';
 import { useStateValue } from "../../StateProvider";
-import CheckoutProduct from "../../components/CheckoutProduct/CheckoutProduct";
+
 import { Link, useHistory } from "react-router-dom";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import CurrencyFormat from "react-currency-format";
+
+
 import { getBasketTotal } from "../../reducer";
 import axios from '../../axios';
 import { db } from '../../firebase';
@@ -36,18 +36,48 @@ function loadScript(src) {
 
 
 function Payment({pageId}) {
-    const [{ basket, user,user_details,site_settings ,site_colors,sidebar}, dispatch] = useStateValue();
+    const [{ basket,site_info, user,user_details,site_settings ,site_colors,sidebar,order_notification}, dispatch] = useStateValue();
     const history = useHistory();
    
     const [error, setError] = useState(null);
     
     const [clientSecret, setClientSecret] = useState(null);
     const [orders,setOrders]= useState('');
-    const [ordersNotification,setOrderNotification]= useState(0);
+  
 
     console.log('payment status',site_settings.onlinePay);
 
-    useEffect(() => {
+
+
+
+
+    const sendSMS= async (mode) => {
+  
+      const messageUser=`
+      Hi ${user_details.name},Your Order For -${basket.map(item => item.title) }, With Order Id -${clientSecret.data.id} amounting to Rs.${clientSecret.data.amount / 100} has been Recieved on ${moment().format()}.You can track your order by clicking this link - vandore.in/vandore/${pageId.toUpperCase()}/orders . ${mode === 'Cash On Delivery' ? `Please Keep Rs.${clientSecret.data.amount / 100} for payment` : `We have Received the payment of Rs.${clientSecret.data.amount / 100}`}.`;
+
+   const SMS = await axios({
+        method: 'post',
+        // Stripe expects the total in a currencies subunits
+        url: `/orderSMS?phone=${user_details.phone}&message=${messageUser}`
+    });
+     }
+
+     const sendEmail= async (mode) => {
+     
+      const messageUser=`
+      Hi ${user_details.name},Your Order For -${basket.map(item => item.title) }, With Order Id -${clientSecret.data.id} amounting to Rs.${clientSecret.data.amount / 100} has been Recieved on ${moment().format()}.You can track your order by clicking this link - vandore.in/vandore/${pageId.toUpperCase()}/orders . ${mode === 'Cash On Delivery' ? `Please Keep Rs.${clientSecret.data.amount / 100} for payment` : `We have Received the payment of Rs.${clientSecret.data.amount / 100}`}.`;
+
+   const EMAIL = await axios({
+        method: 'post',
+        
+        url: `/orderEmail?email=ap8335235@gmail.com&message=${messageUser}&business=${site_info.siteName}&subject=Order Details From ${site_info.siteName}`
+    });
+
+   
+     }
+
+    /* useEffect(() => {
      
       db.collection(pageId).doc('site_orders_notification').collection("site_orders_notification").doc(`orders`)
       .get()
@@ -63,7 +93,8 @@ function Payment({pageId}) {
         console.log("Error getting document:", error);
       });
  
-   },[])
+   },[]) */
+
 
 
 
@@ -104,6 +135,15 @@ function Payment({pageId}) {
    
     const payOff = (mode) => {
 
+      if(site_settings.orderMessage){
+        sendSMS(mode);
+      }
+      if(site_settings.orderEmail){
+        sendEmail(mode);
+      }
+     
+      
+
    const docId= Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 
         db.collection(pageId).doc('users').collection('users')
@@ -141,13 +181,13 @@ function Payment({pageId}) {
               orders: '1'
             })
       }else{
-          db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+          db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).update({
               orders: `${orders*1 + 1}`
             })
       }
 
         db.collection(pageId).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
-          order: ordersNotification + 1
+          order: order_notification + 1
         });
 
         dispatch({
@@ -170,6 +210,8 @@ function Payment({pageId}) {
 		}
 
 
+   
+
 
 		const options = {
 			key: __DEV__ ? 'rzp_test_Yw9rV4usIyk5O1' : 'PRODUCTION_KEY',
@@ -178,10 +220,22 @@ function Payment({pageId}) {
 			order_id: clientSecret.data.id,
 			name: 'Buy',
 			description: 'Amount Charged For Your Order',
-			handler: function (response) {
+			handler: function async (response) {
 			/* 	alert(response.razorpay_payment_id)
 				alert(response.razorpay_order_id)
                 alert(response.razorpay_signature) */
+
+               
+
+          
+
+               if(site_settings.orderMessage){
+                sendSMS('Online Payment');
+              }
+              if(site_settings.orderEmail){
+                sendEmail('Online Payment');
+              }
+
                 db.collection(pageId).doc('users').collection('users')
                 .doc(user?.uid)
                 .collection('orders')
@@ -223,16 +277,20 @@ function Payment({pageId}) {
               })
     
               if(orders==''){
+              
                 db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     orders: '1'
                   })
             }else{
-                db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
+                db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).update({
                     orders: `${orders*1 + 1}`
                   })
             }
     
+            db.collection(pageId).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
+              order: order_notification + 1
+            });
                 
     
                 dispatch({

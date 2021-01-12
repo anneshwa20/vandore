@@ -15,7 +15,7 @@ function HandleGuide({id}) {
     const [hindi,setHindi]= useState(false);
     const [bannerVideo,setBannerVideo]= useState('https://www.youtube.com/embed/084LhrJ6VNY');
     const [bannerTitle,setBannerTitle]= useState('How to Handle Your Guides');
-    const [bannerDescription,setBannerDescription]= useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eu facilisis sed odio morbi quis commodo odio aenean sed.');
+    const [bannerDescription,setBannerDescription]= useState('In this video, you are going to discover the Guides which helps to understand the system and it\'s utilisation in the best way possible.');
     const [bannerImage,setBannerImage]= useState('https://i.ibb.co/6WFrWKp/i-Phone-X-XS-11-Pro-9.jpg');
 
 
@@ -124,7 +124,7 @@ function HandleGuide({id}) {
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Guides</h1>
-                           <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                           <h3>Guides helps in understanding the system and it's utilisation in the best way possible.</h3>
                      
                             <div className='site_preview--getStarted' onClick={handleGetStarted}>
                                Get Started
@@ -142,7 +142,7 @@ function HandleGuide({id}) {
              <div className='site_preview--guide'>
                 <div className='site_preview--guide--left'>
                 <img src={Guide} style={{fill:"#FFFFFF"}} />
-                <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+                <h4>Guides helps in understanding the system and it's utilisation in the best way possible.</h4>
                 </div>
                 <div className='site_preview--guide--right'>
                   <iframe src={single_guides.guide} />

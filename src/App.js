@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
+import './App.scss';
 import Header from './components/Header/Header';
 import Home from './Pages/Home/Home';
 import Menu from './Pages/Menu/Menu';
@@ -31,9 +31,13 @@ import LoginVandore from './Pages/LoginVandore/LoginVandore';
 import Vandore from './Pages/Vandore/Vandore';
 import LoginVandoreClient from './Pages/LoginVandoreClient/LoginVandoreClient';
 import Landing from './Pages/Landing/Landing';
+import LandingPage from './Pages';
+import SigninPage from './Pages/signin';
+import SignupPage from './Pages/signup';
+import MobileAppHome from './Pages/MobileAppHome/MobileAppHome';
 
 
-const promise= loadStripe("pk_test_51HhCb7Ks7edpRlOlanfeP933Rc1cT6evN35X3K0t9HCOmDHd5gtMo83sfnIchnEvPyqxnVDzCwQR31h2VyGzptLN00PyDR59DU");
+
 
 
 function App() {
@@ -88,6 +92,7 @@ function App() {
 
 useEffect(() => {
   db.collection('guides')
+  .orderBy("timestamp")
   .onSnapshot(snapshot => (
 
    dispatch({
@@ -140,6 +145,20 @@ useEffect(() => {
    },[user])
 
 
+   useEffect(() => {
+     if(user) {
+      dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`)
+      .onSnapshot(function(doc) {
+        dispatch({
+          type: 'UPDATE_USER',
+          user_details: doc.data()
+        })
+      });
+     }
+   
+},[user]); 
+
+
 
 
   return (
@@ -175,16 +194,27 @@ useEffect(() => {
           <Route exact  path="/handleGuideContent/:category" component={GuideContent}></Route>
           <Route exact  path="/vandore/:id/:page" component={Vandore}></Route>
         
+          <Route exact path="/signin" component={SigninPage}>
+          
+          </Route>
+
+          <Route exact path="/signup" component={SignupPage}>
+          
+          </Route>
+
+          <Route exact path="/mobile" component={MobileAppHome}>
+          
+          </Route>
          
           <Route exact path="/:id" component={Landing}>
        
               </Route>
          
-           <Route exact path="/" >
-          VANDOOR LANDING PAGE
-          <Link to='/vandoreLogin'>Register Your Brand</Link>
-          <Link to='/vandoreClient'>Log In</Link>
+           <Route exact path="/" component={LandingPage}>
+          
               </Route>
+
+             
   
           
 

@@ -12,6 +12,8 @@ function GuideUpload() {
     const[user,setUser]= useState('');
     const[feedbacks,setFeedbacks]= useState('');
     const[chatChannels,setChatChannels]= useState('');
+    const[dashboard,setDashboard]= useState('');
+    const[settings,setSettings]= useState('');
 
 
     
@@ -31,6 +33,8 @@ function GuideUpload() {
                setUser(doc.data().user);
                setFeedbacks(doc.data().feedbacks);
                setChatChannels(doc.data().chatChannels);
+               setDashboard(doc.data().dashboard);
+               setSettings(doc.data().settings);
 
           } else {
             // doc.data() will be undefined in this case
@@ -55,13 +59,17 @@ function GuideUpload() {
           payments: payments,
           user: user,
           feedbacks: feedbacks,
-          chatChannels: chatChannels
+          chatChannels: chatChannels,
+          dashboard: dashboard,
+          settings: settings
       }).then(alert('Updated'));
     }
 
 
     return (
         <div className='guideUpload'>
+          <input type='text' placeholder='Enter Dashboard Guide' value={dashboard} onChange={e => setDashboard(e.target.value)} />
+          <input type='text' placeholder='Enter Settings' value={settings} onChange={e => setSettings(e.target.value)} />
             <input type='text' placeholder='Enter Post Guide' value={post} onChange={e => setPost(e.target.value)} />
             <input type='text' placeholder='Enter Photo Gallery Guide' value={photoGallery} onChange={e => setPhotoGallery(e.target.value)} />
             <input type='text' placeholder='Enter Slider Guide' value={slider} onChange={e => setSlider(e.target.value)} />

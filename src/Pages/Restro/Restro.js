@@ -23,24 +23,26 @@ import ReactAudioPlayer from 'react-audio-player'
 import notification from '../../audio/notification.ogg'
 import { useHistory } from 'react-router-dom'
 import StateFill from './../StateFill'
+import {Howl, Howler} from 'howler';
+import HandlePricing from '../HandlePricing/HandlePricing'
+import HandleQrApp from '../HandleQrApp/HandleQrApp'
 
 
 function Restro(props) {
-    const [{sidebarVandore,user,user_details},dispatch]= useStateValue();
-    const [orderNotifications,setOrderNotification]= useState(0);
+    const [{sidebarVandore,user,user_details,order_notification},dispatch]= useStateValue();
+   
     const history= useHistory();
     const [show,setShow]= useState(true);
 
     const id= props.match.params.id;
 
-
-     useEffect(() => {
-        db.collection(id.toUpperCase()).doc('site_orders_notification').collection("site_orders_notification").doc("orders")
-        .onSnapshot(function(doc) {
-            setOrderNotification(doc.data().order);
-        });
-    },[]); 
-
+    const sound = new Howl({
+        src: [notification]
+      });
+     
+    if(order_notification > 0 ){
+        sound.play();
+    }
 
     
        
@@ -50,7 +52,7 @@ function Restro(props) {
    
          
  
-    console.log(orderNotifications);
+    
 
     const handleNotification= () => {
         db.collection(id.toUpperCase()).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
@@ -68,16 +70,16 @@ function Restro(props) {
      
  <div className='vandoreMobile'>
      {sidebarVandore ? <SidebarRestro id={id} active={props.match.params.page} /> : ''}
-     {orderNotifications > 0 ? (
+     {order_notification > 0 ? (
          <div className='notification__page'>
-         <ReactAudioPlayer
+        {/*  <ReactAudioPlayer
          src={notification}
          autoPlay
          
-      />
+      /> */}
            <div className='notification__content'>
-               {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
-               
+               {order_notification === 1 ?  <h2>You Have {order_notification} New Order</h2> :  <h2>You Have {order_notification} New Orders</h2>}
+               <img src="https://i.ibb.co/VTVJywp/notification.jpg" />
                <div className='notification__content--button' onClick={handleNotification}>
                      OK
                 </div>
@@ -98,22 +100,25 @@ function Restro(props) {
 {props.match.params.page === 'dashboard' ? <HandleDashboard id={id}/> : ''}
 {props.match.params.page === 'settings' ? <HandleSettings id={id}/> : ''}
 {props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
+{props.match.params.page === 'pricing' ? <HandlePricing  id={id}/> : ''}
+{props.match.params.page === 'qrapp' ? <HandleQrApp id={id}/> : ''}
       </>
      )}
 
  </div>
  <div className='vandorePc'>
  <SidebarRestro  id={id} active={props.match.params.page} />
- {orderNotifications > 0 ? (
+ {order_notification > 0 ? (
      <div className='notification__page'>
-         <ReactAudioPlayer
+        {/*  <ReactAudioPlayer
          src={notification}
          autoPlay
          
-      />
+      /> */}
+     
            <div className='notification__content'>
-               {orderNotifications === 1 ?  <h2>You Have {orderNotifications} New Order</h2> :  <h2>You Have {orderNotifications} New Orders</h2>}
-               
+               {order_notification === 1 ?  <h2>You Have {order_notification} New Order</h2> :  <h2>You Have {order_notification} New Orders</h2>}
+               <img src="https://i.ibb.co/VTVJywp/notification.jpg" />
                <div className='notification__content--button' onClick={handleNotification}>
                      OK
                 </div>
@@ -133,6 +138,8 @@ function Restro(props) {
 {props.match.params.page === 'dashboard' ? <HandleDashboard id={id}/> : ''}
 {props.match.params.page === 'settings' ? <HandleSettings id={id}/> : ''}
 {props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
+{props.match.params.page === 'pricing' ? <HandlePricing  id={id}/> : ''}
+{props.match.params.page === 'qrapp' ? <HandleQrApp id={id}/> : ''}
 </>
  ) }
 

@@ -1,0 +1,38 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+.handleQrApp {
+    display: flex;
+    flex: 0.8;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+    background-color: rgb(91, 87, 115);
+
+    @include respond(tab-port) {
+        flex: 1;
+        width: 100vw;
+    }
+}
+
+.handleQrApp__Qr {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-self: center;
+  
+}
+

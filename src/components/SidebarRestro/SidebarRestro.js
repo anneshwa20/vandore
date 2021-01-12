@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './SidebarRestro.scss';
 import SidebarRowRestro from './../SidebarRow/SidebarRowRestro';
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close, ExitToApp} from '@material-ui/icons'
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close, ExitToApp, ExpandLessOutlined, Money, PhoneIphone} from '@material-ui/icons'
 import { authMain, db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import { Avatar, Menu } from '@material-ui/core';
@@ -69,7 +69,8 @@ function SidebarRestro({active,id}) {
         <div className='sidebarRestro__option'>
     
              <div onClick={() => setShowManagement(!showManagement)} className='option_management'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Management'  admin/>
+            {showManagement ? <SidebarRowRestro Icon={ExpandLessOutlined}  title='Management'  admin/> : <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Management'  admin/>}
+          
             </div>
               
        {showManagement ? (
@@ -88,7 +89,8 @@ function SidebarRestro({active,id}) {
 
         
              <div onClick={() => setShowCreative(!showCreative)} className='option_creative'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Creative'  admin/>
+          {showCreative ?   <SidebarRowRestro Icon={ExpandLessOutlined}  title='Creative'  admin/> :   <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Creative'  admin/>}
+          
             </div>
          
    
@@ -122,7 +124,7 @@ function SidebarRestro({active,id}) {
         
       
              <div onClick={() => setShowStore(!showStore)} className='option_store'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='My Store' admin />
+       {showStore ? <SidebarRowRestro Icon={ExpandLessOutlined}  title='My Store' admin /> : <SidebarRowRestro Icon={ExpandMoreOutlined}  title='My Store' admin />}     
             </div>
          
 
@@ -148,7 +150,7 @@ function SidebarRestro({active,id}) {
 
         
              <div onClick={() => setShowCustomers(!showCustomers)} className='option_customers'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Customers'  admin/>
+    {showCustomers ? <SidebarRowRestro Icon={ExpandLessOutlined}  title='Customers'  admin/> : <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Customers'  admin/>}        
             </div>
          
 
@@ -170,7 +172,7 @@ function SidebarRestro({active,id}) {
          
          
              <div onClick={() => setShowSettings(!showSettings)} className='option_settings'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Settings' admin />
+    {showSettings ?  <SidebarRowRestro Icon={ExpandLessOutlined}  title='Settings' admin /> :  <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Settings' admin />}       
             </div>
         
 
@@ -181,10 +183,23 @@ function SidebarRestro({active,id}) {
                 </div>
         ) : ''}
 
+{showSettings ? (
+            <div onClick={() => history.push(`/restro/pricing/${pageId}`)}>
+            <SidebarRowRestro Icon={Money} title="Pricing" active={active==='pricing' ? true : false}/>
+                </div>
+        ) : ''}
+
+{showSettings ? (
+            <div onClick={() => history.push(`/restro/qrapp/${pageId}`)}>
+            <SidebarRowRestro Icon={PhoneIphone} title="QR code & App" active={active==='qrapp' ? true : false}/>
+                </div>
+        ) : ''}
+
+
               
           
              <div onClick={() => setShowChannel(!showChannel)} className='option_channel'>
-            <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Channels' admin/>
+    {showChannel ? <SidebarRowRestro Icon={ExpandLessOutlined}  title='Channels' admin/> : <SidebarRowRestro Icon={ExpandMoreOutlined}  title='Channels' admin/>}        
             </div>
               
 

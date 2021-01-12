@@ -21,7 +21,7 @@
 
     @include respond(tab-port) {
        width: 80%;
-        height: 350px;
+        min-height: 350px;
     }
 }
 .post__top{

@@ -1,0 +1,91 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+.priceCard {
+    min-height: 630px;
+    width: 30%;
+    background-color: white;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+
+    @include respond(tab-port) {
+        width: 90%;
+    }
+}
+.priceCard > h2 {
+    text-transform: uppercase;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid lightgray;
+}
+.priceCard__price {
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+    
+}
+.priceCard__price > span {
+    font-size: 50px;
+    font-weight: 500;
+    
+}
+
+.priceCard__price > p {
+    margin: 10px;
+    color: gray;
+}
+
+.priceCard__info {
+    padding: 15px;
+    height: 300px;
+    overflow-y: scroll;
+}
+.priceCard__info > span {
+    color: gray;
+}
+.priceCard__info > p {
+    font-weight: 500;
+}
+.priceCard__bottom {
+    display: flex;
+    flex-direction: column;
+}
+.priceCard__bottom--button {
+    align-self: center;
+    width: max-content;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: green;
+    cursor: pointer;
+}
+
+
+.priceCard__message {
+  background-color: #34a8eb;
+  width: 90%;
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 7px;
+  color: white;
+}
+
+

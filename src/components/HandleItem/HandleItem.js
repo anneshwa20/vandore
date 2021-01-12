@@ -4,18 +4,30 @@ import './HandleItem.css'
 import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 import { CloudUpload, Delete, Edit, EventAvailable, EventBusy, Update } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Modal } from '@material-ui/core';
 
 
 function HandleItem({item,id,pageId}) {
 
     const [name,setName]= useState(item.name);
     const [price,setPrice]= useState(item.price);
+    const [openAlert,setOpenAlert]= useState(false);
+    const [openImage,setOpenImage]= useState(false);
+
     const [rating,setRating]= useState(item.rating);
     const [description,setDescription]= useState(item.description);
     const [available,setAvailable]= useState(item.available);
     const [image,setImage]= useState(item.image);
     const[edit,setEdit]= useState(false);
+
+    const [openAlertDelete,setOpenAlertDelete]= useState(false);
+    const [deleteMessage,setDeleteMessage]= useState('');
+    const [deleteId,setDeleteId]= useState('');
+    const openDeleteModal= (message,id) => {
+        setDeleteMessage(message);
+        setDeleteId(id);
+        setOpenAlertDelete(true);
+    }
 
     const updateItem= (e) => {
         e.preventDefault();
@@ -42,7 +54,7 @@ function HandleItem({item,id,pageId}) {
             image: item.image,
             available: item.available
         })
-     }).then(alert('updated')).then(refreshPage);
+     }).then(() => setOpenAlert(true)).then(refreshPage);
 
   
     }
@@ -73,7 +85,7 @@ function HandleItem({item,id,pageId}) {
                image: item.image,
                available: item.available
            })
-        }).then(alert('updated')).then(refreshPage);
+        }).then(() => setOpenAlert(true)).then(refreshPage);
 
         setAvailable(!available);
    }
@@ -89,7 +101,8 @@ function HandleItem({item,id,pageId}) {
                 image: item.image,
                 available: item.available
             })
-         }).then(alert('deleted')).then(refreshPage);
+         }).then(refreshPage);
+         setOpenAlertDelete(false);
      }
 
     function getRandomText(length) {
@@ -104,14 +117,14 @@ function HandleItem({item,id,pageId}) {
 
 
         const handleUploadStart= () => {
-            alert('UPLOAD STARTED')
+           setOpenImage(true);
         }
     
         const handleUploadSuccess= (filename) =>{
           
         
            firebaseApp.storage().ref('products').child(filename).getDownloadURL()
-           .then(url => setImage(url)).then(alert('UPLOAD FINISH'));
+           .then(url => setImage(url)).then(() => setOpenImage(false));
                          
             
            
@@ -159,7 +172,7 @@ function HandleItem({item,id,pageId}) {
                     <IconButton> <Edit /></IconButton>
                       <span>Edit</span>
                   </div>
-                  <div style={{textAlign: 'center'}} onClick={deleteItem} className='handleItem__buttons--button'>
+                  <div style={{textAlign: 'center'}} onClick={() => openDeleteModal('this item','demo')} className='handleItem__buttons--button'>
                     <IconButton> <Delete /></IconButton>
                     <span>Delete</span>
                   </div>
@@ -189,6 +202,63 @@ function HandleItem({item,id,pageId}) {
            <div className='handleItem__availability' style={{ backgroundColor: `${available ? 'green' : 'red'}`, color: 'white'}}>
                 {available ? 'Currently Available' : 'Currently Not Available'}
            </div>
+
+           <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openAlert}
+  onClose={() => setOpenAlert(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+          Your data was upated
+        </div>
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={deleteItem}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage(''); setDeleteId('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
+    </div>
+ 
+</Modal>
+
         </div>
     )
 }

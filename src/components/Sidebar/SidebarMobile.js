@@ -16,6 +16,7 @@ import SidebarRow from './../SidebarRow/SidebarRow';
 import Leftqoute from '../../icons/lq.svg';
 import Rightqoute from '../../icons/rq.svg';
 import firebase from 'firebase';
+import axios from '../../axios';
 
 
 import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Home, Fastfood, AccountCircle, ExitToApp} from '@material-ui/icons'
@@ -35,7 +36,7 @@ function SidebarMobile({page,pageId}) {
   const [facebookLink,setFacebookLink]= useState('');
   const [zomatoLink,setZomatoLink]= useState('');
   const [swiggyLink,setSwiggyLink]= useState('');
-  const [{site_settings,site_colors,user,user_details,sidebar},dispatch]= useStateValue();
+  const [{site_settings,site_colors,user,user_details,sidebar,site_info},dispatch]= useStateValue();
   const [youtubeLink,setYoutubeLink]= useState('');
   const [feedbacks,setFeedbacks]= useState([]);
   const [open,setOpen]= useState(false);
@@ -47,6 +48,50 @@ function SidebarMobile({page,pageId}) {
   const [image,setImage]= useState('');
 
   const AutoplaySlider= withAutoplay(AwesomeSlider);
+
+
+
+  
+  const sendSMS= async () => {
+    var messageUser= '';
+  
+     if(value > 3) {
+        messageUser='Thank you for feedback.';
+     }
+     else if(value < 3) {
+       messageUser= 'sorry for the inconvinience';
+     }
+     else{
+       messageUser =`we will try to improve it.`;
+     }
+  
+   const SMS = await axios({
+        method: 'post',
+        // Stripe expects the total in a currencies subunits
+        url: `/orderSMS?phone=${user_details.phone}&message=${messageUser}`
+    });
+     }
+  
+     const sendEmail= async (mode) => {
+     
+      var messageUser= '';
+  
+      if(value > 3) {
+         messageUser='Thank you for feedback.';
+      }
+      else if(value < 3) {
+        messageUser= 'sorry for the inconvinience';
+      }
+      else{
+        messageUser =`we will try to improve it.`;
+      }
+   const EMAIL = await axios({
+        method: 'post',
+        
+        url: `/feedbackEmail?email=ap8335235@gmail.com&message=${messageUser}&business=${site_info.siteName}&subject=Thanks From ${site_info.siteName}`
+    });
+  }
+  
 
   const StyledRating = withStyles({
     iconFilled: {
@@ -233,6 +278,14 @@ function SidebarMobile({page,pageId}) {
          rating: value,
          timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => setOpenRate(false));
+
+
+      if(site_settings.feedbackMessage){
+        sendSMS();
+      }
+      if(site_settings.feedbackEmail){
+        sendEmail();
+      }
     }else{
       db.collection(pageId).doc('messages').collection('messages')
       .doc()

@@ -1,4 +1,4 @@
-import { Avatar } from '@material-ui/core'
+import { Avatar, Modal } from '@material-ui/core'
 import { AccountCircle, ChatBubbleOutline, Delete, ExpandMoreOutlined, NearMe, ThumbUpSharp } from '@material-ui/icons'
 import React from 'react'
 import { db } from '../../firebase'
@@ -6,13 +6,22 @@ import { useStateValue } from '../../StateProvider'
 import firebase from 'firebase';
 import './PostAdmin.scss'
 import { useHistory } from 'react-router-dom'
+import { useState } from 'react'
 
 function PostAdmin({pageId,id,profilePic,image,username,timestamp,message,handleDelete,fclicks,wclicks,visits}) {
     const [{user_details},dispatch]= useStateValue();
     const history= useHistory();
+    const [openAlertDelete,setOpenAlertDelete]= useState(false);
+    const [deleteMessage,setDeleteMessage]= useState('');
+
+    const openDeleteModal= (message) => {
+        setDeleteMessage(message);
+        setOpenAlertDelete(true);
+    }
 
     const postDelete= () => {
-      db.collection(pageId.toUpperCase()).doc('posts').collection('posts').doc(id).delete().then(alert('Deleted'));
+      db.collection(pageId.toUpperCase()).doc('posts').collection('posts').doc(id).delete();
+      setOpenAlertDelete(false);
     }
 
     const updateFacebook= () => {
@@ -69,7 +78,7 @@ function PostAdmin({pageId,id,profilePic,image,username,timestamp,message,handle
                     <h3>{username}  </h3>
                <p>{new Date(timestamp?.toDate()).toUTCString()}</p>
                </div>
-               {handleDelete  ? <button onClick={postDelete} style={{width: 50,height:50,marginLeft: 20}}><Delete /></button> : ''}
+               {handleDelete  ? <button onClick={() => openDeleteModal('this post')} style={{width: 50,height:50,marginLeft: 20}}><Delete /></button> : ''}
            </div>
            <div className="post__bottom" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
                <p>{message}</p>
@@ -95,6 +104,26 @@ function PostAdmin({pageId,id,profilePic,image,username,timestamp,message,handle
                </div>
                
            </div>
+           <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={postDelete}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
         </div>
     )
 }

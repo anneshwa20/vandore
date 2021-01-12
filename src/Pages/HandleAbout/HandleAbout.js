@@ -12,6 +12,9 @@ import AboutSvg from '../../icons/undraw_newspaper_k72w.svg';
 function HandleAbout({id}) {
     const [currImage,setCurrImage]= useState('');
     const [currAbout,setCurrAbout]= useState('');
+    const [openAlert,setOpenAlert]= useState(false);
+    const [openImage,setOpenImage]= useState(false);
+
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const history= useHistory();
     const pageId= id;
@@ -51,14 +54,14 @@ function HandleAbout({id}) {
      },[])
 
     const handleUploadStart= () => {
-        alert('UPLOAD STARTED')
+        setOpenImage(true);
     }
 
     const handleUploadSuccess= (filename) =>{
       
     
        firebaseApp.storage().ref('about').child(filename).getDownloadURL()
-       .then(url => setCurrImage(url)).then(alert('UPLOAD FINISH'));
+       .then(url => setCurrImage(url)).then(() => setOpenImage(false));
                      
         
        
@@ -70,7 +73,7 @@ function HandleAbout({id}) {
          db.collection(pageId.toUpperCase()).doc('about').collection("about").doc('about_site').set({
            image: currImage,
            about: currAbout
-       }).then(alert('UPDATED')).then(() => setEdit(false));
+       }).then(() => setOpenAlert(true)).then(() => setEdit(false));
      }
 
 
@@ -131,7 +134,7 @@ function HandleAbout({id}) {
             <p>{site_settings.aboutUs ? 
             'To turn off About Us, go to settings and disable About Us' : 
             'About Us is disabled, go to settings and enable About Us'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -139,6 +142,42 @@ function HandleAbout({id}) {
             </p> 
             <div  onClick={() => manageVideo(single_guides.about)}>Guides</div>
            </div>
+
+           <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openAlert}
+  onClose={() => setOpenAlert(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+          Your data was upated
+        </div>
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
+    </div>
+ 
+</Modal>
+
 
            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -171,7 +210,7 @@ function HandleAbout({id}) {
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage About Us Page</h1>
-                         <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                         <h3>About helps the users to understand your business overview.</h3>
                    
                           <div className='site_preview--getStarted' onClick={handleGetStarted}>
                              Get Started
@@ -189,7 +228,7 @@ function HandleAbout({id}) {
            <div className='site_preview--guide'>
               <div className='site_preview--guide--left'>
               <img src={AboutSvg} style={{fill:"#FFFFFF"}} />
-              <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+              <h4>About helps the users to understand your business overview.</h4>
               </div>
               <div className='site_preview--guide--right'>
                 <iframe src={single_guides.about} />

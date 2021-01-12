@@ -1,0 +1,55 @@
+.QRComponent {
+    min-height: 450px;
+    min-width: 300px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+}
+.QRComponentQR{
+    align-self: center;
+    margin-top: -80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.QRComponentTop{
+    min-height: 200px;
+    background-color: green;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 8px;
+}
+.QRComponentTop > h3 {
+    color: white;
+    margin-top: 10px;
+}
+.QRComponentQR > p {
+    color: white;
+    margin-bottom: 10px;
+}
+.QRComponentBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+.QRComponentBottom > h4 {
+    color: green;
+}
+.QRComponentBottom--logo{
+    display: flex;
+    margin-top: 20px;
+}
+.QRComponentBottom--logo > img {
+    width: 30px;
+    height: 30px;
+}
+
+.QRComponentBottom--logo > h2 {
+    font-size: 25px;
+}
+
+ 

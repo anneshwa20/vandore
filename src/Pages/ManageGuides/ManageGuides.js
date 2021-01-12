@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { db } from '../../firebase';
+import firebase from 'firebase';
 import './ManageGuides.css'
 
 function ManageGuides() {
@@ -10,11 +11,13 @@ function ManageGuides() {
     useEffect(() => {
   
         db.collection('guides')
+        .orderBy("timestamp")
         .onSnapshot(snapshot => (
             setCategories(snapshot.docs.map(doc => ({
                 id: doc.id,
                 title: doc.data().title,
-                items: doc.data().items
+                items: doc.data().items,
+              
             })))
         ))
        
@@ -23,7 +26,8 @@ function ManageGuides() {
     const handleCategory= () => {
         db.collection('guides').add({
             title: category,
-            items: []
+            items: [],
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(alert('category updated')).then(refreshPage);
     }
 

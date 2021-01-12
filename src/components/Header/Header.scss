@@ -48,10 +48,17 @@
     }
 }
 
-.sidebar__container > p {
-    font-size: x-large;
-    font-weight: bold;
-    margin-left: 5px;
+.mobile__header--title {
+    display: none;
+
+
+    @include respond(tab-port) {
+        font-size: larger;
+        font-weight: bold;
+        display: flex;
+        margin-left: 15px;
+        justify-self: center;
+    }
 }
 
 

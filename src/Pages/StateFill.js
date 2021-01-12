@@ -12,7 +12,7 @@ function StateFill({id,authorization}) {
     const [visits,setVisits]= useState('');
     const history= useHistory();
 
-    console.log('this is working',id);
+    
 
                
    
@@ -40,7 +40,7 @@ function StateFill({id,authorization}) {
        
          },[])
   
-       useEffect(() => {
+      /*  useEffect(() => {
         
             db.collection(id).doc('site').collection("site").doc('site_info')
             .get()
@@ -58,7 +58,17 @@ function StateFill({id,authorization}) {
               console.log("Error getting document:", error);
             });
        
-         },[])
+         },[]) */
+
+         useEffect(() => {
+          db.collection(id.toUpperCase()).doc('site').collection("site").doc('site_info')
+          .onSnapshot(function(doc) {
+            dispatch({
+              type: 'ADD_SITE_INFO',
+              site_info: doc.data()
+            })
+          });
+      },[]); 
   
   
          useEffect(() => {
@@ -81,25 +91,31 @@ function StateFill({id,authorization}) {
      
        },[])
   
-       useEffect(() => {
-        
-        db.collection(id).doc('site').collection("site").doc('site_colors')
-        .get()
-        .then(function(doc) {
-          if (doc.exists) {
-              dispatch({
-                type: 'ADD_SITE_COLORS',
-                site_colors: doc.data()
-              })
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        }).catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-   
-     },[])
+     
+
+
+     useEffect(() => {
+      db.collection(id.toUpperCase()).doc('site').collection("site").doc("site_colors")
+      .onSnapshot(function(doc) {
+        dispatch({
+          type: 'ADD_SITE_COLORS',
+          site_colors: doc.data()
+        })
+      });
+  },[]); 
+
+
+  useEffect(() => {
+    db.collection(id.toUpperCase()).doc('site_orders_notification').collection("site_orders_notification").doc("orders")
+    .onSnapshot(function(doc) {
+        dispatch({
+          type: 'ORDER_NOTIFICATION',
+          order: doc.data().order
+        })
+    });
+},[]); 
+
+
 
      useEffect(() => {
         

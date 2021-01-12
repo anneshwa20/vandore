@@ -100,37 +100,40 @@ function Body({pageId}) {
            
 
         </div>
-        <div className='slide' style={{margin: '10px auto'}}>
-          <div className='slide1Slider'>
-          <AutoplaySlider
-                   play={true}
-                   cancelOnInteraction={false} // should stop playing on user interaction
-                   interval={3000}
-                   animation='cubeAnimation'
-               >
-                        {images.map((image,key) => (
-                          <div key={key} style={{backgroundImage: `url(${image})`,backgroundSize: 'contain'}}>
-                             
-                          </div>
-                       ))}
-       </AutoplaySlider> 
-          </div>
-          <div className='slide2'>
-          <AutoplaySlider
-                   play={true}
-                   cancelOnInteraction={false} // should stop playing on user interaction
-                   interval={3000}
-                   animation='cubeAnimation'
-               >
-                       {images.map((image,key) => (
-                          <div key={key} style={{backgroundImage: `url(${image})`,backgroundSize: '900px 400px'}}>
-                             
-                          </div>
-                       ))}
-       </AutoplaySlider> 
-       </div>
-       
-       </div>
+        {site_settings.slider ? (
+              <div className='slide' style={{margin: '10px auto'}}>
+              <div className='slide1Slider'>
+              <AutoplaySlider
+                       play={true}
+                       cancelOnInteraction={false} // should stop playing on user interaction
+                       interval={3000}
+                       animation='cubeAnimation'
+                   >
+                            {images.map((image,key) => (
+                              <div key={key} style={{backgroundImage: `url(${image})`,backgroundSize: 'contain'}}>
+                                 
+                              </div>
+                           ))}
+           </AutoplaySlider> 
+              </div>
+              <div className='slide2'>
+              <AutoplaySlider
+                       play={true}
+                       cancelOnInteraction={false} // should stop playing on user interaction
+                       interval={3000}
+                       animation='cubeAnimation'
+                   >
+                           {images.map((image,key) => (
+                              <div key={key} style={{backgroundImage: `url(${image})`,backgroundSize: '900px 400px'}}>
+                                 
+                              </div>
+                           ))}
+           </AutoplaySlider> 
+           </div>
+           
+           </div>
+        ) : ''}
+      
        
         {site_settings.store && site_settings.discount ? (
                 <div className='item__preview'>

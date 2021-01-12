@@ -26,7 +26,7 @@ function StoreCategory({pageId,category,updateCategory,deleteCategory}) {
           
 
            
-              <IconButton onClick={() => deleteCategory(category.id)}><Delete style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}}/></IconButton>
+              <IconButton onClick={() => deleteCategory('this category',category.id)}><Delete style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}}/></IconButton>
             
     </div>
             
@@ -39,8 +39,9 @@ function StoreCategory({pageId,category,updateCategory,deleteCategory}) {
        
           
             <div className='handleStore__category--buttons'>
+               
+               {category.title === 'Discover' ? '' :   <IconButton onClick={() => setEdit(true)}><Edit style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}} /></IconButton>}
               
-                <IconButton onClick={() => setEdit(true)}><Edit style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}} /></IconButton>
               
                 
                 <IconButton onClick={() => history.push(`/handleCategory/${pageId}/${category.id}`)}><ArrowForwardIosSharp style={{color: 'black',backgroundColor: 'rgba(66, 135, 245, 0.2)',borderRadius: '99px',padding: '10px'}}/></IconButton>

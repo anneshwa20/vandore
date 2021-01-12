@@ -192,7 +192,7 @@ function Chats() {
        <div className='site_preview--topContainer'>
               <div className='site_preview--topContainer--left'>
                  <h1 style={{color: 'rgb(73, 157, 222)'}}>Introducing Chat Channels</h1>
-                 <h3 style={{color: 'rgb(70, 84, 94)'}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                 <h3 style={{color: 'rgb(70, 84, 94)'}}>Creating chat Channels helps in interacting with customers and promotes high customer engagement.</h3>
            
                   <div className='site_preview--getStarted' onClick={handleGetStarted}>
                      Get Started
@@ -210,7 +210,7 @@ function Chats() {
    <div className='site_preview--guide'>
       <div className='site_preview--guide--left'>
       <img src={ChatSvg} style={{fill:"#FFFFFF"}} />
-      <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+      <h4>Creating chat Channels helps in interacting with customers and promotes high customer engagement.</h4>
       </div>
       <div className='site_preview--guide--right'>
         <iframe src={single_guides.chatChannels} />

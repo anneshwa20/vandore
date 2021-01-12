@@ -21,6 +21,8 @@ import PaymentIcon from '../../icons/credit-card.svg';
 import OrderIcon from '../../icons/check-list(1).svg';
 import UserIcon from '../../icons/user.svg';
 import GalleryIcon from '../../icons/gallery(1).svg'
+import LineChartMobile from '../../components/LineChart/LineChartMobile';
+import OrdersAnalyticsMobile from '../../components/OrdersAnalytics/OrdersAnalyticsMobile';
 
 
 function HandleDashboard({id}) {
@@ -223,6 +225,7 @@ function HandleDashboard({id}) {
                         .orderBy("createdAt","desc")
                         .limit(7)
                         .onSnapshot(snapshot => (
+                            
                             setOrdersDate(snapshot.docs.map(doc => doc.id))
                         ))
                        
@@ -381,7 +384,7 @@ const handleChangeIconColor=(color) => {
         <h2 style={{color: 'white',marginTop:'5px'}}>{user_details.name}</h2>
         <h3 style={{color: 'white',marginTop:'5px',width: '300px',fontSize: '12px',marginBottom: '10px',textAlign: 'center'}}>{user_details.address}</h3>
          <div  className='visitShop' style={{cursor: 'pointer',color: 'white',padding: '10px',height: '50px', border: '1px solid white', borderRadius: '12px', display: 'flex', justifyContent: 'space-between',alignItems: 'center'}}>
-             <p style={{marginRight: '30px'}}>Visit Your Shop:</p>  <a href={`https://restro-e4874.firebaseapp.com/${id}`} target="_blank" >vandore.in/{id}</a>
+             <p style={{marginRight: '30px'}}>Visit Your Shop:</p>  <a href={`https://vandore.in/${id}`} target="_blank" >vandore.in/{id}</a>
          </div>
        </div>
        <div className='handleDashboard__header--right' style={{backgroundImage: `url(${image})`}}>
@@ -584,6 +587,17 @@ const handleChangeIconColor=(color) => {
       
   </div>
 
+  <div className='dashboard__analytics--mobile'>
+    
+  <div className='chartMobile' style={{backgroundColor: 'black',borderRadius: '10px'}}>
+      <LineChartMobile  dates={visitsDate} datesData={visitsPerday}/>
+      </div>
+
+   <div className='chartMobile'  style={{backgroundColor: 'black',borderRadius: '10px'}}>
+      <OrdersAnalyticsMobile  dates={ordersDate} datesData={ordersPerDay} />
+   </div>
+  </div>
+
   <div className='dashboard__headerTitle' style={{marginBottom: '20px'}}>
       Manage Your Colors
         <hr></hr>
@@ -708,11 +722,29 @@ const handleChangeIconColor=(color) => {
   aria-describedby="Guide Video description"
 >
     <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
-        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: '#f0c14b'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
           Your data was upated
         </div>
-        <div className='modal__button' style={{margin: '10px auto', backgroundColor: '#3E67D0',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '12px'}} onClick={()=> setOpenAlert(false)}>
-          Okay
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
         </div>
     </div>
  
@@ -760,23 +792,6 @@ const handleChangeIconColor=(color) => {
    
   </>
 </Modal>
-<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
-  open={openImage}
-  
-  aria-labelledby="Guide Video"
-  aria-describedby="Guide Video description"
->
-    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
-        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: '#f0c14b'}}>
-         Please wait your photo is uploading
-        </div>
-        
-        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
-          <img src='https://i.ibb.co/HqghKW6/2.gif' />
-        </div>
-    </div>
- 
-</Modal>
 
 
                </>
@@ -803,7 +818,7 @@ const handleChangeIconColor=(color) => {
                      <div className='site_preview--topContainer'>
                             <div className='site_preview--topContainer--left'>
                                <h1>Dashboard</h1>
-                               <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                               <h3>Dashboard helps you performing all the core functions of the website.</h3>
                          
                                 <div className='site_preview--getStarted' onClick={handleGetStarted}>
                                    Get Started
@@ -821,7 +836,7 @@ const handleChangeIconColor=(color) => {
                  <div className='site_preview--guide'>
                     <div className='site_preview--guide--left'>
                     <img src={Dashboard} style={{fill:"#FFFFFF"}} />
-                    <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+                    <h4>Dashboard helps you performing all the core functions of the website.</h4>
                     </div>
                     <div className='site_preview--guide--right'>
                       <iframe src={single_guides.dashboard} />

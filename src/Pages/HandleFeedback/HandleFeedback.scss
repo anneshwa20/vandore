@@ -34,10 +34,16 @@
     background-color: white;
     width: 40%;
     margin: 15px;
+    border: 4px solid green;
 
     @include respond(tab-port) {
         width: 80%;
     }
+}
+
+.handleFeedback__feedback > button {
+    border-radius: 10px;
+    background-color: green;
 }
 
 .handleFeedback__feedback--item {

@@ -27,19 +27,19 @@ function Header({home,cart,orders,store,account,login,pageId}) {
         <div className='header'>
           <div className='sidebar__container' >
             <div onClick={handleSidebar}>
-            {sidebar ?  <Close style={{fontSize: '30px'}}/> : <MenuRounded style={{fontSize: '30px'}}/>}
+            {sidebar ?  <Close style={{fontSize: '25px'}}/> : <MenuRounded style={{fontSize: '25px'}}/>}
             </div>
           
-            <p style={{color: `${site_colors.primary}`}}>{site_info.siteName}</p> 
+         
                   </div>
-
+                  <p  className='mobile__header--title' style={{color: `${site_colors.primary}`}}>{site_info.siteName}</p> 
     {site_settings.store ? (
  <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}} className='headerCart'>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
-        <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '20px',height:'20px',display: 'flex', justifyContent: 'center'}}>
+        <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '15px',height:'15px',display: 'flex', justifyContent: 'center'}}>
           {basket.length}
         </div>
-             <ShoppingCartOutlined fontSize="large" style={{color: `${site_colors.icons}`}}/>
+             <ShoppingCartOutlined  style={{color: `${site_colors.icons}`,fontSize: '20px'}}/>
              
         </div> 
  </Link>

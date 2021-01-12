@@ -35,15 +35,40 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @include respond(tab-port) {
+        flex: 1;
+        height: 100vh;
+    }
 }
 
 .notification__content {
     width: 60%;
     background-color: white;
-    padding: 25px;
+    
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @include respond(tab-port) {
+        width: 90%;
+        height: max-content;
+    }
+}
+
+.notification__content > img {
+    padding: 10px;
+    width: 70%;
+    height: 200px;
+    object-fit: contain;
+}
+.notification__content > h2 {
+    background-color: rgba(66, 135, 245, 0.7);
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: larger;
+    color: white;
 }
 .notification__content--button {
     background-color: rgba(66, 135, 245, 1);

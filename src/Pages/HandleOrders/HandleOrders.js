@@ -3,20 +3,23 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import Order from '../../components/Order/Order';
-import { db } from '../../firebase';
+import { db, dbMain } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import './HandleOrders.scss';
 import OrderSvg from '../../icons/undraw_online_payments_luau.svg';
 import moment from 'moment';
 import { Menu, ReceiptOutlined } from '@material-ui/icons';
+import axios from '../../axios';
 
 
 function HandleOrders({id}) {
-  
+    const [searchOrders,setSearchOrders]= useState('');
+    const [message,setMessage]= useState('');
+
     const [orders,setOrders]= useState([]);
     const [openOrder,setOpenOrder]= useState(false);
     const [currentOrder,setCurrentOrder]= useState({});
-    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore,user,user_details},dispatch]= useStateValue();
     const history= useHistory();
     const pageId= id;
     const [open,setOpen]= useState(false);
@@ -48,11 +51,41 @@ function HandleOrders({id}) {
    
     },[])
 
-   const handleOrderBill= (order) => {
-     setCurrentOrder(order);
-     setOpenOrder(true);
-   }
 
+
+    const seen = new Set();
+
+    let allUsers= orders.filter(order => {
+        const duplicate = seen.has(order.data?.phone);
+        seen.add(order.data?.phone);
+        return !duplicate;
+      });
+
+
+    const sendSMS= async () => {
+    const SMS = await axios({
+         method: 'post',
+         // Stripe expects the total in a currencies subunits
+         url: `/orderSMS?phone=${allUsers.map(user => user.data?.phone)}&message=${message}`
+     });
+      }
+
+    const handleMessage= () => {
+      sendSMS();
+      dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+       sms: user_details.sms - allUsers.length
+      });
+      setMessage('');
+    }
+
+   const filteredOrders= orders.filter(order => 
+    order.data?.name.toLowerCase().includes(searchOrders.toLowerCase()) || order.data?.phone.toLowerCase().includes(searchOrders.toLowerCase()) || order.data?.email.toLowerCase().includes(searchOrders.toLowerCase()));
+
+    const handleOrderBill= (order) => {
+        setCurrentOrder(order);
+        setOpenOrder(true);
+      }
+   
 
     return (
         <div className='handleOrders'>
@@ -78,7 +111,7 @@ function HandleOrders({id}) {
             <p>{site_settings.store ? 
             'To turn off store orders, go to settings and disable store' : 
             'Store orders is disabled, go to settings and enable store'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -87,7 +120,7 @@ function HandleOrders({id}) {
             <div onClick={() => manageVideo(single_guides.order)}>Guides</div>
            </div>
 
-     
+     <div className='userHolder'>
         <table className='handleUser__user'>
                      <tr>
                          <th>Customer</th>
@@ -100,7 +133,7 @@ function HandleOrders({id}) {
                          <th>Bill</th>
                      </tr>
 
-            {orders.map(order => (
+            {filteredOrders.map(order => (
             
             <tr>
                     <td style={{display: 'flex', alignItems: 'center'}}>  <Avatar src={order.data?.image} style={{marginRight: '5px'}}/> {order.data?.name}</td>
@@ -151,6 +184,61 @@ function HandleOrders({id}) {
             ))}
                      
                  </table>
+                 </div>
+
+                 <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
+       Search Users Based On Names,Phone,Email
+        <hr></hr>
+     </div>
+     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+       Search Your Users,Start By Typing Name Or Phone Or Email.
+       
+     </div>
+    
+
+                 <div className='handleStore__add'>
+           <div className='handleStore__add--input'>
+               <input type='text' placeholder='Enter User Name' value={searchOrders} onChange={e => setSearchOrders(e.target.value)} />
+            </div>
+                
+           </div>
+
+
+
+      
+    <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+       Send Promotional Message To Your Regular Customers
+        <hr></hr>
+     </div>
+     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+      Now You Can Send Promotional Messages To Your Existing Customers
+       
+     </div>
+     {user_details.sms < allUsers.length ? (
+          <div className='deleteAccount' style={{margin: '0 auto',width: '90%',color: 'green'}} >
+         You Don't Have Enough SMS Credits To Send Promotional Messages To All Users, Go To Pricing Tab To Buy Some SMS Credits
+          
+        </div>
+     ) : (
+        <div className='deleteAccount' style={{color: 'green',margin: '0 auto',width: '90%'}} >
+       By Sending Promotional Messages To All Users You Will Spend {allUsers.length} SMS Credits in Total
+        
+      </div>
+     )}
+
+
+
+                 <div className='handleStore__add'>
+           <div className='handleStore__add--input'>
+               <input type='text' placeholder='Enter Your Message' value={message} onChange={e => setMessage(e.target.value)} />
+            </div>
+            {user_details.sms < allUsers.length ? (
+                 <button style={{backgroundColor: 'gray'}} onClick={()=>{}}>Buy Credits</button>
+            ) : (
+                <button disabled={user_details.sms < allUsers.length} onClick={handleMessage}>Submit</button>
+            )}
+               
+           </div>
            {/*  {orders?.map(order => (
                 <Order 
                 delivery
@@ -198,7 +286,7 @@ function HandleOrders({id}) {
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage Your Orders</h1>
-                         <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                         <h3>Management of orders placed on your website simplifies online selling.</h3>
                    
                           <div className='site_preview--getStarted' onClick={handleGetStarted}>
                              Get Started
@@ -216,7 +304,7 @@ function HandleOrders({id}) {
            <div className='site_preview--guide'>
               <div className='site_preview--guide--left'>
               <img src={OrderSvg} style={{fill:"#FFFFFF"}} />
-              <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+              <h4>Management of orders placed on your website simplifies online selling.</h4>
               </div>
               <div className='site_preview--guide--right'>
                 <iframe src={single_guides.order} />

@@ -32,12 +32,18 @@
     text-align: center;
 }
 
+.userHolder {
+    max-height: 450px;
+    overflow-y: scroll;
+}
 .handleUser__user{
     width: 90%;
     border-collapse: collapse;
     border-radius: 10px;
     padding: 10px;
     margin: 20px auto;
+   
+  
 
     @include respond(tab-port) {
         width: 100vw;
@@ -68,6 +74,7 @@
   }
 .handleUser__user tr{
     background-color: #f2f2f2;
+     
 }
 
 

@@ -15,11 +15,24 @@ function HandleGallery({id}) {
     const [image,setImage]= useState('');
     const [images,setImages]= useState([]);
     const [show,setShow]= useState(false);
+    const [openAlert,setOpenAlert]= useState(false);
+    const [openImage,setOpenImage]= useState(false);
     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
     const pageId= id;
     const history= useHistory();
    const [open,setOpen]= useState(false);
    const [currentVideo,setCurrentVideo]= useState('');
+   const [openAlertDelete,setOpenAlertDelete]= useState(false);
+   const [deleteMessage,setDeleteMessage]= useState('');
+   const [deleteId,setDeleteId]= useState('');
+   const openDeleteModal= (message,id) => {
+       setDeleteMessage(message);
+       setDeleteId(id);
+       setOpenAlertDelete(true);
+   }
+
+
+
    const manageVideo= (link) => {
     setOpen(true);
     setCurrentVideo(link);
@@ -47,18 +60,20 @@ const refreshPage = ()=>{
         },[])
     
     const sliderDelete= (id) => {
-        db.collection(pageId.toUpperCase()).doc('gallery').collection('gallery').doc(id).delete().then(alert('deleted'));
-    }
+        db.collection(pageId.toUpperCase()).doc('gallery').collection('gallery').doc(id).delete();
+        setOpenAlertDelete(false);
+      }
 
     const handleUploadStart= () => {
-        alert('UPLOAD STARTED')
+        setOpenImage(true);
     }
 
     const handleUploadSuccess= (filename) =>{
       
     
        firebaseApp.storage().ref('gallery').child(filename).getDownloadURL()
-       .then(url => setImage(url)).then(() => setShow(true));
+       
+       .then(url => setImage(url)).then(() => setOpenImage(false)).then(() => setShow(true));
                      
         
        
@@ -69,7 +84,7 @@ const refreshPage = ()=>{
 
          db.collection(pageId.toUpperCase()).doc('gallery').collection("gallery").add({
            image: image
-       }).then(alert('Upload Finish')).then(() => setImage('')).then(() => setShow(false));
+       }).then(() => setOpenAlert(true)).then(() => setImage('')).then(() => setShow(false));
      }
 
     return (
@@ -96,7 +111,7 @@ const refreshPage = ()=>{
             <p>{site_settings.photoGallery ? 
             'To turn off Photo Gallery, go to settings and disable Photo gallery' : 
             'Photo gallery is disabled, go to settings and enable photo gallery'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -132,13 +147,69 @@ const refreshPage = ()=>{
                {images.map(image => (
                    <div className='images__holder--gallery' style={{height: 'max-content'}}>
                     <Zoom>    <img src={image.image}  className='images__holder__image--gallery'/> </Zoom>  
-                        <div className='gallery__delete' onClick={() => sliderDelete(image.id)}>
+                        <div className='gallery__delete' onClick={() => openDeleteModal('this photo',image.id)}>
                             Remove
                            <Delete />
                         </div>
                     </div>
                ))}
                </div>
+
+               <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openAlert}
+  onClose={() => setOpenAlert(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+          Your data was upated
+        </div>
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => sliderDelete(deleteId)}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage(''); setDeleteId('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
 
                <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -171,7 +242,7 @@ const refreshPage = ()=>{
                  <div className='site_preview--topContainer'>
                         <div className='site_preview--topContainer--left'>
                            <h1>Photo Gallery</h1>
-                           <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                           <h3>Creating an eye-catching gallery helps to draw the user attention.</h3>
                      
                             <div className='site_preview--getStarted' onClick={handleGetStarted}>
                                Get Started
@@ -189,7 +260,7 @@ const refreshPage = ()=>{
              <div className='site_preview--guide'>
                 <div className='site_preview--guide--left'>
                 <img src={GallerySvg} style={{fill:"#FFFFFF"}} />
-                <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+                <h4>Creating an eye-catching gallery helps to draw the user attention.</h4>
                 </div>
                 <div className='site_preview--guide--right'>
                   <iframe src={single_guides.photoGallery} />

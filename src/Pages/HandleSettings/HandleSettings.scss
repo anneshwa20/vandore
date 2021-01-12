@@ -46,3 +46,39 @@
 .MuiSwitch-colorPrimary {
     color: rgba(66, 135, 245, 1);
 }
+
+.deleteAccount {
+    width: 50%;
+    margin-left: 10px;
+    margin-bottom: 20px;
+
+    @include respond(tab-port) {
+        width: 60%;
+        margin-left: 10px;
+    }
+}
+
+.deleteAccountButton {
+    cursor: pointer;
+    padding: 10px;
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    width: max-content;
+    margin-top: 10px;
+}
+.domainAccountButton {
+    cursor: pointer;
+    padding: 10px;
+    background-color: green;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    width: max-content;
+    margin-top: 10px;
+}
+
+.domainAccountButton:hover {
+    background-color: darkgreen;
+}

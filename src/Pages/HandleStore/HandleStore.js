@@ -9,10 +9,16 @@ import { useStateValue } from '../../StateProvider';
 import './HandleStore.scss'
 import StoreSvg from '../../icons/undraw_street_food_hm5i.svg';
 import { AddAPhoto, Menu } from '@material-ui/icons';
+import firebase from 'firebase';
+
 
 function HandleStore({id}) {
     const [category,setCategory]= useState('');
     const [categories,setCategories]= useState([]);
+    const [openAlert,setOpenAlert]= useState(false);
+    const [openImage,setOpenImage]= useState(false);
+
+
     const [editCategory,setEditCategory]= useState('');
     const [save,setSave]= useState(false);
     const [cover,setCover]= useState('https://i.ibb.co/wWPx0KM/Handle-Your-Store.png');
@@ -25,6 +31,16 @@ function HandleStore({id}) {
  
      const [open,setOpen]= useState(false);
      const [currentVideo,setCurrentVideo]= useState('');
+
+     const [openAlertDelete,setOpenAlertDelete]= useState(false);
+     const [deleteMessage,setDeleteMessage]= useState('');
+     const [deleteId,setDeleteId]= useState('');
+     const openDeleteModal= (message,id) => {
+         setDeleteMessage(message);
+         setDeleteId(id);
+         setOpenAlertDelete(true);
+     }
+
      const handleGetStarted= () => {
         db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             store: true
@@ -54,7 +70,7 @@ function HandleStore({id}) {
     const updateCategory= (id,category) =>{
       db.collection(pageId.toUpperCase()).doc('store').collection('store').doc(id).update({
           title: category
-      }).then(alert('category updated'));
+      }).then(() => setOpenAlert(true));
     }
 
     const refreshPage = ()=>{
@@ -62,7 +78,8 @@ function HandleStore({id}) {
 
 
     const deleteCategory= (id) => {
-      db.collection(pageId.toUpperCase()).doc('store').collection('store').doc(id).delete().then(alert('category deleted')).then(refreshPage);
+      db.collection(pageId.toUpperCase()).doc('store').collection('store').doc(id).delete().then(refreshPage);
+      setOpenAlertDelete(false);
     }
 
     const handleCategory= (e) => {
@@ -70,8 +87,9 @@ function HandleStore({id}) {
 
          db.collection(pageId.toUpperCase()).doc('store').collection('store').add({
              title: category,
-             items: []
-         }).then(alert('category updated')).then(refreshPage);
+             items: [],
+             timestamp: firebase.firestore.FieldValue.serverTimestamp()
+         }).then(() => setOpenAlert(true)).then(refreshPage);
     }
 
     useEffect(() => {
@@ -82,14 +100,14 @@ function HandleStore({id}) {
     },[]);
 
     const handleUploadStart= () => {
-        alert('UPLOAD STARTED')
+        setOpenImage(true);
     }
 
     const handleUploadSuccess= (filename) =>{
       
     
        firebaseApp.storage().ref('storeCover').child(filename).getDownloadURL()
-       .then(url => setCover(url)).then(alert('UPLOAD FINISH')).then(() => setSave(true));
+       .then(url => setCover(url)).then(() => setOpenImage(false)).then(() => setSave(true));
                      
         
        
@@ -98,7 +116,7 @@ function HandleStore({id}) {
      const handleCoverUpload= () => {
          db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_store_cover').update({
              cover: cover
-         }).then(() => setSave(false))
+         }).then(() => setSave(false)).then(() => setOpenAlert(true));
      }
 
     return (
@@ -125,7 +143,7 @@ function HandleStore({id}) {
           <hr></hr>
           <div className='handleStore__categories--categories'>
                 {categories.map(category => (
-                        <StoreCategory pageId={pageId} category={category} deleteCategory={deleteCategory} updateCategory={updateCategory} />
+                        <StoreCategory pageId={pageId} category={category} deleteCategory={openDeleteModal} updateCategory={updateCategory} />
                     ))}
           </div>
            
@@ -166,7 +184,7 @@ function HandleStore({id}) {
             <p>{site_settings.store ? 
             'To turn off store , go to settings and disable store' : 
             'Store  is disabled, go to settings and enable store'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -174,6 +192,63 @@ function HandleStore({id}) {
             </p> 
             <div onClick={() => manageVideo(single_guides.store)}>Guides</div>
            </div>
+
+
+           <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openAlert}
+  onClose={() => setOpenAlert(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+          Your data was upated
+        </div>
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => deleteCategory(deleteId)}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage(''); setDeleteId('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
            
       <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -205,7 +280,7 @@ function HandleStore({id}) {
                <div className='site_preview--topContainer'>
                       <div className='site_preview--topContainer--left'>
                          <h1>Manage Your Store</h1>
-                         <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                         <h3>Creating a store helps in managing your products digitally for sale.</h3>
                    
                           <div className='site_preview--getStarted' onClick={handleGetStarted}>
                              Get Started
@@ -223,7 +298,7 @@ function HandleStore({id}) {
            <div className='site_preview--guide'>
               <div className='site_preview--guide--left'>
               <img src={StoreSvg} style={{fill:"#FFFFFF"}} />
-              <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+              <h4>Creating a store helps in managing your products digitally for sale.</h4>
               </div>
               <div className='site_preview--guide--right'>
                 <iframe src={single_guides.store} />

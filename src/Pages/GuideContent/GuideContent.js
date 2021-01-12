@@ -8,6 +8,7 @@ function GuideContent(props) {
     const [title,setTitle]= useState('');
     const [youtube,setYoutube]= useState('');
     const [image,setImage]= useState('');
+    const [description,setDescription]= useState('');
     const [image2,setImage2]= useState('');
 
 
@@ -20,7 +21,7 @@ function GuideContent(props) {
                 youtube: youtube,
                 image: image,
                 image2: image2,
-                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eu facilisis sed odio morbi quis commodo odio aenean sed.'
+                description: description
                 
             })
          }).then(alert('UPDATED'));
@@ -42,6 +43,9 @@ function GuideContent(props) {
           <h2>Add New Video</h2>
           <div className='handleCategory__form--input'>
          <input type='text' onChange={e => setTitle(e.target.value)} value={title} placeholder='Video Title' />
+          </div>
+          <div className='handleCategory__form--input'>
+         <input type='text' onChange={e => setDescription(e.target.value)} value={description} placeholder='Description' />
           </div>
           <div className='handleCategory__form--input'>
          <input type='text' onChange={e => setYoutube(e.target.value)} value={youtube}  placeholder='Video Link'/>

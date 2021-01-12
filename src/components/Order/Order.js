@@ -5,16 +5,30 @@ import CheckoutProduct from '../CheckoutProduct/CheckoutProduct'
 import CurrencyFormat from 'react-currency-format'
 import { db } from '../../firebase'
 import { useStateValue } from '../../StateProvider'
+import { Modal } from '@material-ui/core'
+import { useState } from 'react'
+import axios from '../../axios';
+
 
 function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
     const [{site_colors},dispatch]= useStateValue();
-    console.log(order);
+    const [openAlertDelete,setOpenAlertDelete]= useState(false);
+    const [deleteMessage,setDeleteMessage]= useState('');
+    const [deleteId,setDeleteId]= useState('');
+    const openDeleteModal= (message,id) => {
+        setDeleteMessage(message);
+        setDeleteId(id);
+        setOpenAlertDelete(true);
+    }
+ 
+ 
 
 
     const orderDelete= () => {
-        db.collection(pageId.toUpperCase()).doc('orders').collection('orders').doc(order.id).delete().then(alert('deleted'));
+        db.collection(pageId.toUpperCase()).doc('orders').collection('orders').doc(order.id).delete();
 
         handleModal(false);
+        setOpenAlertDelete(false);
     }
 
     const handleDelivery= () => {
@@ -28,6 +42,16 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
 
         handleModal(false);
     }
+
+    const sendSMS= async () => {
+        const messageUser=`Hi ${order.data.name}, Your order for - ${order.data.basket.map(item => item.title)}, has been cancelled due to some internal errors. We are extremely sorry for the inconvinience.`;
+  
+     const SMS = await axios({
+          method: 'post',
+          // Stripe expects the total in a currencies subunits
+          url: `/orderSMS?phone=${order.data?.phone}&message=${messageUser}`
+      });
+       }
  
     const handleCancelletion = () => {
         db.collection(pageId.toUpperCase()).doc('orders').collection('orders').doc(order.id).update({
@@ -37,7 +61,12 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
             cancelled: true
         })
 
+        sendSMS();
+
         handleModal(false);
+
+
+        
     }
 
 
@@ -60,7 +89,7 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
                      </>
                  )}
                 
-                 {handleDelete ? <button onClick={orderDelete}>Delete</button> : ''}
+                 {handleDelete ? <button onClick={() => openDeleteModal('this order','demo')}>Delete</button> : ''}
              </div>
                 
        
@@ -78,7 +107,26 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
                   <h3 >ORDER TOTAL: </h3>
                   <h3>Rs.{order.data.amount / 100}</h3>
               </div>
-            
+              <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => orderDelete()}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage(''); setDeleteId('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
         </div>
     )
 }

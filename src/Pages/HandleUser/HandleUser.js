@@ -3,14 +3,19 @@ import { Delete, DoneAll, Menu } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
-import { db } from '../../firebase';
+import { db, dbMain } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import './HandleUser.scss';
 import UserSvg from '../../icons/undraw_newspaper_k72w.svg';
+import axios from '../../axios';
+
+
 
 function HandleUser({id}) {
     const [users,setUsers]= useState([]);
-    const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
+    const [searchUser,setSearchUser]= useState('');
+    const [{site_settings,single_guides,site_preview,sidebarVandore,user_details,user},dispatch]= useStateValue();
+    const [message,setMessage]= useState('');
     const history= useHistory();
     const pageId= id;
     const handleGetStarted= () => {
@@ -55,6 +60,36 @@ function HandleUser({id}) {
          });
      }
 
+     const allUsers= `${users.map(user => user.phone)}`;
+   
+
+     const sendSMS= async () => {
+     
+     
+  
+     const SMS = await axios({
+          method: 'post',
+          // Stripe expects the total in a currencies subunits
+          url: `/orderSMS?phone=${allUsers}&message=${message}`
+      });
+       }
+ 
+
+
+     const handleMessage= () => {
+       sendSMS();
+       dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+        sms: user_details.sms - users.length
+       });
+       setMessage('');
+
+
+     }
+
+
+     const filteredUsers= users.filter(user => 
+        user.name.toLowerCase().includes(searchUser.toLowerCase()) || user.phone.toLowerCase().includes(searchUser.toLowerCase()) || user.email.toLowerCase().includes(searchUser.toLowerCase()));
+
 
 
     return (
@@ -81,7 +116,7 @@ function HandleUser({id}) {
             <p>{site_settings.userAuth ? 
             'To turn off User Authentication, go to settings and disable User Authentication' : 
             'User Authentication is disabled, go to settings and enable User Authentication'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -90,6 +125,9 @@ function HandleUser({id}) {
             <div onClick={() => manageVideo(single_guides.user)}>Guides</div>
            </div>
 
+     <div className='userHolder'>
+
+     
                   <table className='handleUser__user'>
                      <tr>
                          <th>Picture</th>
@@ -100,7 +138,7 @@ function HandleUser({id}) {
                          <th>Status</th>
                      </tr>
 
-            {users.map(user => (
+            {filteredUsers.map(user => (
             
             <tr  style={{   backgroundColor: `${user.active ? '' : 'red'}`,color: `${user.active ? '' : 'white'}`}}>
                     <td><Avatar src={user.image} style={{margin: '0 auto'}} /></td>
@@ -118,6 +156,65 @@ function HandleUser({id}) {
             ))}
                      
                  </table>
+
+                 </div>
+
+
+     <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+       Search Users Based On Names,Phone,Email
+        <hr></hr>
+     </div>
+     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+       Search Your Users,Start By Typing Name Or Phone Or Email.
+       
+     </div>
+    
+
+                 <div className='handleStore__add'>
+           <div className='handleStore__add--input'>
+               <input type='text' placeholder='Enter User Name' value={searchUser} onChange={e => setSearchUser(e.target.value)} />
+            </div>
+                
+           </div>
+
+
+
+      
+    <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+       Send Promotional Message To Your Customers
+        <hr></hr>
+     </div>
+     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+       Send your customers about your new offers, may be greet them or ask for feedbacks.
+       
+     </div>
+     {user_details.sms < users.length ? (
+          <div className='deleteAccount' style={{margin: '0 auto',width: '90%',color: 'green'}} >
+         You Don't Have Enough SMS Credits To Send Promotional Messages To All Users, Go To Pricing Tab To Buy Some SMS Credits
+          
+        </div>
+     ) : (
+        <div className='deleteAccount' style={{color: 'green',margin: '0 auto',width: '90%'}} >
+       By Sending Promotional Messages To All Users You Will Spend {users.length} SMS Credits in Total
+        
+      </div>
+     )}
+
+
+
+                 <div className='handleStore__add'>
+           <div className='handleStore__add--input'>
+               <input type='text' placeholder='Enter Your Message' value={message} onChange={e => setMessage(e.target.value)} />
+            </div>
+            {user_details.sms < users.length ? (
+                 <button style={{backgroundColor: 'gray'}} onClick={()=>{}}>Buy Credits</button>
+            ) : (
+                <button disabled={user_details.sms < users.length} onClick={handleMessage}>Submit</button>
+            )}
+               
+           </div>
+
+                 
                  <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
   onClose={() => setOpen(false)}
@@ -148,7 +245,7 @@ function HandleUser({id}) {
                    <div className='site_preview--topContainer'>
                           <div className='site_preview--topContainer--left'>
                              <h1>Manage Your Users</h1>
-                             <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                             <h3>User database helps you understand user behaviour and interact with them better.</h3>
                        
                               <div className='site_preview--getStarted' onClick={handleGetStarted}>
                                  Get Started
@@ -166,7 +263,7 @@ function HandleUser({id}) {
                <div className='site_preview--guide'>
                   <div className='site_preview--guide--left'>
                   <img src={UserSvg} style={{fill:"#FFFFFF"}} />
-                  <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+                  <h4>User database helps you understand user behaviour and interact with them better.</h4>
                   </div>
                   <div className='site_preview--guide--right'>
                     <iframe src={single_guides.user} />

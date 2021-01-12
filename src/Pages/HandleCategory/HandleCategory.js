@@ -14,6 +14,8 @@ import { useStateValue } from '../../StateProvider'
 function HandleCategory(props) {
   const [image,setImage]= useState('');
   const [name,setName]= useState('');
+  const [openAlert,setOpenAlert]= useState(false);
+  const [openImage,setOpenImage]= useState(false);
   const [price,setPrice]= useState('');
   const [rating,setRating]= useState('');
   const [description,setDescription]= useState('');
@@ -24,23 +26,14 @@ function HandleCategory(props) {
   const pageId= props.match.params.id;
 
 
-  useEffect(() => {
-    
-        db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(props.match.params.category)
-        .get()
-        .then(function(doc) {
-          if (doc.exists) {
-               setCategoryTitle(doc.data().title);
-               setItems(doc.data().items);
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        }).catch(function(error) {
-          console.log("Error getting document:", error);
-        });
-    
-     },[])
+ 
+     useEffect(() => {
+      db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(props.match.params.category)
+      .onSnapshot(function(doc) {
+        setCategoryTitle(doc.data().title);
+        setItems(doc.data().items);
+      });
+  },[]); 
 
 
 
@@ -49,14 +42,14 @@ function HandleCategory(props) {
 
 
     const handleUploadStart= () => {
-        alert('UPLOAD STARTED')
+        setOpenImage(true);
     }
 
     const handleUploadSuccess= (filename) =>{
       
     
        firebaseApp.storage().ref('products').child(filename).getDownloadURL()
-       .then(url => setImage(url)).then(alert('UPLOAD FINISH'));
+       .then(url => setImage(url)).then(() => setOpenImage(false));
                      
         
        
@@ -75,7 +68,7 @@ function HandleCategory(props) {
               image: image,
               available: true
           })
-       }).then(() => setShow(!show)).then(alert('UPDATED'));
+       }).then(() => setShow(!show)).then(() => setOpenAlert(true));
      }
      function getRandomText(length) {
         var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match(/./g);
@@ -126,7 +119,8 @@ function HandleCategory(props) {
        </div>
 
        <div className='categoryPc'>
-         <SidebarRestro active='store' id={pageId} />
+    <div className='category__body'>
+    <SidebarRestro active='store' id={pageId} />
        <div className='handleCategory__body'>
        <div className='vandoreHeaderMobile' onClick={() => {
             dispatch({
@@ -154,7 +148,43 @@ function HandleCategory(props) {
             </div>
               
            </div>
+    </div>
        </div>
+
+       <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openAlert}
+  onClose={() => setOpenAlert(false)}
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+          Your data was upated
+        </div>
+        <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer',borderRadius: '10px'}} onClick={()=> setOpenAlert(false)}>
+          Ok
+        </div>
+    </div>
+ 
+</Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
+    </div>
+ 
+</Modal>
 
          
           
@@ -168,6 +198,7 @@ function HandleCategory(props) {
     <div className='handleCategory__form'>
           
           <h2>Add New Product</h2>
+          {image != '' ? <img src={image} style={{width: '50%',height: '250px'}} /> : ''}
           <div className='handleCategory__form--input'>
          <input type='text' onChange={e => setName(e.target.value)} value={name} placeholder='Product Name' />
           </div>

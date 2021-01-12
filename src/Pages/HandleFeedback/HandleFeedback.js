@@ -23,6 +23,16 @@ function HandleFeedback({id}) {
     const pageId= id;
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
+
+    const [openAlertDelete,setOpenAlertDelete]= useState(false);
+    const [deleteMessage,setDeleteMessage]= useState('');
+    const [deleteId,setDeleteId]= useState('');
+    const openDeleteModal= (message,id) => {
+        setDeleteMessage(message);
+        setDeleteId(id);
+        setOpenAlertDelete(true);
+    } 
+
     const manageVideo= (link) => {
      setOpen(true);
      setCurrentVideo(link);
@@ -96,7 +106,9 @@ function HandleFeedback({id}) {
           };
 
         const feedbackDelete= (id) => {
-            db.collection(pageId.toUpperCase()).doc('messages').collection('messages').doc(id).delete().then(alert('deleted'));
+            db.collection(pageId.toUpperCase()).doc('messages').collection('messages').doc(id).delete();
+            setOpenAlertDelete(false);
+
         }
     return (
         <div className='handleFeedback'>
@@ -123,7 +135,7 @@ function HandleFeedback({id}) {
             <p>{site_settings.feedback ? 
             'To turn off Feedbacks, go to settings and disable Feedbacks' : 
             'Feedbacks is disabled, go to settings and enable Feedbacks'}</p> 
-            <div  style={{cursor: 'pointer'}} onClick={() => history.push('/restro/settings')}>Settings</div>
+            <div  style={{cursor: 'pointer'}} onClick={() => history.push(`/restro/settings/${pageId}`)}>Settings</div>
            </div>
            <div className='guide_tutorial_toast'>
             <p>
@@ -151,10 +163,34 @@ function HandleFeedback({id}) {
                                           />
 
                     </p>
-                     <button onClick={() => feedbackDelete(feedback.id)}>delete</button>
+                     <button onClick={() => openDeleteModal('this feedback',feedback.id)}>delete</button>
                   </div>
           ))}
             </div>
+
+            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openAlertDelete}
+onClose={() => setOpenAlertDelete(false)}
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Do You Want to Delete {deleteMessage} ?
+ </div>
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => feedbackDelete(deleteId)}>
+   yes
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=> {setOpenAlertDelete(false); setDeleteMessage(''); setDeleteId('')}}>
+   no
+ </div>
+ </div>
+</div>
+</Modal>
+
+      
+
             <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
   onClose={() => setOpen(false)}
@@ -185,7 +221,7 @@ function HandleFeedback({id}) {
            <div className='site_preview--topContainer'>
                   <div className='site_preview--topContainer--left'>
                      <h1>Manage Your Feedbacks</h1>
-                     <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h3>
+                     <h3>Receiving and managing feedback helps you to discover customer's view on your business.</h3>
                
                       <div className='site_preview--getStarted' onClick={handleGetStarted}>
                          Get Started
@@ -203,7 +239,7 @@ function HandleFeedback({id}) {
        <div className='site_preview--guide'>
           <div className='site_preview--guide--left'>
           <img src={FeedbackSvg} style={{fill:"#FFFFFF"}} />
-          <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
+          <h4>Receiving and managing feedback helps you to discover customer's view on your business.</h4>
           </div>
           <div className='site_preview--guide--right'>
             <iframe src={single_guides.feedbacks} />

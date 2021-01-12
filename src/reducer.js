@@ -12,7 +12,8 @@ export const initialState={
     site_preview: {},
     site_colors: {},
     sidebarVandore: false,
-    social: {}
+    social: {},
+    order_notification: 0,
 };
 
 
@@ -121,6 +122,12 @@ const reducer = (state,action) => {
                 ...state,
                 sidebar: action.sidebar
             }
+        case 'ORDER_NOTIFICATION': {
+            return{
+                ...state,
+                order_notification: action.order
+            }
+        }
         case 'UPDATE_SIDEBAR_VANDORE':
             return {
                 ...state,
