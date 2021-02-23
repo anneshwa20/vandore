@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { authMain, dbMain } from '../../firebase';
+import { authMain, dbMain, firebaseApp } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import { Container, Form, FormButton, FormContent, FormH1, FormInput, FormLabel, FormWrap, Icon , Text } from './signElements'
 
@@ -13,11 +13,13 @@ function SignIn() {
 
     if(user) {
       
-        
-        if(user_details.business){
-            history.push(`/restro/dashboard/${user_details.business}`);
+        if(user_details){
+            if(user_details.business){
+                history.push(`/restro/dashboard/${user_details.business}`);
+            }
+         
         }
-     
+        
       
   }
    
@@ -42,6 +44,22 @@ function SignIn() {
                 });
             
            }).catch(error => alert(error.message));
+    }
+
+    const sendNotification= () => {
+        const messaging = firebaseApp.messaging() 
+                        Notification.requestPermission().then(()=>{
+                          return messaging.getToken()
+                        }).then(token=>{
+                            console.warn(token);
+                           dispatch({
+                               type: 'ADD_NOTIFICATION_TOKEN',
+                               notification_token: token
+                           });
+                        }).catch((err)=>{
+                          console.log(err);
+                          
+                        })
     }
    
     return (

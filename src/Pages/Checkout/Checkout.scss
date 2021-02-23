@@ -199,3 +199,40 @@ display: none;
     border-radius: 20px;
     color: white;
 }
+
+.apply__coupon {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 15px;
+}
+.apply__coupon > p{
+    text-align: center;
+    margin: 10px auto;
+    font-weight: 700;
+    color: red;
+}
+.apply__coupon--coupon{
+    display: flex;
+    width: 60%;
+    height: 40px;
+  
+   margin: 0 auto;
+
+   @include respond(tab-port){
+       width: 90%;
+   }
+}
+.apply__coupon--coupon > input {
+    width: 85%;
+}
+.apply__coupon--coupon__button {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   width: 15%;
+   background-color: green;
+   cursor: pointer;
+   color: white;
+}

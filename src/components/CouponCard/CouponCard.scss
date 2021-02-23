@@ -1,0 +1,80 @@
+
+.coupon__card{
+    min-height: 270px;
+    min-width: 400px;
+    display: flex;
+ 
+    border-radius: 8px;
+    font-size: larger;
+    font-weight: 700;
+ 
+    background-size: 51% 100% ;
+    background-repeat: no-repeat;
+    background-image: radial-gradient(circle at 0 50%, rgba(white,0) .4em, white (.4em + .1em)), radial-gradient(circle at 100% 50%, rgba(white,0) .4em, white (.4em + .1em));
+    background-position: top left, top right;
+    margin: 10px;
+}
+.coupon__card--left{
+ flex: 0.4;
+ border-right: 2px dotted green;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+.coupon__card--right{
+ flex: 0.5;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+.coupon__save{
+    border-radius: 99px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid green;
+    width: 130px;
+    height: 130px;
+
+}
+.coupon__card--logo{
+    display: flex;
+    margin-top: 10px;
+}
+.coupon__card--logo > img {
+    width: 25px;
+    height: 25px;
+}
+
+.coupon__card--coupon{
+    border: 3px solid green;
+    padding: 10px;
+    margin-top: 5px;
+    color: green;
+    text-transform: uppercase;
+}
+.coupon__qr{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.coupon__qr > p{
+    font-size: 12px;
+    text-align: center;
+    
+}
+.coupon__button > button {
+  cursor: pointer;
+  width: max-content;
+  height: max-content;
+  margin: 5px;
+  padding: 10px;
+  
+}
+
+.coupon__button {
+    display: flex;
+    justify-content: center;
+}

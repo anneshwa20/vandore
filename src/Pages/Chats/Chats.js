@@ -1,6 +1,6 @@
 import { InfoOutlined, Menu, MenuBook, StarBorderOutlined } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import ChatInput from '../../components/ChatInput/ChatInput';
 import Message from '../../components/Message/Message';
 import SidebarRestro from '../../components/SidebarRestro/SidebarRestro';
@@ -9,13 +9,15 @@ import './Chats.scss';
 import ChatSvg from '../../icons/undraw_add_file_4gfw.svg';
 import { useStateValue } from '../../StateProvider';
 import StateFill from '../StateFill';
+import { Modal } from '@material-ui/core';
 
 function Chats() {
     const { roomId,id }= useParams();
     const [roomDetails,setRoomDetails]= useState(null);
      const [roomMessages,setRoomMessages]= useState([]);
-  const[{single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
+  const[{single_guides,site_preview,sidebarVandore,user_details},dispatch]= useStateValue();
      const pageId= id;
+     const history= useHistory();
 
      const handleGetStarted= () => {
         db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
@@ -95,6 +97,27 @@ function Chats() {
   <ChatInput pageId={pageId} channelName={roomDetails?.name} channelId={roomId} />
 
  </div>
+ <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={user_details.plan !== 'gold' && site_preview.chatChannel ? true : false}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
 </>
 ) : (
     <div className='site_preview'>

@@ -14,6 +14,11 @@ export const initialState={
     sidebarVandore: false,
     social: {},
     order_notification: 0,
+    notification_token: '',
+    brand: {},
+    site_coupons: [],
+    final_price: 0,
+    applied_coupon: null
 };
 
 
@@ -77,6 +82,21 @@ const reducer = (state,action) => {
                 ...state,
                 guides: action.guides
             }
+        case 'ADD_SITE_COUPONS':
+            return{
+                ...state,
+                site_coupons: action.site_coupons
+            }
+        case 'ADD_FINAL_PRICE': 
+            return{
+                ...state,
+                final_price: action.final_price
+            }
+        case 'ADD_APPLIED_COUPON':
+            return{
+                ...state,
+                applied_coupon: action.applied_coupon
+            }
         case 'ADD_TO_HINDI_GUIDES':
             return{
                  ...state,
@@ -97,10 +117,20 @@ const reducer = (state,action) => {
                 ...state,
                 site_preview: action.site_preview
             }
+        case 'ADD_NOTIFICATION_TOKEN':
+            return{
+                ...state,
+                notification_token: action.notification_token
+            }
         case 'ADD_SITE_COLORS':
             return {
                 ...state,
                 site_colors: action.site_colors
+            }
+        case 'ADD_SITE_BRAND':
+                return {
+                    ...state,
+                    brand: action.brand
             }
         case 'ADD_SITE_SETTINGS':
             return {

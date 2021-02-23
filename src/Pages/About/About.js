@@ -27,7 +27,7 @@ function About({pageId}) {
     const [image,setImage]= useState('');
     const [userImage,setUserImage]= useState('');
     const [about,setAbout]= useState('');
-    const [{site_settings,site_colors,site_info,user,user_details,sidebar},dispatch]= useStateValue();
+    const [{site_settings,site_colors,site_info,user,user_details,sidebar,brand},dispatch]= useStateValue();
     const [open,setOpen]= useState(false);
     
 
@@ -119,6 +119,11 @@ function About({pageId}) {
     IconContainer.propTypes = {
       value: PropTypes.number.isRequired,
     };
+
+    if(!site_settings.aboutUs){
+      history.push(`/${pageId}`);
+    }
+  
 
     return (
         <div className='about'>

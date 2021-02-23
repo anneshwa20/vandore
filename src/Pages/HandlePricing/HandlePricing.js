@@ -8,7 +8,7 @@ import {  Menu } from '@material-ui/icons';
 import { useStateValue } from '../../StateProvider';
 import { Modal } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import PostSvg from '../../icons/undraw_share_online_r87b.svg';
+import PricingSvg from '../../icons/undraw_online_payments_luau.svg';
 import PriceCard from '../../components/PriceCard/PriceCard';
 
 
@@ -30,7 +30,7 @@ function HandlePricing({id}) {
 
   const handleGetStarted= () => {
     db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
-        post: true
+        pricing: true
     }).then(refreshPage);
 }
 const refreshPage = ()=>{
@@ -53,7 +53,7 @@ const refreshPage = ()=>{
          <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
          <h4>ANDORE</h4>
          </div>
-     {site_preview.post ? (
+     {site_preview.pricing ? (
        <>
            <div className='vandoreHeaderMobile' onClick={() => {
             dispatch({
@@ -71,7 +71,7 @@ const refreshPage = ()=>{
      <p>
      If you face any difficulties regarding Pricing, then see our Pricing guides
      </p> 
-     <div onClick={() => manageVideo(single_guides.posts)}>Guides</div>
+     <div onClick={() => manageVideo(single_guides.pricing)}>Guides</div>
     </div>
 
 
@@ -83,15 +83,16 @@ const refreshPage = ()=>{
         <hr></hr>
  </div>
      <div className='deleteAccount' style={{color: 'white',margin:'0 auto',width: '93%'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
-      <div className='domainAccountButton' onClick={() => manageVideo(single_guides.posts)}>
+     Vandore primarily offers Two plans. Choose the plan that's suit for your business.
+      <div className='domainAccountButton' onClick={() => manageVideo(single_guides.pricing)}>
           See Guide Video
       </div>
     </div>
   
                 <div className='handlePrice_priceCards'>
-                <PriceCard plan='free' />
-                <PriceCard plan='plus' />
+              {/*   <PriceCard plan='free' /> */}
+                <PriceCard plan='lite' />
+               
                 <PriceCard plan='gold' />
                 
                 </div>
@@ -100,8 +101,8 @@ const refreshPage = ()=>{
         <hr></hr>
  </div>
      <div className='deleteAccount' style={{color: 'white',margin:'0 auto',width: '93%'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
-     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.posts)}>
+     Buying SMS services results in better customer relationship.
+     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.pricing)}>
           See Guide Video
       </div>
     </div>
@@ -124,7 +125,7 @@ aria-describedby="Guide Video description"
 >
 <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
 <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+<button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
 </div>
 
 </Modal>
@@ -147,8 +148,8 @@ aria-describedby="Guide Video description"
                 </div>
          <div className='site_preview--topContainer'>
                 <div className='site_preview--topContainer--left'>
-                   <h1>Posts</h1>
-                   <h3>Posting content on your timeline helps driving high customer engagement.</h3>
+                   <h1>Pricing</h1>
+                   <h3>Vandore primarily offers three plans. Choose the plan that's suit for your business.</h3>
              
                     <div className='site_preview--getStarted' onClick={handleGetStarted}>
                        Get Started
@@ -156,7 +157,7 @@ aria-describedby="Guide Video description"
                 </div>
 
                 <div className='site_preview--topContainer--right'>
-                     <img src={PostSvg} style={{fill:"#FFFFFF"}} />
+                     <img src={PricingSvg} style={{fill:"#FFFFFF"}} />
                 </div>
         </div>
      </div>
@@ -165,11 +166,11 @@ aria-describedby="Guide Video description"
     </div>
      <div className='site_preview--guide'>
         <div className='site_preview--guide--left'>
-        <img src={PostSvg} style={{fill:"#FFFFFF"}} />
-        <h4>Posting content on your timeline helps driving high customer engagement.</h4>
+        <img src={PricingSvg} style={{fill:"#FFFFFF"}} />
+        <h4>Vandore primarily offers three plans. Choose the plan that's suit for your business.</h4>
         </div>
         <div className='site_preview--guide--right'>
-          <iframe src={single_guides.posts} />
+          <iframe src={single_guides.pricing} />
         </div>
     </div>
     </div>

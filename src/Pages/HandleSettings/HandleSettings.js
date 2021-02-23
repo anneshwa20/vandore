@@ -1,4 +1,4 @@
-import { Switch } from '@material-ui/core'
+import { Modal, Switch } from '@material-ui/core'
 import { Menu, SettingsOverscanRounded } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
 import { authMain, db, dbMain } from '../../firebase';
@@ -8,6 +8,7 @@ import SettingsSvg from '../../icons/undraw_personal_settings_kihd.svg';
 import { useHistory } from 'react-router-dom';
 
 function HandleSettings({id}) {
+    const [openPricing,setOpenPricing]= useState(false);
     const[store,setStore]=useState(true);
     const [slider,setSlider]= useState(true);
     const [discount,setDiscount]=useState(true);
@@ -64,17 +65,23 @@ function HandleSettings({id}) {
 
 
    const handleDomain= () => {
-          /* console.log('domaineeeeeeeeeeeeeeed'); */
-       dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
-              domainRequest: true
-       });
-       dbMain.collection("domain").add({
-              user: user_details.name,
-              phone: user_details.phone,
-              email: user.email,
-              image: user_details.image,
-              business: user_details.business
-       });
+          
+       if(user_details.plan !== 'gold' || user_details.plan !== 'plus'){
+              setOpenPricing(true);
+              return;
+       }else{
+              dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                     domainRequest: true
+              });
+              dbMain.collection("domain").add({
+                     user: user_details.name,
+                     phone: user_details.phone,
+                     email: user.email,
+                     image: user_details.image,
+                     business: user_details.business
+              });
+       }
+       
    }
 
 
@@ -356,7 +363,7 @@ function HandleSettings({id}) {
         <hr></hr>
      </div>
      <div className='deleteAccount' style={{color: 'white',marginTop: '15px'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
+     Control your SMS mountings through simple switches.
      </div>
      <div className='setting__option'>
                    <div className='setting__option--left'>
@@ -398,7 +405,7 @@ function HandleSettings({id}) {
         <hr></hr>
      </div>
      <div className='deleteAccount' style={{color: 'white',marginTop: '15px'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
+     Control your E-mail mountings through simple switches.
      </div>
      <div className='setting__option'>
                    <div className='setting__option--left'>
@@ -442,7 +449,7 @@ function HandleSettings({id}) {
         <hr></hr>
      </div>
      <div className='deleteAccount' style={{color: 'white',marginTop: '15px'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
+     Control the whole on your finger tips through simple switches.
      </div>
 
                <div className='setting__option'>
@@ -665,6 +672,27 @@ function HandleSettings({id}) {
 
 
             </div>
+            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openPricing}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
             </>
            ) : (
               <div className='site_preview'>

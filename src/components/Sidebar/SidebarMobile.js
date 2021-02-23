@@ -36,7 +36,7 @@ function SidebarMobile({page,pageId}) {
   const [facebookLink,setFacebookLink]= useState('');
   const [zomatoLink,setZomatoLink]= useState('');
   const [swiggyLink,setSwiggyLink]= useState('');
-  const [{site_settings,site_colors,user,user_details,sidebar,site_info},dispatch]= useStateValue();
+  const [{site_settings,site_colors,user,user_details,sidebar,site_info,brand},dispatch]= useStateValue();
   const [youtubeLink,setYoutubeLink]= useState('');
   const [feedbacks,setFeedbacks]= useState([]);
   const [open,setOpen]= useState(false);
@@ -280,10 +280,10 @@ function SidebarMobile({page,pageId}) {
       }).then(() => setOpenRate(false));
 
 
-      if(site_settings.feedbackMessage){
+      if(site_settings.feedbackMessage && brand.plan !== 'free'){
         sendSMS();
       }
-      if(site_settings.feedbackEmail){
+      if(site_settings.feedbackEmail && brand.plan !== 'free'){
         sendEmail();
       }
     }else{
@@ -315,7 +315,7 @@ function SidebarMobile({page,pageId}) {
         </div>
         {!user ? '' : (
              <div onClick={handleOrders}>
-             {site_settings.userAuth ? <SidebarRow Icon={Fastfood} title="Your Orders" page={page}/> : ''}
+             {site_settings.userAuth && brand.plan !== 'lite' ? <SidebarRow Icon={Fastfood} title="Your Orders" page={page}/> : ''}
              </div>
         )}
          {!user ? '' : (
@@ -332,7 +332,7 @@ function SidebarMobile({page,pageId}) {
         </div>
           ) : ''}
        
-        {site_settings.chatChannels ? (
+        {site_settings.chatChannels && brand.plan === 'gold' ? (
         <div onClick={() => setShow(!show)}>
         <SidebarRow Icon={Chat} title="Chat With Us" page={page}/>
         </div>
@@ -349,7 +349,7 @@ function SidebarMobile({page,pageId}) {
                    <SidebarRow  title={`# ${channel.name}`} />
                    </div>
                )) : ''}
-            {site_settings.store ? (
+            {site_settings.store && brand.plan !== 'lite' ? (
               <div onClick={handleStore} >
           <SidebarRow Icon={Storefront} title="Store" page={page}/>
               </div> 

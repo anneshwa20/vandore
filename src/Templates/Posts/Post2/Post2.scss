@@ -1,0 +1,84 @@
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: 1800px) { @content };    //1800
+	}
+  }
+
+.PostFive__container{
+    height: 400px;
+    width: 690px;
+    display: flex;
+    border: 1px solid grey;
+}
+.PostFive__containerLeft{
+    height: 100%;
+    width: 50%;
+    background-color: #833821;
+    display: flex;
+  
+}
+.PostFive__containerRight{
+    height: 100%;
+    width: 50%;
+    background-color: white;
+    position: relative;
+ 
+}
+.PostFive__leftBack{
+    height: 100%;
+    width: 50%;
+    background-color: white;
+    flex: 0.3;
+    
+}
+.PostFive__imgHolder{
+    flex: 0.7;
+    border: 1px solid white;
+    position: relative;
+    background-color: #833821 ;
+  
+
+}
+.PostFive__leftImg{
+    height: 60%;
+    width: 90%;
+    position: absolute;
+    top: 20%;
+    left: -20%;
+    border: 6px solid white;
+}
+.PostFive__rightTitle{
+    text-transform: uppercase;
+    font-size: 31px;
+    font-weight: 400;
+    color: #471616;
+    max-width: 85%;
+    line-height: 30x;
+    letter-spacing: 10px;
+    padding-left: 30px;
+    padding-top: 30px;
+   padding-bottom: 10px;
+}
+.PostFive__rightSubtitle{
+    font-size: 17px;
+    font-weight: 400;
+    padding: 30px;
+    color: brown;
+}
+.PostFive__rightStyle{
+    height: 20%;
+    width: 10%;
+    background-color: #833821 ;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

@@ -69,6 +69,17 @@ function StateFill({id,authorization}) {
             })
           });
       },[]); 
+
+
+      useEffect(() => {
+        dbMain.collection('brands').doc(id.toUpperCase())
+        .onSnapshot(function(doc) {
+          dispatch({
+            type: 'ADD_SITE_BRAND',
+            brand: doc.data()
+          })
+        });
+    },[]); 
   
   
          useEffect(() => {

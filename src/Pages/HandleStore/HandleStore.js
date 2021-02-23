@@ -17,13 +17,14 @@ function HandleStore({id}) {
     const [categories,setCategories]= useState([]);
     const [openAlert,setOpenAlert]= useState(false);
     const [openImage,setOpenImage]= useState(false);
+    const [openPricing,setOpenPricing]= useState(false);
 
 
     const [editCategory,setEditCategory]= useState('');
     const [save,setSave]= useState(false);
     const [cover,setCover]= useState('https://i.ibb.co/wWPx0KM/Handle-Your-Store.png');
     const colors= ['#FFA07A', '#FF0000','#FFDAB9','#F0E68C','#7CFC00','#8FBC8F','#808000','#E0FFFF','#00FFFF','#ADD8E6','#000080','#DDA0DD','#FF00FF','#FF1493','#FFC0CB','#8B4513','#FFD700','#E6E6FA','#FF6347','#40E0D0','#FFDAB9','#333300' ,'#C71585','#4B0082','#800000'];
-     const [{site_settings,single_guides,site_preview,sidebarVandore},dispatch]= useStateValue();
+     const [{site_settings,single_guides,site_preview,sidebarVandore,user_details},dispatch]= useStateValue();
      const history= useHistory();
     const pageId= id;
      
@@ -51,6 +52,8 @@ function HandleStore({id}) {
       setOpen(true);
       setCurrentVideo(link);
     }
+
+    
 
 
     useEffect(() => {
@@ -229,6 +232,31 @@ function HandleStore({id}) {
  
 </Modal>
 
+
+
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={user_details.plan === 'lite' ? true : false}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
+
 <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
 open={openAlertDelete}
 onClose={() => setOpenAlertDelete(false)}
@@ -258,7 +286,7 @@ aria-describedby="Guide Video description"
 >
     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
     <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+   <button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
     </div>
  
 </Modal>

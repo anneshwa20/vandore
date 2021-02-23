@@ -1,0 +1,80 @@
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: 1800px) { @content };    //1800
+	}
+  }
+.slider1{
+	height: 400px;
+	width: 900px;
+	// height and width 100% (900px , 400px) (for post -) (200px , 100vw)
+	display : flex;
+	// display: flex  !!important
+	background-color: #df7c2b;
+	color: white;
+	position: relative;
+	overflow: hidden;
+
+
+	
+}
+
+.slider1--right > h2 {
+	
+	// 900-400px font-size: 45px, 100vw-200px , font-size=25px
+	font-size: 45px;
+	font-weight: 300;
+	color: #ac2f09;
+}
+
+.slider1--right > p {
+	
+	margin-top: 5%;
+	font-size: 18px;
+	font-weight: 400;
+
+	
+}
+
+.slider1--left{
+ 
+   flex: 0.4;
+   position: relative;
+ 
+}
+
+.slider1--right{
+	flex: 0.6;
+	display: flex;
+	flex-direction: column;
+	padding-top: 10%;  // padding,margin percentage
+	
+}
+
+.slider1__image{
+	height: 100%;
+	width: 95%;
+
+// height and width == percentage
+	object-fit: cover;
+	z-index: 100;
+	position: absolute;
+	
+}
+.slider1__imageTwo{
+	height: 100%;
+	width: 100%;
+	// height and width == percentage
+	object-fit: cover;
+	z-index: 9;
+	position: absolute;
+	opacity: 0.4;
+}

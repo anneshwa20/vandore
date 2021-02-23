@@ -183,3 +183,9 @@
     justify-content: space-between;
     padding: 10px;
 }
+.payment__option--price > h3 > span {
+    padding: 7px;
+    border: 1px solid green;
+    background-color: white;
+    color: red;
+}

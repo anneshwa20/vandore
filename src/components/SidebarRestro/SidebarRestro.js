@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './SidebarRestro.scss';
 import SidebarRowRestro from './../SidebarRow/SidebarRowRestro';
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close, ExitToApp, ExpandLessOutlined, Money, PhoneIphone} from '@material-ui/icons'
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Add, AccountBox, Dashboard, Feedback, PostAdd, Fastfood, PhotoLibrary, BurstMode, Info, PeopleAlt, Payment, Settings, LibraryBooks, DashboardOutlined, LibraryBooksOutlined, PostAddOutlined, PhotoLibraryOutlined, BurstModeOutlined, InfoOutlined, StorefrontOutlined, FastfoodOutlined, PaymentOutlined, PeopleAltOutlined, FeedbackOutlined, SettingsOutlined, AddOutlined, Close, ExitToApp, ExpandLessOutlined, Money, PhoneIphone, Book, LocalOffer} from '@material-ui/icons'
 import { authMain, db } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import { Avatar, Menu } from '@material-ui/core';
@@ -106,6 +106,8 @@ function SidebarRestro({active,id}) {
            </div>      
          ) : ''}
 
+         
+
 
 
         {showCreative ? (
@@ -119,6 +121,11 @@ function SidebarRestro({active,id}) {
            <div onClick={() => history.push(`/restro/about/${pageId}`)}>
            <SidebarRowRestro Icon={InfoOutlined} title="About Section" active={active==='about' ? true : false}/>
            </div>     
+         ) : ''}
+         {showCreative ? (
+           <div className='mobileHide' onClick={() => history.push(`/restro/componentsTemplate/${pageId}`)}>
+           <SidebarRowRestro Icon={Book} title="Templates" active={active==='componentsTemplate' ? true : false}/>
+           </div>      
          ) : ''}
 
         
@@ -145,6 +152,12 @@ function SidebarRestro({active,id}) {
     {showStore ? (
         <div onClick={() => history.push(`/restro/payments/${pageId}`)}>
         <SidebarRowRestro Icon={PaymentOutlined} title="Payments" active={active==='payments' ? true : false}/>
+            </div>
+        ) : ''}
+
+{showStore ? (
+        <div onClick={() => history.push(`/restro/coupons/${pageId}`)}>
+        <SidebarRowRestro Icon={LocalOffer} title="Coupons" active={active==='coupons' ? true : false}/>
             </div>
         ) : ''}
 

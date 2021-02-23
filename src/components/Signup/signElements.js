@@ -89,7 +89,7 @@ border-radius : 4px ;
 `
 export const FormButton = styled.button `
 background : #01bf71 ;
-padding : 16px 0 ;
+padding : 0 0 ;
 border : none ;
 border-radius : 4px ;
 color: #fff ;

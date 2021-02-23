@@ -1,6 +1,6 @@
 import { InfoOutlined, StarBorderOutlined } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import ChatInput from '../../components/ChatInput/ChatInput';
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
@@ -17,10 +17,10 @@ function ChatsPublic() {
     const { roomId,id }= useParams();
     const [roomDetails,setRoomDetails]= useState(null);
      const [roomMessages,setRoomMessages]= useState([]);
-     const [{sidebar},dispatch]= useStateValue();
+     const [{sidebar,brand,site_settings},dispatch]= useStateValue();
 
      const pageId= id;
-
+     const history= useHistory();
 
    useEffect(()=>{
         if(roomId){
@@ -44,6 +44,11 @@ function ChatsPublic() {
    const handleDetails= () => {
        alert(roomDetails.description);
    }
+
+   if(brand.plan !== 'gold' || !site_settings.chatChannels){
+    history.push(`/${pageId}`);
+  }
+
 
 
     return (

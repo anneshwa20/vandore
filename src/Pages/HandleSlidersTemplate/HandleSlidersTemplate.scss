@@ -1,0 +1,88 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+.handleSlidersTemplate {
+    display: flex;
+    flex: 0.8;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: scroll;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 1));
+    background-color: rgb(91, 87, 115);
+
+    @include respond(tab-port) {
+        flex: 1;
+        width: 100vw;
+    }
+}
+
+.handleSlidersTemplate--sliders {
+    width: 95%;
+    
+    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    
+
+    @include respond(tab-port){
+        width: 100vw;
+        height: 200px;
+    }
+}
+
+.templateHolder {
+    display: flex;
+    flex-direction: column;
+    margin-right: 2px;
+    align-items: center;
+    
+}
+
+.templateHolder > img {
+    width: 400px;
+    height: 200px;
+}
+
+.templateHolder > div {
+    width: 400px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    margin-top: 5px;
+}
+
+.templateHolderPost {
+    display: flex;
+    flex-direction: column;
+    margin-right: 2px;
+    align-items: center;
+}
+
+.templateHolderPost > img {
+    width: 350px;
+    height: 250px;
+}
+.templateHolderPost > div {
+    width: 350px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    margin-top: 5px;
+}
+

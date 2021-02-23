@@ -14,8 +14,9 @@ import HandlePayment from '../HandlePayments/HandlePayment'
 import HandleDashboard from '../HandleDashboard/HandleDashboard'
 import HandleSettings from '../HandleSettings/HandleSettings'
 import HandleGuide from '../HandleGuide/HandleGuide'
+import HandleSlidersTemplate from '../HandleSlidersTemplate/HandleSlidersTemplate'
 import { useStateValue } from '../../StateProvider'
-import { db } from '../../firebase'
+import { authMain, db } from '../../firebase'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { Modal } from '@material-ui/core'
@@ -26,6 +27,8 @@ import StateFill from './../StateFill'
 import {Howl, Howler} from 'howler';
 import HandlePricing from '../HandlePricing/HandlePricing'
 import HandleQrApp from '../HandleQrApp/HandleQrApp'
+import HandleCoupons from '../HandleCoupons/HandleCoupons'
+import { MdChangeHistory } from 'react-icons/md'
 
 
 function Restro(props) {
@@ -44,9 +47,16 @@ function Restro(props) {
         sound.play();
     }
 
-    
+   
        
-        
+    if(user_details){
+        if(user_details.business){
+            if(user_details.business.toUpperCase() !== id.toUpperCase()){
+                    history.push('/signout');
+                 }
+        }
+     
+      }
     
     
    
@@ -64,10 +74,13 @@ function Restro(props) {
 
     return (
         <>
+  
       <StateFill authorization='restro' id={id.toUpperCase()} />
-    
- <div className='restro'>
-     
+      {user_details.business ? (
+    <>
+ {user_details.business.toUpperCase() === id.toUpperCase() ? (
+    <div className='restro'>
+ 
  <div className='vandoreMobile'>
      {sidebarVandore ? <SidebarRestro id={id} active={props.match.params.page} /> : ''}
      {order_notification > 0 ? (
@@ -102,6 +115,8 @@ function Restro(props) {
 {props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
 {props.match.params.page === 'pricing' ? <HandlePricing  id={id}/> : ''}
 {props.match.params.page === 'qrapp' ? <HandleQrApp id={id}/> : ''}
+{props.match.params.page === 'componentsTemplate' ? <HandleSlidersTemplate id={id} /> : ''}
+{props.match.params.page === 'coupons' ? <HandleCoupons id={id} /> : ''}
       </>
      )}
 
@@ -140,6 +155,8 @@ function Restro(props) {
 {props.match.params.page === 'guides' ? <HandleGuide  id={id}/> : ''}
 {props.match.params.page === 'pricing' ? <HandlePricing  id={id}/> : ''}
 {props.match.params.page === 'qrapp' ? <HandleQrApp id={id}/> : ''}
+{props.match.params.page === 'componentsTemplate' ? <HandleSlidersTemplate id={id} /> : ''}
+{props.match.params.page === 'coupons' ? <HandleCoupons id={id} /> : ''}
 </>
  ) }
 
@@ -148,6 +165,11 @@ function Restro(props) {
 
 
  </div>
+) : ''}
+</>
+      ) : ''}
+   
+ 
   
        
         </>

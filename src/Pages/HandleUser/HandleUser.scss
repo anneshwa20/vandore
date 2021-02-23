@@ -33,7 +33,7 @@
 }
 
 .userHolder {
-    max-height: 450px;
+    min-height: 450px;
     overflow-y: scroll;
 }
 .handleUser__user{
@@ -50,6 +50,15 @@
         overflow-x: scroll;
         margin: 20px 0;
     }
+}
+
+.notification__image--holder{
+    display: flex;
+   
+}
+.notification__image--holder > img {
+    width: 200px;
+    height: 100px;
 }
 
 .handleUser__user  th, .handleUser__user td {

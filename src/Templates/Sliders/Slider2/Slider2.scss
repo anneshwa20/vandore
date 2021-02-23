@@ -1,0 +1,79 @@
+
+
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only scr0een and (min-width: 1800px) { @content };    //1800
+	}
+  }
+
+
+.containerTwo{
+    height: 400px;
+	width: 900px;
+	display : inline-block;
+    background-color: #462104ef ;
+	color: white;
+	position: relative;
+    overflow: hidden;
+    position: relative;
+	
+}
+.imageOne{
+   
+    object-fit: contain;
+    right:  300px;
+    clip-path: circle(65.1% at 80% 35%);
+
+}
+.imageHolder{
+    height: 100%;
+    width: 50%;
+    position: absolute;
+   background-color: #be6a25 ;
+   clip-path: circle(65.1% at 80% 35%);
+    left: 31%;
+    z-index: 1;
+    
+}
+
+.imageHolderTwo{
+    height: 90%;
+    width: 100%;
+    position: absolute;
+   
+    left: 300px;
+    z-index: 100;
+   
+    
+}
+.containerTwo > h2{
+    position: absolute;
+    top: 15%;
+    padding-left: 3%;
+    font-size: 41px;
+    font-weight: 300;
+    color: #e69e18;
+    z-index: 1000;
+    
+
+}
+.containerTwo > p {
+    font-size: 18px;
+    font-weight: 400;
+    position: absolute;
+    top: 35%;
+    padding-left: 3%;
+    z-index: 2000;
+   width: 40%;
+    color: wheat;
+  
+}

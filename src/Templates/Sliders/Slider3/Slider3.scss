@@ -1,0 +1,80 @@
+
+
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: 1800px) { @content };    //1800
+	}
+  }
+
+  .SliderNine__container{
+    height: 400px;
+    width: 900px;
+    background-color: #FFE77AFF;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.SliderNine__containerTop{
+    height: 60%;
+    width: 55%;
+    background-color: #2C5F2DFF;
+    position: relative;
+
+}
+.SliderNine__containerTopImage{
+    height: 140%;
+    width: 78%;
+    object-fit: cover;
+    position: absolute;
+    top: 15%;
+    left: 8%;
+    z-index: 1000;
+
+}
+.SliderNine__containerTopDesignOne{
+    height: 60%;
+    width: 73%;
+    position: absolute;
+    top: 98%;
+    left: 80%;
+    z-index: 3000;
+}
+.SliderNine__containerTopHeading{
+    text-transform: capitalize;
+    font-family: 'Lato', sans-serif;
+    z-index: 4000;
+    font-size: 45px;
+    position: absolute;
+    top: 10%;
+    left: 15%;
+    font-weight: 500;
+    color:#2C5F2DFF ;
+}
+.SliderNine__containerBottomSubheading{
+    z-index: 5000;
+    position: absolute;
+    font-family: 'Lobster', cursive;
+    top: 30%;
+    right: -75%;
+    width: 68%;
+    color: #063138;
+    font-size: 22px;
+    font-weight: lighter;
+}
+.SliderNine__containerBottomDesignOne{
+    height: 3%;
+    width: 30%;
+    background-color: #2C5F2DFF;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

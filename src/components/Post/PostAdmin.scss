@@ -39,6 +39,33 @@
         height: 150px;
     }
 }
+.post__admin__youtube > iframe{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+
+    @include respond(tab-port) {
+        height: 150px;
+    }
+}
+.post__admin__link{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+
+    @include respond(tab-port) {
+        height: 150px;
+    }
+}
+.post__admin__pdf{
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+
+    @include respond(tab-port) {
+        height: 150px;
+    }
+}
 .post__avatar{
     margin-right: 10px;
 }

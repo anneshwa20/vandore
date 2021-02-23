@@ -3,21 +3,27 @@ import { Delete, DoneAll, Menu } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
-import { db, dbMain } from '../../firebase';
+import { db, dbMain, firebaseAppMain } from '../../firebase';
 import { useStateValue } from '../../StateProvider';
 import './HandleUser.scss';
 import UserSvg from '../../icons/undraw_newspaper_k72w.svg';
 import axios from '../../axios';
+import FileUploader from 'react-firebase-file-uploader';
 
 
 
 function HandleUser({id}) {
     const [users,setUsers]= useState([]);
+    const [openImage,setOpenImage]=useState(false);
+    const [openPricing,setOpenPricing]= useState(false);
     const [searchUser,setSearchUser]= useState('');
-    const [{site_settings,single_guides,site_preview,sidebarVandore,user_details,user},dispatch]= useStateValue();
+    const [{site_settings,single_guides,site_preview,sidebarVandore,user_details,user,site_info},dispatch]= useStateValue();
     const [message,setMessage]= useState('');
+    const [notification,setNotification]= useState('');
+    const [notificationImage,setNotificationImage]= useState('https://i.ibb.co/TbGQWXh/Vandore-Logo-3-4-removebg-preview.png');
     const history= useHistory();
     const pageId= id;
+    const [plan,setPlan]= useState('');
     const handleGetStarted= () => {
         db.collection(pageId.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
             user: true
@@ -44,7 +50,8 @@ function HandleUser({id}) {
                 phone: doc.data().phone,
                 image: doc.data().image,
                 email: doc.data().email,
-                active: doc.data().active
+                active: doc.data().active,
+                notification: doc.data().notification
             })))
         ))
        
@@ -61,36 +68,112 @@ function HandleUser({id}) {
      }
 
      const allUsers= `${users.map(user => user.phone)}`;
-   
+     const alltokens= `${users.map(user => user.notification)}`;
 
      const sendSMS= async () => {
+        if(plan!=='gold' || plan !== 'lite'){
+            setOpenPricing(true);
+            return;
+        }
      
-     
+     if(user_details.plan === 'free'){
+         setOpenPricing(true);
+     }
+     else{
+        const SMS = await axios({
+            method: 'post',
+            // Stripe expects the total in a currencies subunits
+            url: `/orderSMS?phone=${allUsers}&message=${message}`
+        });
+     }
   
-     const SMS = await axios({
-          method: 'post',
-          // Stripe expects the total in a currencies subunits
-          url: `/orderSMS?phone=${allUsers}&message=${message}`
-      });
+     
        }
+
+    const sendNotification= async () => {
+        if(plan!=='gold' || plan !== 'lite'){
+            setOpenPricing(true);
+            return;
+        }
+        if(user_details.plan === 'free'){
+         setOpenPricing(true);
+          }
+       else {
+        const NOTIFY = await axios({
+            method: 'post',
+            url: `/sendNotification`,
+            data: {
+                title: `Vandore. ${site_info.siteName}`,
+                desc: notification,
+                tokens: alltokens.split(','),
+                image: notificationImage
+            }
+        });
+       }
+
+
+    }
  
 
 
      const handleMessage= () => {
-       sendSMS();
-       dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
-        sms: user_details.sms - users.length
-       });
-       setMessage('');
+        sendSMS();
+         if(user_details.plan !== 'free'){
+            dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                sms: user_details.sms - users.length
+               });
+               setMessage('');
+         }
+    
+       
+       
 
 
      }
+
+     const handleNotification= () => {
+         sendNotification();
+         setNotification('');
+
+        
+     }
+
+     const handleUploadStart= () => {
+        setOpenImage(true);
+    }
+
+    const handleUploadSuccess= (filename) =>{
+      
+    
+       firebaseAppMain.storage().ref('notifications').child(filename).getDownloadURL()
+       .then(url => setNotificationImage(url)).then(() =>setOpenImage(false));
+                     
+        
+       
+     };
+
 
 
      const filteredUsers= users.filter(user => 
         user.name.toLowerCase().includes(searchUser.toLowerCase()) || user.phone.toLowerCase().includes(searchUser.toLowerCase()) || user.email.toLowerCase().includes(searchUser.toLowerCase()));
 
-
+        useEffect(() => {
+     
+            dbMain.collection('brands').doc(pageId.toUpperCase())
+            .get()
+            .then(function(doc) {
+              if (doc.exists) {
+                 setPlan(doc.data().plan);
+              } else {
+                // doc.data() will be undefined in this case
+               
+                console.log("No such document!");
+              }
+            }).catch(function(error) {
+              console.log("Error getting document:", error);
+            });
+        
+         },[])
 
     return (
         <div className='handleUser'>
@@ -214,6 +297,44 @@ function HandleUser({id}) {
                
            </div>
 
+
+           <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+       Send Promotional Notifications To Your Customers
+        <hr></hr>
+     </div>
+     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+       Send your customers about your new offers, may be greet them or ask for feedbacks.
+       
+     </div>
+    
+
+
+
+                 <div className='handleStore__add'>
+            <div className='notification__image--holder'>
+        <img src={notificationImage} />
+        <label style={{backgroundColor: `green`, color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
+                     Select Your Photo
+                     <FileUploader
+                       hidden
+                       accept="image/*"
+                       randomizeFilename
+                       name="image"
+                       storageRef={firebaseAppMain.storage().ref("notifications")}
+                       onUploadStart={handleUploadStart}
+                       onUploadSuccess={handleUploadSuccess}
+                      />
+                      </label>
+            </div>
+           <div className='handleStore__add--input'>
+               <input type='text' placeholder='Enter Your Notification Message' value={notification} onChange={e => setNotification(e.target.value)} />
+            </div>
+            
+                <button  onClick={handleNotification}>Submit</button>
+            
+               
+           </div>
+
                  
                  <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -223,7 +344,45 @@ function HandleUser({id}) {
 >
     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
     <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+   <button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
+    </div>
+ 
+</Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openPricing}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+  open={openImage}
+  
+  aria-labelledby="Guide Video"
+  aria-describedby="Guide Video description"
+>
+    <div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+        <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+         Please wait your photo is uploading
+        </div>
+        
+        <div className='modal__button' style={{margin: '10px auto',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}}>
+          <img src='https://i.ibb.co/HqghKW6/2.gif' />
+        </div>
     </div>
  
 </Modal>

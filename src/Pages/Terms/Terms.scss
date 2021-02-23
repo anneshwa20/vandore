@@ -1,0 +1,60 @@
+.QRComponentBottom--logo{
+    margin: 15px;
+}
+.Terms {
+    
+  
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.Terms__container{
+
+}
+
+.Terms__container--header{
+    font-size: xx-large;
+    font-weight: bolder;
+    margin: 10px;
+    border-bottom: 2px solid green;
+    width: max-content;
+}
+
+.Terms__box{
+    margin: 20px;
+    border-left: 2px solid green;
+    padding-left: 10px;
+}
+.Terms__box--header{
+    font-size: larger;
+    font-weight: bold;
+}
+.Terms__box--points{
+    margin: 25px;
+    background-color: whitesmoke;
+    padding: 10px;
+}
+.Terms__box--points > h4 {
+    font-weight: 600;
+    color: green;
+    background-color: white;
+}
+
+.Terms__box--points--point{
+    padding: 5px;
+    border-left: 3px solid green;
+}
+
+.Terms__box--points--pointHeading{
+    color: green;
+    font-size: large;
+    font-weight: bold;
+}
+.Terms__box--points--pointSub{
+    padding: 10px;
+    background-color: white;
+    margin-top: 10px;
+}

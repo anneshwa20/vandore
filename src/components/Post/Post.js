@@ -6,8 +6,10 @@ import { useStateValue } from '../../StateProvider'
 import firebase from 'firebase';
 import './Post.scss'
 import { useHistory } from 'react-router-dom'
+import { ReactTinyLink } from 'react-tiny-link';
+import Linkify from 'react-linkify';
 
-function Post({pageId,id,profilePic,image,username,timestamp,message,handleDelete,fclicks,wclicks,visits}) {
+function Post({pageId,id,profilePic,username,timestamp,message,handleDelete,fclicks,wclicks,visits,type,link}) {
     const [{user_details},dispatch]= useStateValue();
     const history= useHistory();
 
@@ -60,7 +62,7 @@ function Post({pageId,id,profilePic,image,username,timestamp,message,handleDelet
         return text;
       }
    
-    const whatsappMessage=`https://restro-e4874.firebaseapp.com/posts/${id}`+`${message}`;
+    const whatsappMessage=`https://vandore.in/posts/${pageId}/${id}`+ ' ' + `${message}`;
     return (
         <div className="post">
            <div className="post__top">
@@ -72,24 +74,52 @@ function Post({pageId,id,profilePic,image,username,timestamp,message,handleDelet
                {handleDelete  ? <button onClick={postDelete} style={{width: 50,height:50,marginLeft: 20}}><Delete /></button> : ''}
            </div>
            <div className="post__bottom" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
-               <p>{message}</p>
+               <p><Linkify>{message}</Linkify></p>
            </div>
-           <div className="post__image" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
-               <img src={image} alt="" style={{width: '100%',height: '400px'}} />
-               
-              
+           {type==='image' ? (
+            <div className="post__image" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
+               <img src={link} alt="" style={{width: '100%',height: '400px'}} />
+
            </div>
+           ) : ''}
+           {type==='youtube' ? (
+            <div className='post__youtube'>
+            <iframe  src={link}  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div> 
+           ) : ''}
+
+           {type==='external' ? (
+            <div className='post__link'>
+            <ReactTinyLink
+            style={{height: '100%'}}
+            cardSize="small"
+            showGraphic={true}
+            maxLine={2}
+            proxyUrl
+
+            defaultMedia='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png'
+            minLine={1}
+            url={link}
+          />
+          </div>
+           ) : ''}           
+
+          {type==='pdf' ? (
+            <div className='postPdf'>
+            <iframe src={link} style={{width: '100%',height: '100%'}} />
+            </div>
+          ) : ''}
            <div className="post__options">
               
               
                <div className="post__option" onClick={updateWhatsapp}>
-               <a className='share__whatsapp' href={`whatsapp://send?text=${whatsappMessage}`} data-action="share/whatsapp/share"> <img src='https://pngimg.com/uploads/whatsapp/whatsapp_PNG21.png'/></a>
+               <a className='share__whatsapp' href={`whatsapp://send?text=${whatsappMessage}`} data-action="share/whatsapp/share"> <img src='https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/logo%2Fwhatsapp_PNG21.png?alt=media&token=45a1f61b-7f18-4637-9bf9-bcfb62b2ede7'/></a>
                   
                    
                </div>
                <div className="post__option" onClick={updateFacebook}>
-               <a className='share__facebook' href={`https://www.facebook.com/sharer/sharer.php?u=restro-e4874.firebaseapp.com/posts/${id}`} target="_blank">
-               <img src='https://toppng.com/uploads/preview/facebook-logo-11549681668z1ra1h6mmx.png' /></a>
+               <a className='share__facebook' href={`https://www.facebook.com/sharer/sharer.php?u=vandore.in/posts/${pageId}/${id}`} target="_blank">
+               <img src='https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/logo%2Ffacebook-logo-11549681668z1ra1h6mmx.png?alt=media&token=fbbf7b58-2943-4b57-af5b-ea57bf26e92e' /></a>
                    
                  
                </div>

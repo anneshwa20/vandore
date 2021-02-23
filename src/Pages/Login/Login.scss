@@ -42,6 +42,7 @@
 
     align-items: center;
     height: 100vh;
+    overflow-y: scroll;
     background-color: white ;
 
     @include respond(tab-port) {
@@ -51,7 +52,7 @@
 
 .login__container{
     width: 300px;
-    height: fit-content;
+    height: max-content;
     margin-top: 30px;
     display: flex;
     flex-direction: column;

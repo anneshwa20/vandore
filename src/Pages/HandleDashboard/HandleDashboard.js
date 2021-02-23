@@ -6,7 +6,7 @@ import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import LineChart from '../../components/LineChart/LineChart';
 import OrdersAnalytics from '../../components/OrdersAnalytics/OrdersAnalytics';
-import { db, firebaseApp } from '../../firebase';
+import { db, dbMain, firebaseApp } from '../../firebase';
 import './HandleDashboard.scss'
 import firebase from 'firebase';
 import { useStateValue } from '../../StateProvider';
@@ -26,6 +26,7 @@ import OrdersAnalyticsMobile from '../../components/OrdersAnalytics/OrdersAnalyt
 
 
 function HandleDashboard({id}) {
+    const [openPricing,setOpenPricing]= useState(false);
     const[facebookLink,setFacebookLink]= useState('');
     const[zomatoLink,setZomatoLink]= useState('');
     const[swiggyLink,setSwiggyLink]= useState('');
@@ -45,7 +46,7 @@ function HandleDashboard({id}) {
     const[ordersPerDay,setOrdersPerDay]= useState('');
     const[visitsDate,setVisitsDate]= useState('');
     const[visitsPerday,setVisitsPerDay]= useState('');
-    const[{user_details,site_preview,single_guides,site_colors,sidebarVandore},dispatch]= useStateValue();
+    const[{user_details,site_preview,single_guides,site_colors,sidebarVandore,user},dispatch]= useStateValue();
     const[image,setImage]= useState('');
     const history= useHistory();
    const [openAlert,setOpenAlert]= useState(false);
@@ -263,6 +264,16 @@ function HandleDashboard({id}) {
     }
 
     const handleSubmitPayment= () => {
+        dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+            paymentRequest: true
+        });
+        dbMain.collection("paymentRequests").add({
+            user: user_details.name,
+            phone: user_details.phone,
+            email: user.email,
+            image: user_details.image,
+            business: user_details.business
+     });
         db.collection(id.toUpperCase()).doc('site').collection('site').doc('payment_gateway').update({
             keyId: keyId,
             keySecret: keySecret,
@@ -354,7 +365,17 @@ const handleChangeIconColor=(color) => {
         setOpenColor(false);
       }
    }
+ /*  if(user_details){
+    if(user_details.business){
+        if(user_details.business.toUpperCase() !== id.toUpperCase()){
+            history.push('/');
+        }
+    }
+ 
+  } */
 
+ 
+   
     return (
         <div className='handleDashboard'>
            {site_preview.dashboard ? (
@@ -694,27 +715,66 @@ const handleChangeIconColor=(color) => {
                     <button onClick={handleSubmit}>Save</button>
     </div>
 
-    <div className='handleDashboard__social'>
-            <h2  className='handleDashboard__social--header'>Payment Gateway Integration</h2>
+    
+
+    </div>
+    <div className='dashboard__headerTitle'>
+        Payment Gateway Activation
+        <hr></hr>
+     </div>
+     {user_details.plan === 'gold' ? (
+
+         <>
+   {user_details.paymentActive ? (
+    <div className='deleteAccount' style={{color: 'white',margin:'10px 10px',width: '90%'}} >
+      Your Payment Gateway Is Now Succesfully Integrated With Your Vandore Site. Now You Can Recieve Online Orders From Net-Banking/UPI/WALLETS..ETC.
+       
+       </div>
+   ) : (
+   <>
+   {user_details.paymentRequest ? (
+       <div className='deleteAccount' style={{color: 'white',margin:'10px 10px',width: '90%'}} >
+      Your Payment Gateway Integration Request is recieved.It Usually Takes 24-48 hr to Activate Your Payment Gateway.
+      
+      </div>
+   ) : (
+<div className='dashboard_info'>
+<div className='handleDashboard__social'>
+        <h2  className='handleDashboard__social--header'>Payment Gateway Integration</h2>
+
+                <div className='user__input'>
+                    <p>Key Id Of Razorpay Account</p>
+                    <div className='user__input--style'>
+                        <input type='text'  placeholder='Key Id Of Your Razorpay Account' value={keyId} onChange={e => setKeyId(e.target.value)}/>
+                    </div>
+                </div>
+
+                <div className='user__input'>
+                    <p>Key Secret Of Razorpay Account</p>
+                    <div className='user__input--style'>
+                        <input type='text'  placeholder='Key Secret Of Your Razorpay Account' value={keySecret} onChange={e => setKeySecret(e.target.value)} />
+                    </div>
+                </div>
+
+                <button onClick={handleSubmitPayment}>Save</button>
+</div>
+</div>
+   )}
   
-                    <div className='user__input'>
-                        <p>Key Id Of Razorpay Account</p>
-                        <div className='user__input--style'>
-                            <input type='text'  placeholder='Key Id Of Your Razorpay Account' value={keyId} onChange={e => setKeyId(e.target.value)}/>
-                        </div>
-                    </div>
+   </>
+   )}
 
-                    <div className='user__input'>
-                        <p>Key Secret Of Razorpay Account</p>
-                        <div className='user__input--style'>
-                            <input type='text'  placeholder='Key Secret Of Your Razorpay Account' value={keySecret} onChange={e => setKeySecret(e.target.value)} />
-                        </div>
-                    </div>
+         </>
 
-                    <button onClick={handleSubmitPayment}>Save</button>
-    </div>
 
-    </div>
+     ) : (
+        <div className='deleteAccount' style={{color: 'white',margin:'10px 10px',width: '90%'}} >
+        Upgrade Your Vandore Plan To Integrate Payment Gateway In To Your Vandore Shop
+        <div className='domainAccountButton' onClick={() => history.push(`/restro/pricing/${id}`)}>
+             Upgrade Vandore Plan
+         </div>
+       </div>
+     )}
     <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={openAlert}
   onClose={() => setOpenAlert(false)}
@@ -731,7 +791,27 @@ const handleChangeIconColor=(color) => {
     </div>
  
 </Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openPricing}
 
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${id}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${id}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
 <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={openImage}
   

@@ -4,10 +4,13 @@ import React from 'react'
 import { useStateValue } from '../../StateProvider'
 import './CheckoutProduct.css'
 
-function CheckoutProduct({item,hidebutton}) {
+function CheckoutProduct({item,hidebutton,handleFinalPrice}) {
     const [{basket,site_colors},dispatch]= useStateValue();
 
     const removeFromBasket = () => {
+        if(handleFinalPrice){
+            handleFinalPrice();
+        }
         dispatch({
             type: 'REMOVE_FROM_BASKET',
             id: item.id,

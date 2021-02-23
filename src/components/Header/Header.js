@@ -7,7 +7,7 @@ import { useStateValue } from '../../StateProvider';
 import { auth, authMain } from '../../firebase';
 
 function Header({home,cart,orders,store,account,login,pageId}) {
-    const [{user,basket,user_details,sidebar,site_settings,site_info,site_colors},dispatch]= useStateValue(); 
+    const [{user,basket,user_details,sidebar,site_settings,site_info,site_colors,brand},dispatch]= useStateValue(); 
      const history= useHistory();
     const handleAuthentication= () => {
         if(user){
@@ -33,7 +33,7 @@ function Header({home,cart,orders,store,account,login,pageId}) {
          
                   </div>
                   <p  className='mobile__header--title' style={{color: `${site_colors.primary}`}}>{site_info.siteName}</p> 
-    {site_settings.store ? (
+    {site_settings.store && brand.plan !== 'lite' ? (
  <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}} className='headerCart'>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
         <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '15px',height:'15px',display: 'flex', justifyContent: 'center'}}>
@@ -64,7 +64,7 @@ function Header({home,cart,orders,store,account,login,pageId}) {
                   <span>Home</span>
              </div> 
             </Link>
-    {site_settings.store ? (
+    {site_settings.store && brand.plan !== 'lite' ? (
  <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}}>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
         <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '20px',height:'20px',display: 'flex', justifyContent: 'center'}}>
@@ -90,7 +90,7 @@ function Header({home,cart,orders,store,account,login,pageId}) {
             </Link>
       )}
            
-        {site_settings.store ? (
+        {site_settings.store && brand.plan !== 'lite' ? (
             <Link to={`/vandore/${pageId}/store`} style={{textDecoration: 'none'}}>
             <div className={`header__option  ${store ? 'header__option--active' : ''}`} style={{borderBottom: `${store ? `4px solid ${site_colors.icons}` : ''}`}}>
                   <StorefrontOutlined fontSize="large" style={{color: `${site_colors.icons}`}}/>
@@ -104,7 +104,7 @@ function Header({home,cart,orders,store,account,login,pageId}) {
                     <Link to={`/vandore/${pageId}/user`} style={{textDecoration: 'none'}}>
                     {site_settings.userAuth ? (
                       <div className={`header__option  ${account ? 'header__option--active' : ''}`} style={{borderBottom: `${account ? `4px solid ${site_colors.icons}` : ''}`}}>
-                      <Avatar src={user_details.image} />
+                      <Avatar src={user_details?.image} />
                       <span>Your Profile</span>
                       </div> 
                     ) : ''}

@@ -3,7 +3,7 @@ import { db, firebaseApp } from '../../firebase';
 import './HandleItem.css'
 import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
-import { CloudUpload, Delete, Edit, EventAvailable, EventBusy, Update } from '@material-ui/icons';
+import { CloudUpload, Delete, Edit, EventAvailable, EventBusy, Star, Update } from '@material-ui/icons';
 import { IconButton, Modal } from '@material-ui/core';
 
 
@@ -31,10 +31,10 @@ function HandleItem({item,id,pageId}) {
 
     const updateItem= (e) => {
         e.preventDefault();
-
+      const productId= getRandomText(20);
         db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
          items: firebase.firestore.FieldValue.arrayUnion({
-             id: getRandomText(20),
+             id: productId,
              name: name,
              price: price,
              description: description,
@@ -44,6 +44,17 @@ function HandleItem({item,id,pageId}) {
          })
       });
 
+      db.collection(pageId.toUpperCase()).doc('products').collection('products').doc(productId).set({
+        id: productId,
+        name: name,
+        price: price,
+        description: description,
+        rating: rating,
+        image: image,
+        available: true
+      })
+
+      db.collection(pageId.toUpperCase()).doc('products').collection('products').doc(item.id).delete();
       db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
         items: firebase.firestore.FieldValue.arrayRemove({
             id: item.id,
@@ -62,10 +73,10 @@ function HandleItem({item,id,pageId}) {
 
      const updateAvailability= (e) => {
         e.preventDefault();
-
+  const productId= getRandomText(20);
         db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
             items: firebase.firestore.FieldValue.arrayUnion({
-                id: getRandomText(20),
+                id: productId,
                 name: name,
                 price: price,
                 description: description,
@@ -74,6 +85,17 @@ function HandleItem({item,id,pageId}) {
                 available: !item.available
             })
          });
+         db.collection(pageId.toUpperCase()).doc('products').collection('products').doc(productId).set({
+          id: productId,
+          name: name,
+          price: price,
+          description: description,
+          rating: rating,
+          image: item.image,
+          available: !item.available
+        })
+  
+        db.collection(pageId.toUpperCase()).doc('products').collection('products').doc(item.id).delete();
    
          db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
            items: firebase.firestore.FieldValue.arrayRemove({
@@ -91,6 +113,9 @@ function HandleItem({item,id,pageId}) {
    }
 
      const deleteItem= () => {
+  
+
+      db.collection(pageId.toUpperCase()).doc('products').collection('products').doc(item.id).delete();
         db.collection(pageId.toUpperCase()).doc('store').collection("store").doc(id).update({
             items: firebase.firestore.FieldValue.arrayRemove({
                 id: item.id,
@@ -162,10 +187,10 @@ function HandleItem({item,id,pageId}) {
                   <input type='text' id='description' onChange={e => setDescription(e.target.value)} value={description}  placeholder='Product Description'/>
                 </div>
                
-                  <label for="rating">Product rating</label>
+                  {/* <label for="rating">Product rating</label>
                   <div className='handleItem__edit--input'>
                   <input type='text' id='rating' onChange={e => setRating(e.target.value)} value={rating}  placeholder='Product Rating'/>
-                </div>
+                </div> */}
                 
                   <div className='handleItem__buttons'>
                   <div style={{textAlign: 'center'}} onClick={() => setEdit(false)} className='handleItem__buttons--button'>
@@ -191,7 +216,7 @@ function HandleItem({item,id,pageId}) {
                 <div className='handleItem__noedit'>
                     <div style={{textAlign: 'center'}}>
                     <h3>{name}</h3>
-                     <h2>{rating}</h2>
+                     <h2>{rating} <Star style={{color: '#ffcc00'}} /></h2>
                      <h1>Rs.{price}</h1>
                     </div>
                    <div style={{marginBottom: 35,textAlign: 'center'}} onClick={() => setEdit(true)}>

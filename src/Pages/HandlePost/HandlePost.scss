@@ -80,6 +80,10 @@
      border-color: yellow;
      border-style: solid;
      margin-top: 10px;
+
+     @include respond(tab-port){
+         width: 90%;
+     }
  }
  
  .handlePost__input > textarea {
@@ -97,4 +101,18 @@
      width: max-content;
      height: max-content;
      margin: 0 auto;
+
+     @include respond(tab-port){
+         width: 90%;
+     }
+}
+.handPost__postUpload--image{
+    margin: 10px 0px;
+    width: 600px;
+    height: 300px;
+
+    @include respond(tab-port){
+        width: 90%;
+        height: 200px;
+    }
 }

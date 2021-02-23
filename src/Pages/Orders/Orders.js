@@ -13,7 +13,7 @@ import StateFill from '../StateFill';
 import './Orders.scss'
 
 function Orders({pageId}) {
-    const [{user,sidebar,site_settings,site_colors,user_details},dispatch]= useStateValue();
+    const [{user,sidebar,site_settings,site_colors,user_details,brand},dispatch]= useStateValue();
     const [orders,setOrders]= useState([]);
     const history= useHistory();
     
@@ -34,6 +34,11 @@ function Orders({pageId}) {
        setOrders([]);
    }
     },[user])
+
+    if(brand.plan === 'lite'){
+        history.push(`/${pageId}`);
+    }
+    
 
     return (
       

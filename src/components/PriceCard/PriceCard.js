@@ -40,17 +40,49 @@ const useStyles = makeStyles((theme) => ({
 function PriceCard({plan}) {
     const classes = useStyles();
   const [clientSecret,setClientSecret]= useState(null);
-  const [planMonth,setPlanMonth]= useState('1 Month');
+  const [planMonth,setPlanMonth]= useState('12 Months');
   const [planMonthOne,setPlanMonthOne]= useState(1000);
-  const [planMonthTwo,setPlanMonthTwo]= useState(2000);
+  const [planMonthTwo,setPlanMonthTwo]= useState(20000);
+  const [planMonthThree,setPlanMonthThree]= useState(10000);
   const [message,setMessage]= useState('');
 
-  const [planSms,setPlanSms]= useState(100);
-  const [planSmsPackage,setPlanSmsPackage]= useState(20);
+  const [planSms,setPlanSms]= useState(30);
+  const [planSmsPackage,setPlanSmsPackage]= useState(10);
 
 
   const [{user_details,user,site_info},dispatch]= useStateValue();
   const [open, setOpen] = useState(false);
+  const [firstPay,setFirstPay]= useState(false);
+  const [rcode,setRcode]= useState('');
+
+   
+  useEffect(() => {
+        
+    dbMain.collection('brands').doc(user_details.business.toUpperCase())
+    .get()
+    .then(function(doc) {
+      if (doc.exists) {
+         setFirstPay(doc.data().firstPay);
+         setRcode(doc.data().affiliation);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+
+ },[])
+
+
+
+
+
+
+
+
+
+
 
 
   useEffect(() => {
@@ -82,13 +114,22 @@ function PriceCard({plan}) {
             });
             setClientSecret(response);
         }
+
+        else if(plan === 'lite') {
+          const response = await axios({
+              method: 'post',
+              // Stripe expects the total in a currencies subunits
+              url: `/razorpay?total=${planMonthThree}`
+          });
+          setClientSecret(response);
+      }
     }
 
     getClientSecret();
 }, [planMonthOne,planMonthTwo,planSmsPackage])
 
 
-console.log(clientSecret);
+
 
 
 
@@ -111,6 +152,24 @@ console.log(clientSecret);
 
         setPlanMonth(event.target.value);
     }
+    if(plan === 'lite') {
+
+      if(event.target.value === '1 Month'){
+          setPlanMonthThree(500);
+          setMessage('');
+      }
+      else if (event.target.value === '3 Months'){
+          setPlanMonthThree(1500);
+        /*   setMessage('We Provide Extra 3 Days For Free'); */
+
+      }
+      else if (event.target.value === '12 Months'){
+          setPlanMonthThree(6000);
+      /*     setMessage('We Provide Extra 1 Month For Free'); */
+      }
+
+      setPlanMonth(event.target.value);
+  }
     if(plan === 'gold') {
 
         if(event.target.value === '1 Month'){
@@ -131,15 +190,15 @@ console.log(clientSecret);
 
     if(plan === 'sms') {
          
-      if(event.target.value === 100) {
-          setPlanSmsPackage(20);
+      if(event.target.value === 30) {
+          setPlanSmsPackage(10);
       }
       else if(event.target.value === 300) {
-        setPlanSmsPackage(60);
+        setPlanSmsPackage(100);
        }
 
-       else if(event.target.value === 600) {
-        setPlanSmsPackage(120);
+       else if(event.target.value === 3000) {
+        setPlanSmsPackage(1000);
        }
        setPlanSms(event.target.value);
     }
@@ -241,7 +300,21 @@ console.log(clientSecret);
               alert(response.razorpay_order_id)
               alert(response.razorpay_signature) */
 
-              
+              if(rcode !== 'LUCKY50'){
+                if(plan==='gold' || plan==='lite'){
+                  if(!firstPay){
+                    dbMain.collection('brands').doc(user_details.business.toUpperCase()).update({
+                      firstPay: true,
+                      plan: plan
+                    })
+  
+                    dbMain.collection('affiliation').doc(rcode).collection('affiliation').doc(user_details.business.toUpperCase()).update({
+                      paid: true,
+                      plan: plan
+                    })
+                  }
+                }
+              }
 
               if(plan === 'plus'){
                 dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
@@ -262,8 +335,39 @@ console.log(clientSecret);
                     payment_id: response.razorpay_payment_id
                 })
 
+                dbMain.collection('brands').doc(user_details.business).update({
+                  plan : plan
+                })
+
+              }
+           else if(plan === 'lite'){
+                dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                    plan: plan,
+                    duration: planMonth,
+                    planActiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    planActive: true,
+                    sms: 100
+                  });
+
+                  dbMain.collection('client_payments').add({
+                    clientName: user_details.name,
+                    clientPhone: user_details.phone,
+                    clientEmail: user.email,
+                    clientPlan: plan,
+                    clientDuration: planMonth,
+                    payment: planMonthThree,
+                    payment_id: response.razorpay_payment_id
+                })
+                dbMain.collection('brands').doc(user_details.business).update({
+                  plan : plan
+                })
+
               }
               else if(plan === 'gold') {
+
+               
+
+
                 dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
                     plan: plan,
                     duration: planMonth,
@@ -280,6 +384,10 @@ console.log(clientSecret);
                     clientDuration: planMonth,
                     payment: planMonthTwo,
                     payment_id: response.razorpay_payment_id
+                })
+
+                dbMain.collection('brands').doc(user_details.business).update({
+                  plan : plan
                 })
               }
               else if(plan === 'sms') {
@@ -315,18 +423,19 @@ console.log(clientSecret);
   
     return (
         <div className='priceCard' style={{backgroundColor: `${user_details.planActive && user_details.plan === plan ? '#1eba4a' : ''}`,minHeight: `${plan === 'sms' ? '315px' : ''}`}}>
-            <h2 style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>{plan}</h2>
+            <h2 style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>{plan==='gold' ? 'PRO PLUS +' : ''} {plan==='lite' ? 'PLUS +' : ''} {plan !== 'gold' && plan !== 'lite' ? plan : ''}</h2>
 
          <div className='priceCard__price'>
               <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Rs.</p>
               <span style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}> 
             {plan === 'free' ? `0` : ''}
             {plan === 'plus' ? `${planMonthOne}` : ''}
+            {plan === 'lite' ? `${planMonthThree}` : ''}
             {plan === 'gold' ? `${planMonthTwo}` : ''}
             {plan === 'sms' ? `${planSmsPackage}` : ''}
             </span>
           {}
-             <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>/ {plan === 'plus' ? `${planMonth}` : ''}{plan === 'free' ? `14 Days` : ''}{plan === 'gold' ? `${planMonth}` : ''}{plan === 'sms' ? `${planSms} SMS` : ''}</p>
+             <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>/ {plan === 'lite' ? `${planMonth}` : ''}{plan === 'plus' ? `${planMonth}` : ''}{plan === 'free' ? `14 Days` : ''}{plan === 'gold' ? `${planMonth}` : ''}{plan === 'sms' ? `${planSms} SMS` : ''}</p>
          </div>
 
          <div className='priceCard__info'>
@@ -349,6 +458,24 @@ console.log(clientSecret);
                 <p>Direct Mass Customer Messaging</p>
                 <p>Orders acceppt/cancel messages</p>
                 
+                </>
+             ) : ''}
+              {plan === 'lite' ? (
+                 <>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Post Feed</p>
+             
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}} >Gallery</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Feedbacks/Ratings</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>User Authentication</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Site Analytics + Post Analytics</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Promotional Slider</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Facebook Timeline Integration</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Zomato And Swiggy Integration(optional)</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>SMS SUPPORT</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>100 FREE PROMOTIONAL MESSAGES</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Direct Customer Notification Support</p>
+ 
+
                 </>
              ) : ''}
               {plan === 'plus' ? (
@@ -382,6 +509,7 @@ console.log(clientSecret);
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Facebook Timeline Integration</p>
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>SMS SUPPORT</p>
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>900 FREE PROMOTIONAL MESSAGES</p>
+                <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Direct Customer Notification Support</p>
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Zomato And Swiggy Integration(optional)</p>
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>CUSTOM DOMAIN</p>
                 <p style={{color:  `${user_details.planActive && user_details.plan === plan ? 'white' : ''}`}}>Online Payment (Net-Banking/Wallets/Upi)</p>
@@ -423,8 +551,7 @@ console.log(clientSecret);
           onChange={handleChange}
         >
          
-          <MenuItem value='1 Month'>1 Month</MenuItem>
-          <MenuItem value='3 Months'>3 Months</MenuItem>
+          
           <MenuItem value='12 Months'>12 Months</MenuItem>
         </Select>
       </FormControl>
@@ -443,15 +570,15 @@ console.log(clientSecret);
           onChange={handleChange}
         >
          
-          <MenuItem value={100}>100 SMS</MenuItem>
+          <MenuItem value={30}>30 SMS</MenuItem>
           <MenuItem value={300}>300 SMS</MenuItem>
-          <MenuItem value={600}>600 SMS</MenuItem>
+          <MenuItem value={3000}>3000 SMS</MenuItem>
         </Select>
       </FormControl>
    ) : ''}
 
   {plan === 'free' ? '' : (
-   <div className='priceCard__bottom--button' onClick={displayRazorpay}>Buy {plan==='plus' ? 'Vandore + Subscription' : ''} {plan==='gold' ? 'Vandore Gold Subscription' : ''} {plan==='sms' ? 'SMS Recharge' : ''}</div>
+   <div className='priceCard__bottom--button' onClick={displayRazorpay}>Buy {plan==='lite' ? 'Vandore Plus + Subscription' : ''}{plan==='plus' ? 'Vandore + Subscription' : ''} {plan==='gold' ? 'Vandore Pro Plus + Subscription' : ''} {plan==='sms' ? 'SMS Recharge' : ''}</div>
   )}
   
      

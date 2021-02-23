@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 
 function Gallery({pageId}) {
     const [images,setImages]= useState([]);
-    const [{sidebar,site_settings,site_colors,user,user_details},dispatch]= useStateValue();
+    const [{sidebar,site_settings,site_colors,user,user_details,brand},dispatch]= useStateValue();
     const history= useHistory();
 
     useEffect(() => {
@@ -26,6 +26,11 @@ function Gallery({pageId}) {
         ))
        
         },[])
+
+        if(!site_settings.photoGallery){
+            history.push(`/${pageId}`);
+          }
+        
     return (
         <div className='gallery'>
             <Sidebar page='Photo Gallery' pageId={pageId} />

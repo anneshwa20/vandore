@@ -187,7 +187,7 @@ function HandleAbout({id}) {
 >
     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
     <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+   <button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
     </div>
  
 </Modal>

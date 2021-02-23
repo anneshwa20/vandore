@@ -34,7 +34,7 @@ function Sidebar({page,pageId}) {
   const [facebookLink,setFacebookLink]= useState('');
   const [zomatoLink,setZomatoLink]= useState('');
   const [swiggyLink,setSwiggyLink]= useState('');
-  const [{site_settings,site_colors,user,user_details,site_info},dispatch]= useStateValue();
+  const [{site_settings,site_colors,user,user_details,site_info,brand},dispatch]= useStateValue();
   const [youtubeLink,setYoutubeLink]= useState('');
   const [feedbacks,setFeedbacks]= useState([]);
   const [open,setOpen]= useState(false);
@@ -178,10 +178,10 @@ function Sidebar({page,pageId}) {
          timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => setOpenRate(false));
       
-        if(site_settings.feedbackMessage){
+        if(site_settings.feedbackMessage && brand.plan !== 'free'){
           sendSMS();
         }
-        if(site_settings.feedbackEmail){
+        if(site_settings.feedbackEmail && brand.plan !== 'free'){
           sendEmail();
         }
 
@@ -281,7 +281,7 @@ function Sidebar({page,pageId}) {
         </div>
           ) : ''}
        
-        {site_settings.chatChannels ? (
+        {site_settings.chatChannels && brand.plan === 'gold' ? (
         <div onClick={() => setShow(!show)}>
         <SidebarRow Icon={Chat} title="Chat With Us" page={page}/>
         </div>
@@ -293,7 +293,7 @@ function Sidebar({page,pageId}) {
                    <SidebarRow  title={`# ${channel.name}`} />
                    </div>
                )) : ''}
-            {site_settings.store ? (
+            {site_settings.store && brand.plan !== 'lite' ? (
               <div onClick={() => history.push(`/vandore/${pageId}/store`)} >
           <SidebarRow Icon={Storefront} title="Store" page={page}/>
               </div> 

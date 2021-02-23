@@ -58,15 +58,25 @@
     flex-wrap: wrap;
 }
 .handleCategory__form {
-    width: 40%;
+    min-width: 40%;
     background-color: white;
     padding: 25px;
     border-radius: 10px;
-    margin: 0 auto;
+  
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @include respond(tab-port){
+        min-width: 90vw;
+    }
+
+  
 }
+.md-dialog {
+    max-width : 95vw !important;  // 95% is a example
+    max-height : 95vh !important; // You can set any size you want (in %, px, em, etc)
+  }
 .handleCategory__form > h2 {
   color: rgb(91, 87, 115);
   text-transform: uppercase;

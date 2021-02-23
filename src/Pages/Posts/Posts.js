@@ -23,6 +23,8 @@ function Posts(props) {
     const[fclicks,setFclicks]= useState('');
     const[wclicks,setWclicks]= useState('');
     const[image,setImage]= useState('');
+    const[type,setType]= useState('');
+    const [link,setLink]= useState('');
 
     const[{user_details,sidebar,user,site_settings,site_colors},dispatch]= useStateValue();
    const history= useHistory();
@@ -40,10 +42,12 @@ function Posts(props) {
                    setUsername(doc.data().username);
                    setTimestamp(doc.data().timestamp);
                    setMessage(doc.data().message);
-                   setImage(doc.data().image);
+                 
                    setVisits(doc.data().visits);
                    setFclicks(doc.data().fclicks);
                    setWclicks(doc.data().wclicks);
+                   setType(doc.data().type);
+                   setLink(doc.data().link);
               } else {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
@@ -126,7 +130,8 @@ function Posts(props) {
                  message={message}
                  timestamp={timestamp}
                  username={username}
-                 image={image}
+                 type={type}
+                 link={link}
                 />
             ) : ''}
    </div>
@@ -147,7 +152,8 @@ function Posts(props) {
                  message={message}
                  timestamp={timestamp}
                  username={username}
-                 image={image}
+                 type={type}
+                 link={link}
                 />
             ) : ''}
    </div>

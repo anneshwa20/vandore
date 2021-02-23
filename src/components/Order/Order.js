@@ -105,7 +105,7 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
              ))}
               <div className='order__price' style={{backgroundColor: `${site_colors.primary}`}}>
                   <h3 >ORDER TOTAL: </h3>
-                  <h3>Rs.{order.data.amount / 100}</h3>
+                  <h3>Rs.{order.data.mode === 'Cash On Delivery' || order.data.mode === 'Take Away' ? order.data.amount : (order.data.amount / 100)}</h3>
               </div>
               <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
 open={openAlertDelete}

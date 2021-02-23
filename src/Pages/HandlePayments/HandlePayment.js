@@ -14,7 +14,7 @@ function HandlePayment({id}) {
   const [message,setMessage]= useState('');
   const [searchPayments,setSearchPayments]= useState('');
   const [payments,setPayments]= useState([]);
-  const [{site_settings,single_guides,site_preview,sidebarVandore,user,user_details},dispatch]= useStateValue();
+  const [{site_settings,single_guides,site_preview,sidebarVandore,user,user_details,brand},dispatch]= useStateValue();
   const history= useHistory();
   const pageId= id;
   const [open,setOpen]= useState(false);
@@ -99,6 +99,11 @@ function HandlePayment({id}) {
         db.collection(pageId.toUpperCase()).doc('payments').collection('payments').doc(id).delete();
         setOpenAlertDelete(false);
     }
+
+
+  
+
+    
 
     return (
         <div className='handlePayment'>
@@ -241,6 +246,28 @@ aria-describedby="Guide Video description"
  </div>
 </div>
 </Modal>
+
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={user_details.plan === 'lite' ? true : false}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
          
            <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={open}
@@ -250,7 +277,7 @@ aria-describedby="Guide Video description"
 >
     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
     <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+   <button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
     </div>
  
 </Modal>

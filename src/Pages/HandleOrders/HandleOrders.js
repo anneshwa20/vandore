@@ -24,6 +24,7 @@ function HandleOrders({id}) {
     const pageId= id;
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
+    const[openPricing,setOpenPricing]= useState(false);
     const manageVideo= (link) => {
      setOpen(true);
      setCurrentVideo(link);
@@ -71,6 +72,10 @@ function HandleOrders({id}) {
       }
 
     const handleMessage= () => {
+        if(user_details.plan === 'free'){
+            setOpenPricing(true);
+            return;
+        }
       sendSMS();
       dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
        sms: user_details.sms - allUsers.length
@@ -137,7 +142,7 @@ function HandleOrders({id}) {
             
             <tr>
                     <td style={{display: 'flex', alignItems: 'center'}}>  <Avatar src={order.data?.image} style={{marginRight: '5px'}}/> {order.data?.name}</td>
-                    <td>Rs.{order.data.amount / 100}</td>
+                    <td>Rs.{order.data.mode === 'Cash On Delivery' || order.data.mode === 'Take Away' ? order.data.amount : (order.data.amount / 100)}</td>
                     <td>{order.data?.phone}</td>
                     
                     <td>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</td>
@@ -255,9 +260,51 @@ function HandleOrders({id}) {
 >
     <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
     <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-   <button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+   <button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
     </div>
  
+</Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openPricing}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
+</Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={user_details.plan === 'lite' ? true : false}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
 </Modal>
 <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
   open={openOrder}

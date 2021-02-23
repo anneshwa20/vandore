@@ -8,7 +8,7 @@ import {  Menu } from '@material-ui/icons';
 import { useStateValue } from '../../StateProvider';
 import { Modal } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
-import PostSvg from '../../icons/undraw_share_online_r87b.svg';
+import QrSvg from '../../icons/undraw_real-time_sync_o57k.svg';
 import { QRCode } from 'react-qrcode-logo';
 import QRComponent from '../../components/QRComponent/QRComponent';
 import { useRef } from 'react';
@@ -19,8 +19,8 @@ import ReactToPdf from 'react-to-pdf';
 
 function HandleQrApp({id}) {
     const componentRef = React.createRef();
-    
-   const [message,setMessage]= useState('');
+    const[openPricing,setOpenPricing]= useState(false);
+  const [message,setMessage]= useState('');
    const [image, setImage]= useState('');
    const [openAlert,setOpenAlert]= useState(false);
    const [openImage,setOpenImage]= useState(false);
@@ -38,7 +38,7 @@ function HandleQrApp({id}) {
 
   const handleGetStarted= () => {
     db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
-        post: true
+        qr: true
     }).then(refreshPage);
 }
 const refreshPage = ()=>{
@@ -47,21 +47,31 @@ const refreshPage = ()=>{
 
    
   const handleApp= () => {
-    dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
-      appRequest: true
-});
-  dbMain.collection("app").add({
-      id: user.uid,
-      user: user_details.name,
-      phone: user_details.phone,
-      email: user.email,
-      image: user_details.image,
-      business: user_details.business
+    if(user_details.plan != 'gold'){
+      setOpenPricing(true);
+      return;
+    }else{
+      dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+        appRequest: true
   });
+    dbMain.collection("app").add({
+        id: user.uid,
+        user: user_details.name,
+        phone: user_details.phone,
+        email: user.email,
+        image: user_details.image,
+        business: user_details.business
+    });
+    }
+    
   }
 
 
  const handleDesktopApp= () => {
+  if(user_details.plan != 'gold'){
+    setOpenPricing(true);
+    return;
+  }else{
     dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
       desktopAppRequest: true
 });
@@ -73,6 +83,7 @@ const refreshPage = ()=>{
       image: user_details.image,
       business: user_details.business
   });
+}
   }
 
   const handleDownloadApp= () => {
@@ -92,7 +103,7 @@ const refreshPage = ()=>{
          <img src='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png' style={{width: '20px',height: '20px'}}/>
          <h4>ANDORE</h4>
          </div>
-     {site_preview.post ? (
+     {site_preview.qr ? (
        <>
            <div className='vandoreHeaderMobile' onClick={() => {
             dispatch({
@@ -110,7 +121,7 @@ const refreshPage = ()=>{
      <p>
      If you face any difficulties regarding Posts, then see our QR CODE & APPs guides
      </p> 
-     <div onClick={() => manageVideo(single_guides.posts)}>Guides</div>
+     <div onClick={() => manageVideo(single_guides.qr)}>Guides</div>
     </div>
 
 
@@ -127,9 +138,9 @@ const refreshPage = ()=>{
         <hr></hr>
  </div>
      <div className='deleteAccount' style={{color:'white'}} >
-     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Urna nunc id cursus metus aliquam eleifend mi in. Vestibulum sed arcu non odio euismod lacinia at quis.
+     Vandore offers a characteristic QR code which draws users to your website.
      
-     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.posts)}>
+     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.qr)}>
        See Guide Video
        </div>
       {user_details.business ? (
@@ -178,13 +189,13 @@ const refreshPage = ()=>{
        </>
     ) : (
         <>
-    {!user_details.appRequest  ? ( <>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sagittis eu volutpat odio facilisis. Faucibus nisl tincidunt eget nullam non nisi est sit. </>) 
+    {!user_details.appRequest  ? ( <>Vandore offers a confidential mobile application for your mobile users. </>) 
     : 'Your App is being generated, it usually takes 24hrs to complete the process, please comeback after 24 hrs to download your app'     
     }
        </>
     )}
     
-     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.posts)}>
+     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.qr)}>
           See Guide Video
       </div>
 
@@ -221,12 +232,12 @@ const refreshPage = ()=>{
        </>
     ) : (
         <>
-    {!user_details.desktopAppRequest  ? ( <>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sagittis eu volutpat odio facilisis. Faucibus nisl tincidunt eget nullam non nisi est sit. </>) 
+    {!user_details.desktopAppRequest  ? ( <> Vandore offers a confidential computer application for your computer users. </>) 
     : 'Your App is being generated, it usually takes 24hrs to complete the process, please comeback after 24 hrs to download your app'     
     }
        </>
     )}
-     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.posts)}>
+     <div className='domainAccountButton' onClick={() => manageVideo(single_guides.qr)}>
           See Guide Video
       </div>
 
@@ -256,9 +267,30 @@ aria-describedby="Guide Video description"
 >
 <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
 <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+<button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
 </div>
 
+</Modal>
+<Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
+open={openPricing}
+
+aria-labelledby="Guide Video"
+aria-describedby="Guide Video description"
+>
+<div style={{display: 'flex',flexDirection: 'column', backgroundColor: 'white',width: '400px',height: 'max-content'}}>
+ <div className='modal__header' style={{padding: '20px',color: 'white',backgroundColor: 'green'}}>
+   Update Your Vandore Plan To Use This Feature
+ </div>
+ 
+ <div style={{display: 'flex',justifyContent: 'space-around'}}>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={() => history.push(`/restro/dashboard/${pageId}`)}>
+  Dashboard
+ </div>
+ <div className='modal__button' style={{margin: '10px auto', backgroundColor: 'black',color: 'white',padding: '10px', display: 'flex',justifyContent: 'center',cursor: 'pointer'}} onClick={()=>  history.push(`/restro/pricing/${pageId}`)}>
+   Upgrade
+ </div>
+ </div>
+</div>
 </Modal>
 <Modal style={{display: "flex",alignItems: 'center',justifyContent: 'center'}}
 open={openAlert}
@@ -310,8 +342,8 @@ aria-describedby="Guide Video description"
                 </div>
          <div className='site_preview--topContainer'>
                 <div className='site_preview--topContainer--left'>
-                   <h1>Posts</h1>
-                   <h3>Posting content on your timeline helps driving high customer engagement.</h3>
+                   <h1>QR Code and Mobile App</h1>
+                   <h3>Vandore offers a characteristic QR code which draws users to your website. and also offers a confidential mobile and desktop application for your mobile users.</h3>
              
                     <div className='site_preview--getStarted' onClick={handleGetStarted}>
                        Get Started
@@ -319,7 +351,7 @@ aria-describedby="Guide Video description"
                 </div>
 
                 <div className='site_preview--topContainer--right'>
-                     <img src={PostSvg} style={{fill:"#FFFFFF"}} />
+                     <img src={QrSvg} style={{fill:"#FFFFFF"}} />
                 </div>
         </div>
      </div>
@@ -328,11 +360,11 @@ aria-describedby="Guide Video description"
     </div>
      <div className='site_preview--guide'>
         <div className='site_preview--guide--left'>
-        <img src={PostSvg} style={{fill:"#FFFFFF"}} />
-        <h4>Posting content on your timeline helps driving high customer engagement.</h4>
+        <img src={QrSvg} style={{fill:"#FFFFFF"}} />
+        <h4>Vandore offers a characteristic QR code which draws users to your website. and also offers a confidential mobile and desktop application for your mobile users.</h4>
         </div>
         <div className='site_preview--guide--right'>
-          <iframe src={single_guides.posts} />
+          <iframe src={single_guides.qr} />
         </div>
     </div>
     </div>

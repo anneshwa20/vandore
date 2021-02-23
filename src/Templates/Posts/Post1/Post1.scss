@@ -1,0 +1,82 @@
+
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: 1800px) { @content };    //1800
+	}
+  }
+
+  .PostSeven__container{
+    height: 400px;
+    width: 690px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.PostSeven__containerTop{
+    height: 50%;
+    width: 100%;
+    background-image: url(https://i.ibb.co/Mnm92gj/adrien-olichon-Zg-REXhl8-ER0-unsplash-1.jpg);
+    position: relative;
+
+}
+.PostSeven__containerBottom{
+    height: 50%;
+    width: 100%;
+    background-color: #e9ca87;
+    position: relative;
+}
+.PostSeven__containerTopImage{
+    height: 170%;
+    width: 40%;
+    position: absolute;
+    top: 15%;
+    right: 5%;
+    z-index: 1000;
+}
+.PostSeven__containerBottomHeading{
+    position: absolute;
+    top: 30%;
+    left: 5%;
+    font-family: 'Alex Brush', cursive;
+    font-size: 57px;
+    text-transform: capitalize;
+    font-weight: 500;
+    color: #e69d54;
+    z-index: 20000;
+}
+.PostSeven__containerBottomSubheading{
+   width: 50%;
+   font-size: 20px;
+   font-weight: 500;
+   font-family: 'Lato', sans-serif;
+   color: #632222;
+   position: absolute;
+   top: 15%;
+   left: 5%;
+}
+.PostSeven__containerBottomDesignOne{
+    height: 50%;
+    width: 2%;
+    background-color: #632222;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.PostSeven__containerBottomDesignTwo{
+    height: 4%;
+    width: 30%;
+    background-color: #632222;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

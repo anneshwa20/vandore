@@ -7,14 +7,28 @@ import Post from '../../components/Post/Post';
 import { AddAPhoto, Facebook, FolderShared, Menu, Save, Visibility, WhatsApp } from '@material-ui/icons';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
 import { useStateValue } from '../../StateProvider';
-import { Modal } from '@material-ui/core';
+import { FormControl, InputLabel, makeStyles, MenuItem, Modal, Select } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import PostSvg from '../../icons/undraw_share_online_r87b.svg';
 import PostAdmin from '../../components/Post/PostAdmin';
+import axios from '../../axios';
+import { ReactTinyLink } from 'react-tiny-link';
+
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    display: 'block',
+    marginTop: theme.spacing(2),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '90%',
+  },
+}));
 
 
 function HandlePost({id}) {
-   
+  const classes = useStyles();
    const [message,setMessage]= useState('');
    const [image, setImage]= useState('');
    const [openAlert,setOpenAlert]= useState(false);
@@ -23,13 +37,25 @@ function HandlePost({id}) {
    const [posts,setPosts]= useState([]);
   const pageId= id;
    const history= useHistory();
-    const[{single_guides,site_preview,sidebarVandore,user,user_details},dispatch]= useStateValue();
+    const[{single_guides,site_preview,sidebarVandore,user,user_details,site_info},dispatch]= useStateValue();
    const [open,setOpen]= useState(false);
+   const [openDropdown,setOpenDropdown]= useState(false);
+   const [option,setOption]= useState(1);
+   const [ylink,setYlink]= useState('');
+   const [elink,setElink]= useState('');
+   const [pdfFile,setPdfFile]= useState('');
    const [currentVideo,setCurrentVideo]= useState('');
+   const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
    const manageVideo= (link) => {
     setOpen(true);
     setCurrentVideo(link);
   }
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
 
   const handleGetStarted= () => {
     db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_preview').update({
@@ -38,6 +64,29 @@ function HandlePost({id}) {
 }
 const refreshPage = ()=>{
     window.location.reload();  }
+
+ 
+    const handleChange = (event) => {
+       setImage('');
+       setYlink('');
+       setElink('');
+       setPdfFile('');
+       setOption(event.target.value);
+    };
+  
+    const handleClose = () => {
+      setOpenDropdown(false);
+    };
+  
+    const handleOpen = () => {
+      setOpenDropdown(true);
+    };
+  
+
+
+
+
+
 
 
     useEffect(() => {
@@ -58,19 +107,89 @@ const refreshPage = ()=>{
       
     
        firebaseApp.storage().ref('posts').child(filename).getDownloadURL()
-       .then(url => setImage(url)).then(() => setShow(true)).then(() => setOpenImage(false));
+       .then(url => setImage(url)).then(() => setOpenImage(false));
                      
         
        
      };
 
+     const handleUploadStartPdf= () => {
+      setOpenImage(true);
+  }
+
+  const handleUploadSuccessPdf= (filename) =>{
+    
+  
+     firebaseApp.storage().ref('pdfs').child(filename).getDownloadURL()
+     .then(url => setPdfFile(url)).then(() => setOpenImage(false));
+                   
+      
+     
+   };
+
+     const [users,setUsers]= useState([]);
+useEffect(() => {
+  
+  db.collection(pageId.toUpperCase()).doc('userList').collection('userList')
+  .onSnapshot(snapshot => (
+      setUsers(snapshot.docs.map(doc => ({
+          id: doc.id,
+          address: doc.data().address,
+          name: doc.data().name,
+          phone: doc.data().phone,
+          image: doc.data().image,
+          email: doc.data().email,
+          active: doc.data().active,
+          notification: doc.data().notification
+      })))
+  ))
+ 
+  },[])
+
+const alltokens= `${users.map(user => user.notification)}`;
+
+const sendNotification= async () => {
+      
+  const NOTIFY = await axios({
+      method: 'post',
+      url: `/sendNotification`,
+      data: {
+          title: `Vandore. ${site_info.siteName}`,
+          desc: message,
+          tokens: alltokens.split(','),
+          image: image
+      }
+  });
+}
+
+
+
+
      const handleSubmit= (e) => {
          e.preventDefault();
         
-         
+         let link='';
+         let type='';
+         if(option===1){
+           link= image;
+           type= 'image';
+         }
+         else if(option ===2){
+           link= ylink;
+           type= 'youtube';
+         }
+         else if(option === 3){
+           link= elink;
+           type= 'external';
+         }
+         else if(option === 4){
+           link= pdfFile;
+           type= 'pdf';
+         }
          db.collection(id.toUpperCase()).doc('posts').collection("posts").add({
            message: message,
-           image: image,
+           link: link,
+           type: type,
            fclicks: '0',
            wclicks: '0',
            visits: '0',
@@ -81,8 +200,16 @@ const refreshPage = ()=>{
            username: user_details.name,
        }).then(() => setOpenAlert(true)).then(() => setImage('')).then(() => setMessage('')).then(() => setShow(false));
 
-      
+       sendNotification();
      }
+
+
+     function isValidURL(string) {
+      var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+      return (res !== null)
+    };
+
+    /* let docs= [{uri: pdfFile}]; */
 
     return (
         <div className='handlePost'>
@@ -118,27 +245,106 @@ const refreshPage = ()=>{
      <div style={{textAlign: 'center',marginTop: 20,marginBottom: 20}}>
      {show ? (
          <div className='handlePost__postUpload' style={{display: 'flex',flexDirection: 'column',alignItems: 'center'}}>
-         <img src={image} style={{width: 600,height: 300,marginBottom: 10,marginTop: 10}} />
+           {image ? <img src={image} className='handPost__postUpload--image'  /> : ''}
+           {ylink ? (
+        <div  style={{width: '100%',height: '300px'}}>
+        <iframe  src={ylink} style={{width: '100%',height: '100%'}} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div> 
+          ) : ''}
+
+          {elink && isValidURL(elink) ? (
+            <ReactTinyLink
+            cardSize="small"
+            showGraphic={true}
+            maxLine={2}
+            proxyUrl
+
+            defaultMedia='https://i.ibb.co/kKdmBDd/Vandore-Logo-3-4-removebg-preview.png'
+            minLine={1}
+            url={elink}
+          />
+          ) : ''}
+
+         {/*  {pdfFile ? (
+           <DocViewer documents={docs} />
+          ) : ''} */}
+
+          {pdfFile ? (
+            <iframe src={pdfFile} style={{width: '100%',height: '300px'}} />
+          ) : ''}
+
          <div className='handlePost__input'>
          <textarea placeholder='Enter Your Post Description' rows={5} cols={3} value={message} onChange={e => setMessage(e.target.value)} />
           </div>
+        <FormControl className={classes.formControl}>
+        <InputLabel id="demo-controlled-open-select-label">Post Customization</InputLabel>
+        <Select
+          labelId="demo-controlled-open-select-label"
+          id="demo-controlled-open-select"
+          open={openDropdown}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          value={option}
+          onChange={handleChange}
+        >
+         
+          <MenuItem value={1}>Post With Image</MenuItem>
+          <MenuItem value={2}>Post with embed Youtube video</MenuItem>
+          <MenuItem value={3}>Post with external link</MenuItem>
+          <MenuItem value={4}>Post with Pdf Document</MenuItem>
+        </Select>
+      </FormControl>
+      {option === 1 ? (
+         <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',marginTop: 20,display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
+         Select Your Photo <AddAPhoto style={{paddingLeft: '10px'}} />
+         <FileUploader
+           hidden
+           accept="image/*"
+           randomizeFilename
+           name="image"
+           storageRef={firebaseApp.storage().ref("posts")}
+           onUploadStart={handleUploadStart}
+           onUploadSuccess={handleUploadSuccess}
+          />
+          </label>
+      ) : ''}
+
+      {option === 2 ? (
+           <div className='handleCategory__form--input'>
+           <input type='text' onChange={e => setYlink(e.target.value)} value={ylink}  placeholder='Paste Your Youtube Embed Link'/>
+           </div>
+      ) : ''}
+
+       {option === 3 ? (
+         <div className='handleCategory__form--input'>
+         <input type='text' onChange={e => setElink(e.target.value)} value={elink}  placeholder='Paste Your External Link'/>
+         </div>
+      ) : ''}
+      
+      {option === 4 ? (
+         <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',marginTop: 20,display: 'flex',alignItems: 'center',width: 'max-content',margin: '0 auto'}}>
+         Select Your PDF file <AddAPhoto style={{paddingLeft: '10px'}} />
+         <FileUploader
+           hidden
+           accept="pdf/*"
+           randomizeFilename
+           name="image"
+           storageRef={firebaseApp.storage().ref("pdfs")}
+           onUploadStart={handleUploadStartPdf}
+           onUploadSuccess={handleUploadSuccessPdf}
+          />
+          </label>
+      ) : ''}
+         
         <label onClick={handleSubmit}  style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',marginTop: '10px'}}>
           Save Post <Save />
          </label>
          </div>
 
      ): (
-  <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
+  <label style={{backgroundColor: 'steelblue', color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}} onClick={() => setShow(true)}>
        Add New Post <AddAPhoto />
-       <FileUploader
-         hidden
-         accept="image/*"
-         randomizeFilename
-         name="image"
-         storageRef={firebaseApp.storage().ref("posts")}
-         onUploadStart={handleUploadStart}
-         onUploadSuccess={handleUploadSuccess}
-        />
+      
         </label>
      )} 
 </div> 
@@ -159,7 +365,8 @@ const refreshPage = ()=>{
           message={post.data.message}
           timestamp={post.data.timestamp}
           username={post.data.username}
-          image={post.data.image}
+          link={post.data.link}
+          type={post.data.type}
          />
 
      <div className='post__analytics'>
@@ -197,7 +404,7 @@ aria-describedby="Guide Video description"
 >
 <div style={{display: 'flex',justifyContent: 'center',alignItems: 'center',flexDirection: 'column', backgroundColor: 'white',padding: '20px'}}>
 <iframe width="560" height="315" src={currentVideo} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<button onClick={() => history.push('/restro/guides')}>Show All Guides</button>
+<button onClick={() => history.push(`/restro/guides/${id.toUpperCase()}`)}>Show All Guides</button>
 </div>
 
 </Modal>

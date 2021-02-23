@@ -6,7 +6,7 @@ import Menu from './Pages/Menu/Menu';
 import { BrowserRouter as Router,Switch,Route, Link } from 'react-router-dom';
 import Checkout from './Pages/Checkout/Checkout';
 import Login from './Pages/Login/Login';
-import { auth, authMain, db, dbMain } from './firebase';
+import { auth, authMain, db, dbMain,firebaseApp } from './firebase';
 import { useStateValue } from './StateProvider';
 import Payment from './Pages/Payment/Payment';
 import { loadStripe } from "@stripe/stripe-js";
@@ -31,16 +31,27 @@ import LoginVandore from './Pages/LoginVandore/LoginVandore';
 import Vandore from './Pages/Vandore/Vandore';
 import LoginVandoreClient from './Pages/LoginVandoreClient/LoginVandoreClient';
 import Landing from './Pages/Landing/Landing';
+import HandleSliderTemplate from './Pages/HandleSliderTemplate/HandleSliderTemplate';
 import LandingPage from './Pages';
 import SigninPage from './Pages/signin';
 import SignupPage from './Pages/signup';
 import MobileAppHome from './Pages/MobileAppHome/MobileAppHome';
+import HandleSignout from './Pages/HandleSignout/HandleSignout';
+import Products from './Pages/Products/Products';
+import Terms from './Pages/Terms/Terms';
+import Register from './Pages/Register/Register';
+import Vlogin from './Pages/Vlogin/Vlogin';
+import withClearCache from "./ClearCache";
 
-
-
+const ClearCacheComponent = withClearCache(MainApp);
 
 
 function App() {
+  return <ClearCacheComponent />;
+}
+
+
+function MainApp() {
   const [{user,store},dispatch]= useStateValue();
   const [visits,setVisits]= useState('');
 
@@ -50,7 +61,7 @@ function App() {
 
   useEffect(() => {
     authMain.onAuthStateChanged(authUser => {
-      console.log('THE USER IS >>>', authUser);
+      
 
       if(authUser){
        dispatch({
@@ -158,6 +169,31 @@ useEffect(() => {
    
 },[user]); 
 
+useEffect(() => {
+  
+   dbMain.collection("general").doc('version')
+   .onSnapshot(function(doc) {
+      if(doc.data().version !== '1.3.0'){
+        if('caches' in window){
+          caches.keys().then((names) => {
+                  // Delete all the cache files
+                  names.forEach(name => {
+                      caches.delete(name);
+                  })
+              });
+      
+              // Makes sure the page reloads. Changes are only visible after you refresh.
+              
+          }
+          window.location.reload(true);
+      }
+   });
+ 
+
+},[]); 
+
+
+
 
 
 
@@ -177,10 +213,17 @@ useEffect(() => {
            <LoginVandoreClient />
         </Route>
 
+        <Route path='/signout'>
+ 
+          <HandleSignout />
+        </Route>
+
    
           <Route exact  path="/restro/:page/:id" component={Restro}></Route>
           <Route exact  path="/posts/:pageId/:id" component={Posts}></Route>
+          <Route exact  path="/products/:pageId/:id" component={Products}></Route>
           <Route exact  path="/handleCategory/:id/:category" component={HandleCategory}></Route>
+          <Route exact  path="/componentTemplate/:id/:component" component={HandleSliderTemplate}></Route>
           <Route exact  path="/chats/:id/:roomId" component={Chats}></Route>
           <Route exact  path="/chatsPublic/:id/:roomId" component={ChatsPublic}></Route>
         
@@ -194,11 +237,16 @@ useEffect(() => {
           <Route exact  path="/handleGuideContent/:category" component={GuideContent}></Route>
           <Route exact  path="/vandore/:id/:page" component={Vandore}></Route>
         
-          <Route exact path="/signin" component={SigninPage}>
+          <Route exact path="/signin" component={Vlogin}>
+          
+          </Route>
+              
+         
+          <Route exact path="/signup" component={Register}>
           
           </Route>
 
-          <Route exact path="/signup" component={SignupPage}>
+          <Route exact path="/terms" component={Terms}>
           
           </Route>
 

@@ -1,0 +1,76 @@
+@mixin respond($breakpoint) {
+	@if $breakpoint == phone {
+		@media only screen and (max-width: 600px) { @content };    //600px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: 900px) { @content };     //900px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: 1200px) { @content };    //1200px
+	}
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: 1800px) { @content };    //1800
+	}
+  }
+
+
+.PostSix__container{
+    height: 400px;
+    width: 690px;
+    background-image: url(https://i.ibb.co/dMTZ8ZS/stories-v1r-Uvn-VMMk-M-unsplash.jpg);
+    background-size: cover;
+    background-position: center;
+    filter: blur(0.8);
+    position: relative;
+}
+
+.PostSix__containerRight{
+    height: 100%;
+    width: 30%;
+    background-color: #802020;
+}
+.PostSix__containerLeft{
+    height: 100%;
+    width: 70%;
+}
+.PostSix__middleContainer{
+    height: 75%;
+    width: 85%;
+    position: absolute;
+    top: 12%;
+    left: 10%;
+    display: flex;
+    color:  #fdab68;
+}
+.PostSix__middleLeft{
+    height: 100%;
+    width: 60%;
+    background-color:  #a0421d;
+
+
+}
+.PostSix__middleRight{
+    height: 100%;
+    width: 40%;
+   
+}
+.PostSix__middleImage{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+.PostSix__middleTitle{
+    font-size: 30px;
+    font-weight: 900;
+    color: #f7e1e1;
+    text-transform: uppercase;
+    padding: 20px;
+    
+}
+.PostSix__middleSubtitle{
+    font-size: 18px;
+    font-weight: 300;
+    color:  #fdab68;
+    padding: 10px;
+    line-height: 28px;
+}

@@ -1,0 +1,108 @@
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 600px) { @content };    //600px
+    }
+    @if $breakpoint == tab-port {
+        @media only screen and (max-width: 900px) { @content };     //900px
+    }
+    @if $breakpoint == tab-land {
+        @media only screen and (max-width: 1200px) { @content };    //1200px
+    }
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 1800px) { @content };    //1800
+    }
+  }
+
+.product__component {
+    width: 100%;
+    min-height: 300px;
+    background-color: whitesmoke;
+    display: flex;
+
+    @include respond(tab-port){
+        min-height: 300px;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+   
+}
+.product__component--left{
+    flex: 0.4;
+    border-right: 2px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    @include respond(tab-port) {
+        flex: 0.3;
+       
+    }
+}
+.product__component--left > img {
+    width: 80%;
+    height: 70%;
+    border: 3px solid black;
+
+    @include respond(tab-port){
+        width: 80%;
+        height: 60%;
+    }
+}
+.product__component--right{
+    flex: 0.6;
+    display: flex;
+    flex-direction: column;
+
+    @include respond(tab-port){
+        flex: 0.7;
+        
+    }
+
+}
+.product__component--name{
+    margin-top: 40px;
+    padding: 15px;
+    font-size: xx-large;
+    font-weight: 700;
+
+    @include respond(tab-port){
+        margin-top: 5px;
+        padding: 10px;
+        font-size: x-large;
+    }
+}
+.product__component--rating {
+    padding: 0 15px;
+}
+.product__component--rating > .MuiSvgIcon-root{
+    color: yellow;
+}
+.product__component--desc{
+    padding: 15px;
+    font-size: larger;
+    font-weight: 500;
+
+    @include respond(tab-port){
+        padding: 10px;
+    }
+}
+.product__component--bottom{
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+.product__component--price{
+    font-size: larger;
+    font-weight: 700;
+    
+}
+.product__component--cart{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    background-color: green;
+    font-size: larger;
+    color: white;
+    cursor: pointer;
+    margin-left: 10px;
+}

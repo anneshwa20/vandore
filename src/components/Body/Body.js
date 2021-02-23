@@ -17,7 +17,7 @@ function Body({pageId}) {
     const [images,setImages]= useState([]);
     const [posts,setPosts]= useState([]);
     const AutoplaySlider = withAutoplay(AwesomeSlider);
-    const [{site_settings,site_info,site_colors,user,user_details},dispatch]= useStateValue();
+    const [{site_settings,site_info,site_colors,user,user_details,brand},dispatch]= useStateValue();
     const [youtubeLink,setYoutubeLink]= useState('');
     const history= useHistory();
 
@@ -135,7 +135,7 @@ function Body({pageId}) {
         ) : ''}
       
        
-        {site_settings.store && site_settings.discount ? (
+        {site_settings.store && site_settings.discount && brand.plan !== 'lite' ? (
                 <div className='item__preview'>
                 <DiscountRow />
                 </div>
@@ -158,7 +158,8 @@ function Body({pageId}) {
                  message={post.data.message}
                  timestamp={post.data.timestamp}
                  username={post.data.username}
-                 image={post.data.image}
+                 link={post.data.link}
+                 type={post.data.type}
                 />
             ))
         }

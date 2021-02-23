@@ -7,7 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import { getBasketTotal } from "../../reducer";
 import axios from '../../axios';
-import { db } from '../../firebase';
+import { db, dbMain } from '../../firebase';
 import moment from 'moment';
 import firebase from 'firebase';
 import { Avatar } from '@material-ui/core';
@@ -36,13 +36,14 @@ function loadScript(src) {
 
 
 function Payment({pageId}) {
-    const [{ basket,site_info, user,user_details,site_settings ,site_colors,sidebar,order_notification}, dispatch] = useStateValue();
+    const [{ basket,site_info, user,user_details,site_settings,applied_coupon,final_price ,site_colors,sidebar,brand,order_notification}, dispatch] = useStateValue();
     const history = useHistory();
    
     const [error, setError] = useState(null);
     
     const [clientSecret, setClientSecret] = useState(null);
     const [orders,setOrders]= useState('');
+    const [onlinePayment,setOnlinePayment]= useState('');
   
 
     console.log('payment status',site_settings.onlinePay);
@@ -97,6 +98,24 @@ function Payment({pageId}) {
 
 
 
+   useEffect(() => {
+     
+    dbMain.collection('brands').doc(pageId.toUpperCase())
+    .get()
+    .then(function(doc) {
+      if (doc.exists) {
+         setOnlinePayment(doc.data().payment);
+      } else {
+        // doc.data() will be undefined in this case
+       
+        console.log("No such document!");
+      }
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+
+ },[])
+
 
 
     useEffect(() => {
@@ -123,7 +142,7 @@ function Payment({pageId}) {
             const response = await axios({
                 method: 'post',
                 // Stripe expects the total in a currencies subunits
-                url: `/razorpay?total=${getBasketTotal(basket)}`
+                url: `/razorpay?total=${final_price}`
             });
             setClientSecret(response);
         }
@@ -152,16 +171,44 @@ function Payment({pageId}) {
         .doc(docId)
         .set({
             basket: basket,
-            amount: clientSecret.data.amount.toString(),
+            amount: final_price,
+            coupon: applied_coupon,
+            couponid: applied_coupon ? applied_coupon.id : 'none',
+            couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
             created: firebase.firestore.FieldValue.serverTimestamp(),
             delivered: false,
+            mode: mode,
             cancelled: false
         })
         
-        db.collection(pageId).doc('orders').collection('orders')
+        if(applied_coupon){
+          db.collection(pageId).doc('orders').collection('orders')
           .add({
             basket: basket,
-            amount: clientSecret.data.amount.toString(),
+            amount: final_price,
+            created: firebase.firestore.FieldValue.serverTimestamp(),
+            name: user_details.name,
+            email: user.email,
+            user_id: user.uid,
+            image: user_details.image,
+            mode: mode,
+            payment_id: mode,
+            phone: user_details.phone,
+            address: user_details.address,
+            coupon: applied_coupon,
+            couponid: applied_coupon ? applied_coupon.id : 'none',
+            couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
+            delivered: false,
+            docId: docId,
+            cancelled: false,
+            applied_coupon: applied_coupon
+        })
+
+        }else{
+          db.collection(pageId).doc('orders').collection('orders')
+          .add({
+            basket: basket,
+            amount: final_price,
             created: firebase.firestore.FieldValue.serverTimestamp(),
             name: user_details.name,
             email: user.email,
@@ -170,10 +217,16 @@ function Payment({pageId}) {
             payment_id: mode,
             phone: user_details.phone,
             address: user_details.address,
+            coupon: applied_coupon,
+            mode: mode,
+            couponid: applied_coupon ? applied_coupon.id : 'none',
+            couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
             delivered: false,
             docId: docId,
             cancelled: false
         })
+
+        }
 
         if(orders==''){
           db.collection(pageId).doc('OrdersAnalytics').collection('OrdersAnalytics').doc(`${moment(new Date()).format('DD-MM-YYYY')}`).set({
@@ -189,6 +242,22 @@ function Payment({pageId}) {
         db.collection(pageId).doc('site_orders_notification').collection('site_orders_notification').doc('orders').update({
           order: order_notification + 1
         });
+
+        if(applied_coupon){
+          db.collection(pageId).doc('coupons').collection('coupons').doc(applied_coupon.id).update({
+            minUser: `${(applied_coupon.coupon.minUser*1) - 1}`
+          });
+        }
+
+        dispatch({
+          type: 'ADD_FINAL_PRICE',
+          final_price: 0
+      })
+
+       dispatch({
+         type: 'ADD_APPLIED_COUPON',
+         applied_coupon: null
+       })
 
         dispatch({
             type: 'EMPTY_BASKET'
@@ -248,6 +317,28 @@ function Payment({pageId}) {
                     cancelled: false
                 })
                 
+                if(applied_coupon){
+                  db.collection(pageId).doc('orders').collection('orders')
+                  .add({
+                    basket: basket,
+                    amount: clientSecret.data.amount.toString(),
+                    created: firebase.firestore.FieldValue.serverTimestamp(),
+                    name: user_details.name,
+                    email: user.email,
+                    user_id: user.uid,
+                    payment_id: response.razorpay_payment_id,
+                    phone: user_details.phone,
+                    image: user_details.image,
+                    address: user_details.address,
+                    coupon: applied_coupon,
+                    couponid: applied_coupon ? applied_coupon.id : 'none',
+                    couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
+                    delivered: false,
+                    docId: response.razorpay_payment_id,
+                    cancelled: false,
+                    applied_coupon: applied_coupon
+                })
+                }else{
                 db.collection(pageId).doc('orders').collection('orders')
                   .add({
                     basket: basket,
@@ -261,9 +352,13 @@ function Payment({pageId}) {
                     image: user_details.image,
                     address: user_details.address,
                     delivered: false,
+                    coupon: applied_coupon,
+                    couponid: applied_coupon ? applied_coupon.id : 'none',
+                    couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
                     docId: response.razorpay_payment_id,
                     cancelled: false
                 })
+              }
     
                 db.collection(pageId).doc('payments').collection('payments')
                 .add({
@@ -272,6 +367,9 @@ function Payment({pageId}) {
                   name: user_details.name,
                   image: user_details.image,
                   email: user.email,
+                  coupon: applied_coupon,
+                  couponid: applied_coupon ? applied_coupon.id : 'none',
+                  couponDiscount: applied_coupon ? applied_coupon.coupon.discount : 'none',
                   phone: user_details.phone,
                   address: user_details.address
               })
@@ -292,7 +390,23 @@ function Payment({pageId}) {
               order: order_notification + 1
             });
                 
-    
+          if(applied_coupon){
+            db.collection(pageId).doc('coupons').collection('coupons').doc(applied_coupon.id).update({
+              minUser: `${(applied_coupon.coupon.minUser*1) - 1}`
+            });
+          }
+
+          dispatch({
+            type: 'ADD_FINAL_PRICE',
+            final_price: 0
+        })
+
+         dispatch({
+           type: 'ADD_APPLIED_COUPON',
+           applied_coupon: null
+         })
+             
+                
                 dispatch({
                     type: 'EMPTY_BASKET'
                 })
@@ -308,7 +422,11 @@ function Payment({pageId}) {
 		}
 		const paymentObject = new window.Razorpay(options)
 		paymentObject.open()
-	}
+  }
+  
+  if(brand.plan === 'lite' || !site_settings.store || basket.length === 0 || !final_price){
+    history.push(`/${pageId}`);
+  }
 
   
     return (
@@ -385,13 +503,35 @@ function Payment({pageId}) {
                    <h3>ORDER TOTAL:</h3>
                    <h3 style={{marginRight: '10px'}}>Rs.{getBasketTotal(basket)}</h3>
                </div>
+               {applied_coupon ? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Coupon Applied {applied_coupon.id}</h3>
+                 <h3 style={{marginRight: '10px'}}>{applied_coupon.coupon.type === 'Discount Percentage' ? `${applied_coupon.coupon.discount} % off on basket total` : `${applied_coupon.coupon.discount} Rs. off on basket total`}</h3>
+                 </div>
+               ) : ''}
+               {site_info.delivery && (site_info.deliveryAbove*1) < getBasketTotal(basket)? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Delivery Charges:</h3>
+                 <h3 style={{marginRight: '10px'}}>Rs.{site_info.delivery}</h3>
+                 </div>
+               ) : ''}
+               {site_info.tax ? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Tax Rate:</h3>
+                 <h3 style={{marginRight: '10px'}}>{site_info.tax}</h3>
+             </div>
+               ) : ''}
+               <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                   <h3>Total:</h3>
+                   <h3 style={{marginRight: '10px'}}>Rs.{final_price}</h3>
+               </div>
                <div className='payment__profile'>
                  <div className='payment__profile--left'>
                    <PaymentOutlined style={{marginRight: '5px'}}/>
                    Payment
                  </div>
                  <div className='payment__profile--right'>
-                 {site_settings.onlinePay ? (
+                 {site_settings.onlinePay && onlinePayment ? (
                       <div className='payment__profile--right--button' onClick={displayRazorpay} style={{backgroundColor: `${site_colors.button}`}}>
                        Pay now
                       </div>
@@ -450,9 +590,31 @@ function Payment({pageId}) {
                    Choose Your Payment Method
                  </div>
                  <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
-                     <h3>ORDER TOTAL:</h3>
-                     <h3 style={{marginRight: '10px'}}>Rs.{getBasketTotal(basket)}</h3>
+                   <h3>ORDER TOTAL:</h3>
+                   <h3 style={{marginRight: '10px'}}>Rs.{getBasketTotal(basket)}</h3>
+               </div>
+               {applied_coupon ? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Coupon Applied <span>{applied_coupon.id}</span></h3>
+                 <h3 style={{marginRight: '10px'}}>{applied_coupon.coupon.type === 'Discount Percentage' ? `${applied_coupon.coupon.discount} % off on basket total` : `${applied_coupon.coupon.discount} Rs. off on basket total`}</h3>
                  </div>
+               ) : ''}
+               {site_info.delivery && (site_info.deliveryAbove*1) > getBasketTotal(basket)? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Delivery Charges:</h3>
+                 <h3 style={{marginRight: '10px'}}>Rs.{site_info.delivery}</h3>
+                 </div>
+               ) : ''}
+               {site_info.tax ? (
+                 <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                 <h3>Tax Rate:</h3>
+                 <h3 style={{marginRight: '10px'}}>{site_info.tax}%</h3>
+             </div>
+               ) : ''}
+               <div className='payment__option--price' style={{backgroundColor: `${site_colors.primary}`}}>
+                   <h3>Total:</h3>
+                   <h3 style={{marginRight: '10px'}}>Rs.{final_price}</h3>
+               </div>
                  <div className='payment__profile'>
                    <div className='payment__profile--left'>
                      <PaymentOutlined style={{marginRight: '5px'}}/>

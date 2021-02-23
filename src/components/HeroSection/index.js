@@ -16,7 +16,7 @@ function HeroSection() {
             </Herobg>
             <HeroContent>
                 <Heroh1>LET'S DRIVE THE MARKET</Heroh1>
-                <HeroP>Start your own e-commerce website accompanied by resourceful tools that help you make sales, manage marketing and engage with costomers.</HeroP>
+                <HeroP>Start your own e-commerce website accompanied by resourceful tools that help you make sales, manage marketing and engage with customers.</HeroP>
                     <HeroBtnWrapper >
                     <NavBtn>
                    <NavBtnLink to="/signup" > Start Free Trial {hover ? <ArrowForward /> : <ArrowRight />}  </NavBtnLink>
