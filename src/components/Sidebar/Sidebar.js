@@ -17,8 +17,8 @@ import Leftqoute from '../../icons/lq.svg';
 import Rightqoute from '../../icons/rq.svg';
 import firebase from 'firebase';
 
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined} from '@material-ui/icons'
-import { db } from '../../firebase';
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Call, WhatsApp} from '@material-ui/icons'
+import { db, dbMain } from '../../firebase';
 import { Avatar, Box, Modal, Typography, withStyles } from '@material-ui/core';
 import { useStateValue } from '../../StateProvider';
 import axios from '../../axios';
@@ -264,6 +264,15 @@ function Sidebar({page,pageId}) {
          )
      ))
   },[]);
+const [cPhone,setCPhone]= useState('');
+  useEffect(() => {
+    db.collection(pageId).doc('site').collection("site").doc("site_info")
+    .onSnapshot(function(doc) {
+         if(doc.data().sitePhone){
+           setCPhone(doc.data().sitePhone);
+         }
+    });
+},[]);  
 
     return (
         <div className="sidebar">
@@ -304,6 +313,23 @@ function Sidebar({page,pageId}) {
                    <SidebarRow Icon={VideoLibrary} title="Photo Gallery" page={page}/>
                    </div>
            ) : ''}
+           
+           {cPhone ? (
+             <>
+             
+             <div onClick={() => window.open(`tel:+91${cPhone}`)} >
+                   <SidebarRow Icon={Call} title="Call Us Now" page={page}/>
+           </div>
+
+           <div onClick={() => {window.location.href=`https://api.whatsapp.com/send?phone=91${cPhone}`}} >
+                   <SidebarRow Icon={WhatsApp} title="Whatsapp Now" page={page}/>
+           </div>
+
+             </>
+           ) : ''}
+          
+
+          
            </div>  
            
          </div>

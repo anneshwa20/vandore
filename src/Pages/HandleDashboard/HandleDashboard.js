@@ -33,6 +33,7 @@ function HandleDashboard({id}) {
     const[siteName,setSiteName]= useState('');
     const[siteDescription,setSiteDescription]= useState('');
     const[siteKeyword,setSiteKeyword]= useState('');
+    const[sitePhone,setSitePhone]= useState('');
     const[posts,setPosts]= useState([]);
     const[payments,setPayments]= useState([]);
     const[orders,setOrders]= useState([]);
@@ -109,7 +110,11 @@ function HandleDashboard({id}) {
               setSiteName(doc.data().siteName);
               setSiteDescription(doc.data().siteDescription);
               setSiteKeyword(doc.data().siteKeyword);
+              
               setImage(doc.data().siteCover);
+              if(doc.data().sitePhone){
+                  setSitePhone(doc.data().sitePhone);
+              }
           } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -287,7 +292,8 @@ function HandleDashboard({id}) {
       db.collection(id.toUpperCase()).doc('site').collection('site').doc('site_info').update({
           siteName: siteName,
           siteDescription: siteDescription,
-          siteKeyword: siteKeyword
+          siteKeyword: siteKeyword,
+          sitePhone: sitePhone ? sitePhone : user_details.phone
       }).then(() => setOpenAlert(true));
     }
 
@@ -675,6 +681,13 @@ const handleChangeIconColor=(color) => {
                         <p>Enter Keywords For Your Site</p>
                         <div className='user__input--style'>
                             <input type='text'  placeholder='Enter Keywords For Your Site'  value={siteKeyword} onChange={e => setSiteKeyword(e.target.value)} />
+                        </div>
+                    </div>
+
+                    <div className='user__input'>
+                        <p>Enter Phone Number</p>
+                        <div className='user__input--style'>
+                            <input type='text'  placeholder='Enter Whatsapp/Phone Number'  value={sitePhone} onChange={e => setSitePhone(e.target.value)} />
                         </div>
                     </div>
 

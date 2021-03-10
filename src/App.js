@@ -42,6 +42,13 @@ import Terms from './Pages/Terms/Terms';
 import Register from './Pages/Register/Register';
 import Vlogin from './Pages/Vlogin/Vlogin';
 import withClearCache from "./ClearCache";
+import TermsServices from './Pages/TermsServices/TermsServices';
+import AboutVandore from './Pages/AboutVandore/AboutVandore';
+import Privacy from './Pages/Privacy/Privacy';
+import Refund from './Pages/Refund/Refund';
+import Contact from './Pages/Contact/Contact';
+import Pricing from './Pages/Pricing/Pricing';
+import PasswordReset from './Pages/PasswordReset/PasswordReset';
 
 const ClearCacheComponent = withClearCache(MainApp);
 
@@ -93,10 +100,10 @@ function MainApp() {
             })
         } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+        /*   console.log("No such document!"); */
         }
       }).catch(function(error) {
-        console.log("Error getting document:", error);
+        /* console.log("Error getting document:", error); */
       });
  
    },[])
@@ -145,13 +152,13 @@ useEffect(() => {
             })
         } else {
           // doc.data() will be undefined in this case
-          console.log("No such document!");
+        /*   console.log("No such document!"); */
         }
       }).catch(function(error) {
-        console.log("Error getting document:", error);
+        /* console.log("Error getting document:", error); */
       });
   }else{
-     console.log('ERROR')
+  /*    console.log('ERROR') */
   }
    },[user])
 
@@ -173,7 +180,7 @@ useEffect(() => {
   
    dbMain.collection("general").doc('version')
    .onSnapshot(function(doc) {
-      if(doc.data().version !== '1.3.0'){
+      if(doc.data().version !== '1.28.0'){
         if('caches' in window){
           caches.keys().then((names) => {
                   // Delete all the cache files
@@ -181,7 +188,7 @@ useEffect(() => {
                       caches.delete(name);
                   })
               });
-      
+         
               // Makes sure the page reloads. Changes are only visible after you refresh.
               
           }
@@ -253,14 +260,23 @@ useEffect(() => {
           <Route exact path="/mobile" component={MobileAppHome}>
           
           </Route>
-         
+          <Route exact path="/TermsServices" component={TermsServices}></Route>
+           <Route exact path="/contact" component={Contact}></Route>
+           <Route exact path="/aboutvandore" component={AboutVandore}></Route>
+           <Route exact path="/privacy" component={Privacy}></Route>
+           <Route exact path="/refund" component={Refund}></Route>
+           <Route exact path="/pricing" component={Pricing}></Route>
+           <Route exact path="/passwordReset" component={PasswordReset}></Route>
           <Route exact path="/:id" component={Landing}>
        
               </Route>
          
-           <Route exact path="/" component={LandingPage}>
-          
-              </Route>
+           <Route exact path="/" component={LandingPage}></Route>
+
+
+         
+
+            
 
              
   

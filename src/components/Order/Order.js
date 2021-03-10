@@ -73,7 +73,7 @@ function Order({order,handleDelete,delivery,cancel,handleModal,pageId}) {
     return (
         <div className='order'>
              <h2>Order</h2>
-             <p>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</p>
+             <p>{new Date(order.data.created?.toDate()).toUTCString()}</p>
              <div className='order__customer'>
              <small>{order.data?.address}</small>
                  <small>{order.data?.name}</small>

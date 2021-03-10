@@ -156,7 +156,7 @@ function Checkout({pageId}) {
            <div className='checkoutMobile'>
                {sidebar ? <SidebarMobile pageId={pageId} /> : (
   <div className='checkout__page'>
-             <div className='shortNav' >
+             {/* <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -196,7 +196,7 @@ function Checkout({pageId}) {
            )}
            
 
-        </div>
+        </div> */}
   <div className='checkout__products'>
        <div className='checkout__products--title'>
            Your Shopping Basket

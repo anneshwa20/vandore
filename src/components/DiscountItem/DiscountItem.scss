@@ -32,6 +32,12 @@
     border-radius: 888px;
     overflow: hidden;
     box-shadow: 0px 5px 8px -9px rgba(0,0,0,0.75);
+
+
+    @include respond(tab-port){
+        border-radius: 3px;
+        
+    }
 }
 .discountItem__item > img {
     width: 100%;

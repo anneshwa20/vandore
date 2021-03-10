@@ -16,6 +16,8 @@ function Vlogin() {
         if(user_details){
             if(user_details.business){
                 history.push(`/restro/dashboard/${user_details.business}`);
+            }else{
+                history.push(`/mobile`);
             }
          
         }
@@ -76,18 +78,23 @@ function Vlogin() {
                           <h1>Sign in to your account </h1>
                           <label htmlFor='for' >Email</label>
                           <div className='vandore__input'>
-                          <input type='email' required value={email} onChange={e => setEmail(e.target.value)}/>
+                          <input type='email' required value={email} onChange={e => setEmail(e.target.value)} placeholder="Your Email"/>
                           </div>
                      
                           <label htmlFor='for' >Password</label>
                           <div className='vandore__input'>
-                          <input type='password' required value={password} onChange={e => setPassword(e.target.value)}/>
+                          <input type='password' required value={password} onChange={e => setPassword(e.target.value)} placeholder="Your Password" />
                           </div>
                        
                           <button type='submit' className='vandore__button'>Continue</button>
-                       
+                          <div className='login__suggest' onClick={() => history.push('/passwordReset')}>
+               Forgot Password ?
+           </div>
+           <div className='login__suggest' onClick={() => history.push('/signup')}>
+               Not Have An Account Yet?, Sign Up Now
+           </div>
                      </form>
-
+           
             </div>
              </div>
         </div>

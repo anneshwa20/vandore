@@ -97,7 +97,27 @@
         width: 80%;
     }
 }
+.menu__input2{
+    display: flex;
+    align-items: center;
+    background-color: /* #eff2f5 */whitesmoke;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 999px;
+    margin-top: 15px;
+    width: 95%;
+
+    @include respond(tab-port){
+        width: 80%;
+    }
+}
 .menu__input > input {
+    border: none;
+    background-color: transparent;
+    outline-width: 0;
+    width: 90%;
+}
+.menu__input2 > input {
     border: none;
     background-color: transparent;
     outline-width: 0;

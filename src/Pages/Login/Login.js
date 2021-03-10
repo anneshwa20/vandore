@@ -30,6 +30,11 @@ function Login({pageId}) {
     const [openImage,setOpenImage]= useState(false);
     const[toggleSignIn,setToggleSignIn]=useState(false);
     const[siteUsers,setSiteUsers]= useState([]);
+    const[nprocessing,setNprocessing]= useState(false);
+    const[cprocessing,setCprocessing]= useState(false);
+    const[lprocessing,setLprocessing]= useState(false);
+
+
     
 
     useEffect(() => {
@@ -54,12 +59,14 @@ function Login({pageId}) {
 
      const grantPermission= (e) => {
          e.preventDefault();
+         setNprocessing(true);
         const messaging = firebaseApp.messaging() 
         Notification.requestPermission().then(()=>{
           return messaging.getToken()
         }).then(token=>{
-            console.warn(token);
+         
             setToken(token);
+            setNprocessing(false);
             dispatch({
                 type: 'ADD_NOTIFICATION_TOKEN',
                 notification_token: token
@@ -74,6 +81,12 @@ function Login({pageId}) {
     const signIn = (e)=> {
        e.preventDefault();
 
+     setLprocessing(true);
+       if(email===''||password===''){
+           setLprocessing(false);
+           alert("Please Type All The Fields");
+           return;
+       }
 
        authMain.signInWithEmailAndPassword(email,password)
            .then(auth => {
@@ -143,15 +156,20 @@ function Login({pageId}) {
             .update({
                 notification: token
             })
-            
+            setLprocessing(false);
+
             history.push(`/vandore/${pageId}/home`)
-           }).catch(error => alert(error.message));
+           }).catch(error => {
+             setLprocessing(false);
+             alert(error.message);
+           });
     }
     const register = (e) => {
         e.preventDefault();
-
+    setCprocessing(true);
       if(name === '' || phone=== '' || address=== '' || image === '' || email=== '' || password === ''){
           alert('Fill All Fields To Continue');
+          setCprocessing(false);
           return;
       }
 
@@ -232,11 +250,15 @@ function Login({pageId}) {
                       active: true
                     })
                     
+                    setCprocessing(false);
                     
                     history.push(`/vandore/${pageId}/home`)
                 }
             })
-            .catch(error => alert(error.message));
+            .catch(error => {
+              setCprocessing(false);
+              alert(error.message);
+            });
     }
 
     function getRandomText(length) {
@@ -289,22 +311,24 @@ function Login({pageId}) {
 
          
 
-          {token ? (
+          
+   {cprocessing ? (
    <button 
-   onClick={register}
+   onClick={() => {}}
    style={{backgroundColor: `${site_colors.button}`}}
-   className='login__signInButton'>Sign Up</button>
-          ) : (
-            <button 
-            onClick={grantPermission}
-            style={{backgroundColor: `${site_colors.button}`}}
-            className='login__signInButton'>Give Notification Access To Continue</button>
-          )}
+   className='login__signInButton'>Creating Your Account...</button>
+   ) : (
+    <button 
+    onClick={register}
+    style={{backgroundColor: `${site_colors.button}`}}
+    className='login__signInButton'>Sign Up</button>
+   )}
+         
 
         </form>
         <p>
         By signing-in you agree to the {site_info.siteName} Conditions of Use 
-        & Sale <Link to='/Terms'>Terms and Conditions</Link>. Please see our Privacy Notice,Our Cookies Notice
+        & Sale <Link to='/TermsServices'>Terms and Conditions</Link> and <Link to='/privacy'>Privacy Policy</Link>. Please see our Privacy Notice,Our Cookies Notice
         and our Interest-Based Ads
         Notice.
         </p>
@@ -321,21 +345,23 @@ function Login({pageId}) {
                         <h5>Password</h5>
                         <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
     
-                        {token ? (
+        {lprocessing ? (
    <button 
-   onClick={signIn}
+   onClick={() => {}}
    style={{backgroundColor: `${site_colors.button}`}}
-   className='login__signInButton'>Sign In</button>
-          ) : (
-            <button 
-            onClick={grantPermission}
-            style={{backgroundColor: `${site_colors.button}`}}
-            className='login__signInButton'>Give Notification Access To Continue</button>
-          )}
+   className='login__signInButton'>Logging in...</button>
+        ) : (
+          <button 
+          onClick={signIn}
+          style={{backgroundColor: `${site_colors.button}`}}
+          className='login__signInButton'>Sign In</button>
+        )}                
+
+        
                     </form>
                     <p>
                       By signing-in you agree to the {site_info.siteName} Conditions of Use 
-                      & Sale <Link to='/Terms'>Terms and Conditions</Link>. Please see our Privacy Notice,Our Cookies Notice
+                      & Sale <Link to='/TermsServices'>Terms and Conditions</Link> and <Link to='/privacy'>Privacy Policy</Link>. Please see our Privacy Notice,Our Cookies Notice
                       and our Interest-Based Ads
                       Notice.
                     </p>
@@ -384,23 +410,23 @@ function Login({pageId}) {
             <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
 
          
-
-          {token ? (
+   {cprocessing ? (
    <button 
-   onClick={register}
+   onClick={() => {}}
    style={{backgroundColor: `${site_colors.button}`}}
-   className='login__signInButton'>Sign Up</button>
-          ) : (
-            <button 
-            onClick={grantPermission}
-            style={{backgroundColor: `${site_colors.button}`}}
-            className='login__signInButton'>Give Notification Access To Continue</button>
-          )}
+   className='login__signInButton'>Creating Your Account...</button>
+   ) : (
+    <button 
+    onClick={register}
+    style={{backgroundColor: `${site_colors.button}`}}
+    className='login__signInButton'>Sign Up</button>
+   )}
+         
 
         </form>
         <p>
         By signing-in you agree to the {site_info.siteName} Conditions of Use 
-        & Sale <Link to='/Terms'>Terms and Conditions</Link>. Please see our Privacy Notice,Our Cookies Notice
+        & Sale <Link to='/TermsServices'>Terms and Conditions</Link> and <Link to='/privacy'>Privacy Policy</Link>. Please see our Privacy Notice,Our Cookies Notice
         and our Interest-Based Ads
         Notice.
         </p>
@@ -417,21 +443,21 @@ function Login({pageId}) {
                         <h5>Password</h5>
                         <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
     
-                        {token ? (
+                        {lprocessing ? (
    <button 
-   onClick={signIn}
+   onClick={() => {}}
    style={{backgroundColor: `${site_colors.button}`}}
-   className='login__signInButton'>Sign In</button>
-          ) : (
-            <button 
-            onClick={grantPermission}
-            style={{backgroundColor: `${site_colors.button}`}}
-            className='login__signInButton'>Give Notification Access To Continue</button>
-          )}
+   className='login__signInButton'>Logging in...</button>
+        ) : (
+          <button 
+          onClick={signIn}
+          style={{backgroundColor: `${site_colors.button}`}}
+          className='login__signInButton'>Sign In</button>
+        )} 
                     </form>
                     <p>
                       By signing-in you agree to the {site_info.siteName} Conditions of Use 
-                      & Sale <Link to='/Terms'>Terms and Conditions</Link>. Please see our Privacy Notice,Our Cookies Notice
+                      & Sale <Link to='/TermsServices'>Terms and Conditions</Link> and <Link to='/privacy'>Privacy Policy</Link>. Please see our Privacy Notice,Our Cookies Notice
                       and our Interest-Based Ads
                       Notice.
                     </p>

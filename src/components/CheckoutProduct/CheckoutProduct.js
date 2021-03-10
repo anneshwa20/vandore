@@ -22,7 +22,7 @@ function CheckoutProduct({item,hidebutton,handleFinalPrice}) {
                         <img src={item.image} className='checkout__products--item--image'/>
                                 <div className='checkout__products--details'>
                                             <h3>{item.title}</h3>
-                                            <p>This is a test description</p>
+                                            <p>{item.description}</p>
                                             <div className="product__rating">
                                                     {Array(5).fill().map((_,i) => (
                                                         <Star />

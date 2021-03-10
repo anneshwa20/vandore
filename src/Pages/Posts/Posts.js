@@ -77,7 +77,7 @@ function Posts(props) {
    <div className='postMobile'>
      {sidebar ? <SidebarMobile pageId={pageId} /> : (
       <div className='posts__content'>
-         <div className='shortNav' >
+        {/*  <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -117,7 +117,7 @@ function Posts(props) {
            )}
            
 
-        </div>
+        </div> */}
    {timestamp ? (
                 <Post
                 pageId={pageId}

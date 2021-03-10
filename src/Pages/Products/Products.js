@@ -95,7 +95,7 @@ function Products(props) {
    <div className='postMobile'>
      {sidebar ? <SidebarMobile pageId={pageId} /> : (
       <div className='posts__content'>
-         <div className='shortNav' >
+        {/*  <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -135,7 +135,7 @@ function Products(props) {
            )}
            
 
-        </div>
+        </div> */}
         <div className='product__component'>
        <div className='product__component--left'>
           <img src={product?.image} />

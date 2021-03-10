@@ -13,13 +13,13 @@ const firebaseConfig = {
 
 
   const firebaseConfigMain = {
-    apiKey: "AIzaSyBBhbD-abkYc_WgtZzl7ZCWpHhvi7MdMlI",
-    authDomain: "restro-main.firebaseapp.com",
-    projectId: "restro-main",
-    storageBucket: "restro-main.appspot.com",
-    messagingSenderId: "956080165095",
-    appId: "1:956080165095:web:c96f82611f7a9a40c85242",
-    measurementId: "G-8ZEHLZ2GF8"
+    apiKey: "AIzaSyBTXJmXqDiRoNQWkQMHYEeiA3Bt4RTHkWg",
+    authDomain: "vandore-auth.firebaseapp.com",
+    projectId: "vandore-auth",
+    storageBucket: "vandore-auth.appspot.com",
+    messagingSenderId: "421912646290",
+    appId: "1:421912646290:web:3d6660e727e6c3d6768c4b",
+    measurementId: "G-9CDB65QBKX"
   };
 
 

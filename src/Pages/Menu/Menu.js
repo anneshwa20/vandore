@@ -52,7 +52,7 @@ useEffect(() => {
   }
      
 
-    console.log('filtered products', filteredProducts);
+    
     return (
         <div className='menu'>
           
@@ -60,7 +60,7 @@ useEffect(() => {
          <div className='storeMobile'>
            {sidebar ? <SidebarMobile  pageId={pageId} /> : (
  <div className='menu__body'>
-       <div className='shortNav' >
+   {/*     <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -100,7 +100,7 @@ useEffect(() => {
            )}
            
 
-        </div>
+        </div> */}
  <img src={cover} />
  <div className="menu__input">
                  <Search fontSize="large"/>
@@ -131,6 +131,7 @@ useEffect(() => {
                         price={item.price}
                         rating={item.rating}
                         image={item.image}
+                        description={item.description}
                       />
                            
                         ) : '')}

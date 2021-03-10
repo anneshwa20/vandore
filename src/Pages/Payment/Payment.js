@@ -72,7 +72,7 @@ function Payment({pageId}) {
    const EMAIL = await axios({
         method: 'post',
         
-        url: `/orderEmail?email=ap8335235@gmail.com&message=${messageUser}&business=${site_info.siteName}&subject=Order Details From ${site_info.siteName}`
+        url: `/orderEmail?email=${user.email}&message=${messageUser}&business=${site_info.siteName}&subject=Order Details From ${site_info.siteName}`
     });
 
    
@@ -225,7 +225,7 @@ function Payment({pageId}) {
             docId: docId,
             cancelled: false
         })
-
+        
         }
 
         if(orders==''){
@@ -283,7 +283,7 @@ function Payment({pageId}) {
 
 
 		const options = {
-			key: __DEV__ ? 'rzp_test_Yw9rV4usIyk5O1' : 'PRODUCTION_KEY',
+			key: __DEV__ ? 'rzp_test_eDFr81LNWkdTcM' : 'PRODUCTION_KEY',
 			currency: clientSecret.data.currency,
 			amount: clientSecret.data.amount.toString(),
 			order_id: clientSecret.data.id,
@@ -435,7 +435,7 @@ function Payment({pageId}) {
   <div className='paymentMobile'>
       {sidebar ? <SidebarMobile pageId={pageId} /> : (
   <div className='payment__page'>
-           <div className='shortNav' >
+           {/* <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -475,7 +475,7 @@ function Payment({pageId}) {
            )}
            
 
-        </div>
+        </div> */}
   <div className='payment__container'>
         <div className='checkout__products--title'>
                   Payment and Delivery
@@ -621,7 +621,7 @@ function Payment({pageId}) {
                      Payment
                    </div>
                    <div className='payment__profile--right'>
-                   {site_settings.onlinePay ? (
+                   {site_settings.onlinePay && onlinePayment ? (
                         <div className='payment__profile--right--button' onClick={displayRazorpay} style={{backgroundColor: `${site_colors.button}`}}>
                          Pay now
                         </div>

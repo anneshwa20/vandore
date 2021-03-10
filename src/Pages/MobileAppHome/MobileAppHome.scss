@@ -29,6 +29,10 @@
  border-right: 1px solid lightgray;
  display: flex;
  flex-direction: column;
+
+ @include respond(tab-port){
+   flex: 1;
+ }
 }
 .left__container{
   flex: 1;
@@ -38,6 +42,10 @@
   flex: 0.35;
   height: 95vh;
   overflow-y: scroll;
+
+  @include respond(tab-port){
+    flex: 1;
+  }
   
 }
 .home__left--right{
@@ -46,6 +54,10 @@
   display: flex;
   flex-direction: column;
   background-color: rgb(67, 71, 77);
+
+  @include respond(tab-port){
+    display: none;
+  }
 }
 .home__right{
  flex: 0.25;
@@ -56,6 +68,9 @@
  background-color: black;
  height: 100vh;
  overflow-y: scroll;
+ @include respond(tab-port){
+   display: none;
+ }
 }
 .home__right > form {
   width: 90%;
@@ -101,18 +116,23 @@ background-color: black;
 }
 .vandore__brands--user--top{
  height: 300px;
+ overflow-y: scroll;
  border-radius: 12px;
  border: 1px solid white;
  width: 90%;
  display: flex;
  flex-wrap: wrap;
- padding: 5px;
+ padding: 3px;
 }
 .user__brand{
 display: flex;
+flex: 0.33;
 flex-direction: column;
 align-items: center;
-margin: 5px;
+justify-content: center;
+padding: 2px;
+margin: 2px;
+background-color: rgb(32, 33, 36);
 }
 .vandore__brands--user--bottom{
   width: 90%;

@@ -43,7 +43,7 @@ function Register() {
     const [name,setName]= useState('');
     const [address,setAddress]= useState('');
     const [phone,setPhone] = useState('');
-    const [image,setImage]= useState('https://cdn0.iconfinder.com/data/icons/face-characters/512/happy_face_character-512.png');
+    const [image,setImage]= useState('https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/user%2Flogo-placeholder-png.png?alt=media&token=c06ac5a9-1a81-4eee-a070-5bef2c584c5a');
     ////////////////////////////
     const [uname,setUname]= useState('');
     const [uemail,setUemail]= useState('');
@@ -99,7 +99,8 @@ function Register() {
 
     const register = (e) => {
         e.preventDefault();
-
+        setCprocessing(true);
+   let vcoupon=false;
         if(password !== cpassword){
             alert('Your Password Doesnt Match');
             setCprocessing(false);
@@ -108,6 +109,7 @@ function Register() {
            
         if(rcode !== '' && codes.includes(rcode.trim().toUpperCase())){
           setValidCoupon(true);
+          vcoupon= true;
           setCouponMessage('Get Instant 60% Off On Pro Plus And 50% Off On Plus Plan Respectively');
          
           
@@ -124,7 +126,7 @@ function Register() {
           return;
         }
 
-        setCprocessing(true);
+       
         authMain.createUserWithEmailAndPassword(email,password)
             .then((auth) => {
                 console.log(auth);
@@ -143,19 +145,19 @@ function Register() {
            //GALLERY
                  
                     db.collection(removeChar()).doc('gallery').collection('gallery').add({
-                      image: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/gallery%2Fb94a3cbd-a886-4a9e-84a9-b30810767127.png?alt=media&token=9bad3b29-ce69-44a7-a95b-f985a873bc27' ,
+                      image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fgal1-min.png?alt=media&token=c9e29f53-47d8-47d8-af96-c29192e026c3' ,
                       timestamp: firebase.firestore.FieldValue.serverTimestamp()        
                     })
                     db.collection(removeChar()).doc('gallery').collection('gallery').add({
-                        image: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/gallery%2Fd867e8e7-b212-4b81-8b46-e09a2a60095c.png?alt=media&token=5a2d7111-8ee8-442e-9670-c76388590092' ,
+                        image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fgal2-min.png?alt=media&token=4e53a2c5-d3e7-430a-b244-ef3f2144a6ca' ,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()            
                       })
                       db.collection(removeChar()).doc('gallery').collection('gallery').add({
-                        image: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/gallery%2F06b1e055-cb0a-4d7b-bb04-5e6ef7164298.png?alt=media&token=87a120eb-0f7e-456a-80b0-afab85831b5e'  ,
+                        image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fgal3-min.png?alt=media&token=bddfd47d-4f01-4895-bce0-16bbdf508842'  ,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()           
                       })
                       db.collection(removeChar()).doc('gallery').collection('gallery').add({
-                        image: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/gallery%2F5e80a90a-8fb6-4acb-b4f5-825d673c49a7.png?alt=media&token=22c0ac2c-a2c5-45db-ae22-74e28ad4b306'  ,
+                        image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fgal4-min.png?alt=media&token=a07ded92-55e2-498d-abd6-93c45a3cca64'  ,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()           
                       })
 
@@ -167,7 +169,7 @@ function Register() {
                        wclicks: '0',
                        visits: '0',
                        type: 'image',
-                       link: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/posts%2F25fc0b6f-4ff9-4c1a-a54d-61e438c06661.png?alt=media&token=2c3db425-6f93-4e8e-8abe-d76f8aa548ed',
+                       link: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2F1stpost-min.png?alt=media&token=a0b6b6e3-1e2e-4b74-9ee3-741bae43da43',
                        message: 'YOU AND YOUR CUSTOMERS CAN DIRECTLY SHARE THIS POST IN FACEBOOK , WHATSAPP.. ETC.',
                        profilePic: 'https://i.ibb.co/hLRHZSN/Vandore-Logo-3-4.png',
                        username: 'Vandore',
@@ -181,7 +183,7 @@ function Register() {
                     wclicks: '0',
                     visits: '0',
                     type: 'image',
-                    link: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/posts%2Fd2a746d0-a794-4586-a46b-e3c13036552c.png?alt=media&token=5cfc4caa-ec9c-40ec-be6e-b25513b7bb28',
+                    link: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpost2-min.png?alt=media&token=558bbc2e-ba70-41d2-9d35-963bede55d36',
                     message: 'YOU CAN CHECK ANALYTICS ON EACH POST BASED ON VIEWS , FACEBOOK SHARES , WHATSAPP SHARES ETC.',
                     profilePic: 'https://i.ibb.co/hLRHZSN/Vandore-Logo-3-4.png',
                     username: 'Vandore',
@@ -197,7 +199,7 @@ function Register() {
                 wclicks: '0',
                 visits: '0',
                 type: 'image',
-                link: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/posts%2F0e4f4495-badf-4143-9025-bfa0c61d96e6.png?alt=media&token=84a89320-7e03-4d1a-8f1a-7fd6d030d99b',
+                link: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2F3post-min.png?alt=media&token=35aa6ec6-b132-4c28-b1bb-ae59d73347c1',
                 message: 'NOW YOU CAN POST DIRECTLY TO YOUR OWN FEED',
                 profilePic: 'https://i.ibb.co/hLRHZSN/Vandore-Logo-3-4.png',
                 username: 'Vandore',
@@ -259,10 +261,11 @@ function Register() {
 
            //SITE-INFO
              db.collection(removeChar()).doc('site').collection('site').doc('site_info').set({
-                 siteCover: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/cover%2Fcd8c966c-7621-4ec4-8b3f-d8970de50534.png?alt=media&token=7480d416-c082-4b00-a772-4d1f96342354',
+                 siteCover: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/cover%2Fcc17919d-dbd3-4d0e-8599-74ead592fd4e.png?alt=media&token=417a9d29-1f69-4260-b99d-e2fe0b7ca303',
                  siteDescription: 'A demo description for VANDORE',
                  siteKeyword: 'VANDORE, VANDORE KOLKATA, VANDORE ASSAM',
                  siteName: 'YOUR VANDORE SHOP',
+                 phone: phone,
                  tax: '',
                  delivery: '',
                  deliveryAbove: ''
@@ -270,7 +273,7 @@ function Register() {
 
           //SITE-STORE-COVER
           db.collection(removeChar()).doc('site').collection('site').doc('site_store_cover').set({
-            cover: 'https://i.ibb.co/Cmr1zmy/handle-store-part-3.png'
+            cover: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2FVAND%20STORE-min.png?alt=media&token=67b97c00-e05f-4f71-8075-8a25ae63c408'
           })
 
          //SITE_PREVIEW
@@ -313,11 +316,7 @@ function Register() {
               orderEmail: true
           })
 
-        //SITE_STORE_COVER
-        db.collection(removeChar()).doc('site').collection('site').doc('site_store_cover').set({
-            cover: 'https://firebasestorage.googleapis.com/v0/b/restro-e4874.appspot.com/o/storeCover%2Fcf5cb9bf-0076-4ea7-a33f-2772eac45a33.png?alt=media&token=20f2a83d-1479-44a0-9f7b-b4547ce76912'
-
-        })
+       
 
    // ----------------------------------------------------------------------------
          
@@ -329,17 +328,17 @@ function Register() {
    
    //SLIDER
      db.collection(removeChar()).doc('slider').collection('slider').add({
-         image: 'https://i.ibb.co/2Sw9WcF/test-slider-2021.pnG',
+         image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fslider(1)-min.png?alt=media&token=1b1ee539-ad32-47d5-8dd1-b8c2a029eaf2',
          timestamp: firebase.firestore.FieldValue.serverTimestamp()
 
      })
      db.collection(removeChar()).doc('slider').collection('slider').add({
-        image: 'https://i.ibb.co/Q9XgkSs/test-slider-SECOND2.png',
+        image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fslider2-min.png?alt=media&token=7a2775ee-5dd8-4fe2-a46e-c75593b144db',
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
         
     })
     db.collection(removeChar()).doc('slider').collection('slider').add({
-        image: 'https://i.ibb.co/gPD35Ww/test-slider-THIRD-1.png',
+        image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fslider3-min.png?alt=media&token=745ddeea-3880-4aac-9d1f-0f159b29bdea',
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
         
     })
@@ -359,7 +358,7 @@ function Register() {
     available: true,
     description: 'This is a demo description',
     id: 'INQPYUAHWWHAKPDRNWCX',
-    image: 'https://i.ibb.co/THn4h5L/discover1-1-1.png',
+    image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro1-min.png?alt=media&token=e9325e53-5581-4492-93c9-b832f8990e3e',
     name: 'Demo Discover Product 1',
     price: '170',
     rating: '5'
@@ -369,7 +368,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'DHUDFVCTUBMGAZLXCRWU',
-            image: 'https://i.ibb.co/4jKfrLg/discover1-2-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro2-min.png?alt=media&token=a7284ef1-1861-4817-aae5-5858eae04cb0',
             name: 'Demo Discover Product 2',
             price: '250',
             rating: '5'
@@ -379,7 +378,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'FODLLPAWFWOGUCXAGNBX',
-            image: 'https://i.ibb.co/MRxhsLH/discover1-3-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro3-min.png?alt=media&token=31144877-e806-409e-9511-d734015321da',
             name: 'Demo Discover Product 3',
             price: '200',
             rating: '5'
@@ -389,7 +388,7 @@ function Register() {
     available: true,
     description: 'This is a demo description',
     id: 'FDYGANXYEBSXBTJFKDHH',
-    image: 'https://i.ibb.co/x2TbJJr/discover1-4-1.png',
+    image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro4-min.png?alt=media&token=f77f3bcc-7174-4cf6-851b-38203491f21e',
     name: 'Demo Discover Product 4',
     price: '90',
     rating: '5'
@@ -399,7 +398,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'TEOQYFZJEKRVAFIVEBOE',
-            image: 'https://i.ibb.co/w4v182f/discover1-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2FPOR-min.png?alt=media&token=585600c2-9747-4797-bbf3-5068a2971266',
             name: 'Demo Discover Product 5',
             price: '300',
             rating: '5'
@@ -413,7 +412,7 @@ function Register() {
              available: true,
              description: 'This is a demo description',
              id: 'INQPYUAHWWHAKPDRNWCX',
-             image: 'https://i.ibb.co/THn4h5L/discover1-1-1.png',
+             image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro1-min.png?alt=media&token=e9325e53-5581-4492-93c9-b832f8990e3e',
              name: 'Demo Discover Product 1',
              price: '170',
              rating: '5'
@@ -422,7 +421,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'DHUDFVCTUBMGAZLXCRWU',
-            image: 'https://i.ibb.co/4jKfrLg/discover1-2-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro2-min.png?alt=media&token=a7284ef1-1861-4817-aae5-5858eae04cb0',
             name: 'Demo Discover Product 2',
             price: '250',
             rating: '5'
@@ -431,7 +430,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'FODLLPAWFWOGUCXAGNBX',
-            image: 'https://i.ibb.co/MRxhsLH/discover1-3-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro3-min.png?alt=media&token=31144877-e806-409e-9511-d734015321da',
             name: 'Demo Discover Product 3',
             price: '200',
             rating: '5'
@@ -440,7 +439,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'FDYGANXYEBSXBTJFKDHH',
-            image: 'https://i.ibb.co/x2TbJJr/discover1-4-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro4-min.png?alt=media&token=f77f3bcc-7174-4cf6-851b-38203491f21e',
             name: 'Demo Discover Product 4',
             price: '90',
             rating: '5'
@@ -449,7 +448,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'TEOQYFZJEKRVAFIVEBOE',
-            image: 'https://i.ibb.co/w4v182f/discover1-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2FPOR-min.png?alt=media&token=585600c2-9747-4797-bbf3-5068a2971266',
             name: 'Demo Discover Product 5',
             price: '300',
             rating: '5'
@@ -463,7 +462,7 @@ function Register() {
             available: true,
             description: 'This is a demo description',
             id: 'CBHOPQFNNRWCOQYURJMS',
-            image: 'https://i.ibb.co/8YR4Wn9/PRODUCT-2021-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro1-min.png?alt=media&token=e9325e53-5581-4492-93c9-b832f8990e3e',
             name: 'Demo Product 1',
             price: '170',
             rating: '5'
@@ -473,7 +472,7 @@ function Register() {
     available: true,
     description: 'This is a demo description',
     id: 'JUPMNPCNSNSWCYGJOZBB',
-    image: 'https://i.ibb.co/545rT0d/PRODUCT-2021-2.png',
+    image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro2-min.png?alt=media&token=a7284ef1-1861-4817-aae5-5858eae04cb0',
     name: 'Demo Product 2',
     price: '250',
     rating: '5'
@@ -485,7 +484,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('INTJZBTH
     available: true,
     description: 'This is a demo description',
     id: 'INTJZBTHSHNAPARGYLHN',
-    image: 'https://i.ibb.co/GTzKwCP/PRODUCT-2021-3.png',
+    image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro3-min.png?alt=media&token=31144877-e806-409e-9511-d734015321da',
     name: 'Demo Product 3',
     price: '200',
     rating: '5'
@@ -497,7 +496,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
     available: true,
     description: 'This is a demo description',
     id: 'UKLRUXTPQUICXENNWDCF',
-    image: 'https://i.ibb.co/8bVDr95/PRODUCT-2021-4.png',
+    image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro4-min.png?alt=media&token=f77f3bcc-7174-4cf6-851b-38203491f21e',
     name: 'Demo Product 4',
     price: '90',
     rating: '5'
@@ -511,7 +510,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
             available: true,
             description: 'This is a demo description',
             id: 'CBHOPQFNNRWCOQYURJMS',
-            image: 'https://i.ibb.co/8YR4Wn9/PRODUCT-2021-1.png',
+            image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro1-min.png?alt=media&token=e9325e53-5581-4492-93c9-b832f8990e3e',
             name: 'Demo Product 1',
             price: '170',
             rating: '5'
@@ -520,7 +519,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
            available: true,
            description: 'This is a demo description',
            id: 'JUPMNPCNSNSWCYGJOZBB',
-           image: 'https://i.ibb.co/545rT0d/PRODUCT-2021-2.png',
+           image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro2-min.png?alt=media&token=a7284ef1-1861-4817-aae5-5858eae04cb0',
            name: 'Demo Product 2',
            price: '250',
            rating: '5'
@@ -529,7 +528,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
            available: true,
            description: 'This is a demo description',
            id: 'INTJZBTHSHNAPARGYLHN',
-           image: 'https://i.ibb.co/GTzKwCP/PRODUCT-2021-3.png',
+           image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro3-min.png?alt=media&token=31144877-e806-409e-9511-d734015321da',
            name: 'Demo Product 3',
            price: '200',
            rating: '5'
@@ -538,7 +537,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
            available: true,
            description: 'This is a demo description',
            id: 'UKLRUXTPQUICXENNWDCF',
-           image: 'https://i.ibb.co/8bVDr95/PRODUCT-2021-4.png',
+           image: 'https://firebasestorage.googleapis.com/v0/b/vandore-ac2b8.appspot.com/o/assets%2Fpro4-min.png?alt=media&token=f77f3bcc-7174-4cf6-851b-38203491f21e',
            name: 'Demo Product 4',
            price: '90',
            rating: '5'
@@ -690,14 +689,14 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
                         name: removeChar(),
                         plan: 'free',
                         notification: token,
-                        affiliation: validCoupon ? rcode : 'LUCKY50',
+                        affiliation: vcoupon ? rcode : 'LUCKY50',
                         firstPay:  false,
                         app:'',
                         domain: '',
                         payment: ''
                     })
 
-                     if(validCoupon){
+                     if(vcoupon){
                       dbMain.collection('affiliation').doc(rcode).collection('affiliation').doc(removeChar()).set({
                         name: removeChar(),
                         image: image,
@@ -706,11 +705,17 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
                       })
                     } 
                     
-                    setCprocessing(false);
-                    history.push(`/restro/dashboard/${removeChar()}`)
+                  
+
+                    setTimeout(function(){ 
+                      setCprocessing(false);
+                      history.push(`/restro/dashboard/${removeChar()}`); }, 2000);
                 }
             })
-            .catch(error => alert(error.message));
+            .catch(error => {
+              setCprocessing(false);
+              alert(error.message);
+            });
     }
 
 
@@ -797,8 +802,11 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
                     active: true
                   })
             
-            setCprocessing(false);
-            history.push(`/mobile`);
+           
+            setTimeout(function(){ 
+              setCprocessing(false);
+              history.push(`/mobile`); }, 2000);
+        
         }
     })
     .catch(error => alert(error.message));
@@ -863,7 +871,7 @@ db.collection(removeChar()).doc('products').collection('products').doc('UKLRUXTP
                <form onSubmit={option===2 ? register : registerUser}>
 
 <h1>Sign up to your account </h1>
- {/* <FormControl className={classes.formControl}>
+  <FormControl className={classes.formControl}>
 <InputLabel id="demo-controlled-open-select-label" style={{color: 'black'}}>Account Type</InputLabel>
 <Select
 style={{backgroundColor: 'white'}}
@@ -880,7 +888,7 @@ onChange={handleChange}
 <MenuItem value={2}>Business</MenuItem>
 
 </Select>
-</FormControl>  */}
+</FormControl>  
 
 
 {option===1 ? (
@@ -932,17 +940,15 @@ onUploadSuccess={handleUploadSuccessUser}
 
 
 
-{token ? (
-    <>
- {cprocessing ? <button type='button' className='vandore__button'>Creating Your Account</button> : <button type='submit' className='vandore__button'>Continue</button>}
-  </>
-) : (
- <>
- {nprocessing ? <button type='button'  className='vandore__button'>Please Wait....</button> : <button type='button' onClick={grantPermission} className='vandore__button'>Give Notification Access To Continue</button>}
+{cprocessing ? <button type='button' className='vandore__button'>Creating Your Account...</button> : <button type='submit' className='vandore__button'>Continue</button>}
 
- </>
 
-)}
+<div className='login__suggest' onClick={() => history.push('/signin')}>
+  Have a account ? Sign In Now 
+</div>
+<div className='login__suggest' onClick={() => history.push('/passwordReset')}>
+  Have a account But Forgot Your Password ? Reset Now ?
+</div>
 
 </>
 ) : ''}
@@ -966,61 +972,59 @@ onUploadSuccess={handleUploadSuccess}
 <div className='vandore__input'>
 
 
-<input type='text' required value={name} onChange={e => setName(e.target.value)}/>
+<input type='text' required placeholder="Your Brand Name" value={name} onChange={e => setName(e.target.value)}/>
 </div>
 
 <label htmlFor='for' >Phone</label>
 <div className='vandore__input'>
 
-<input type='text' required value={phone} onChange={e => setPhone(e.target.value)} />
+<input type='text' required  placeholder="Your Business Phone" value={phone} onChange={e => setPhone(e.target.value)} />
 </div>
 
 <label htmlFor='for' >Address</label>
 <div className='vandore__input'>
 
-<input type='text' required  value={address} onChange={e => setAddress(e.target.value)} />
+<input type='text' required  placeholder="Your Business Address" value={address} onChange={e => setAddress(e.target.value)} />
 </div>
 
 <label htmlFor='for' >Email</label>
 <div className='vandore__input'>
 
-<input type='email' required value={email} onChange={e => setEmail(e.target.value)}/>
+<input type='email' required  placeholder="Your Email" value={email} onChange={e => setEmail(e.target.value)}/>
 </div>
 
 <label htmlFor='for' >Password</label>
 <div className='vandore__input'>
 
-<input type='password' required  value={password} onChange={e => setPassword(e.target.value)}/>
+<input type='password' required placeholder="Your Password" value={password} onChange={e => setPassword(e.target.value)}/>
 </div>
 
 <label htmlFor='for' >Confirm Password</label>
 <div className='vandore__input'>
 
-<input type='password' required  value={cpassword} onChange={e => setCpassword(e.target.value)}/>
+<input type='password' required placeholder="Type Your Password Again" value={cpassword} onChange={e => setCpassword(e.target.value)}/>
 </div>
 
-<label htmlFor='for' >Referal Code</label>
+<label htmlFor='for' >Referral Code</label>
 <div className='vandore__input'>
 
-<input type='text' value={rcode} onChange={e => setRcode(e.target.value)} />
+<input type='text' value={rcode} placeholder="Enter Referral Code For Discount" onChange={e => setRcode(e.target.value)} />
 </div>
 
 
 <p style={{color: 'black'}}>{couponMessage}</p>
 
-<p style={{color: 'black'}}>By Clicking Continue, You Agree And Consent To The <a href='https://docs.google.com/document/d/11_5uGWIL8whiue597KX_Tmdl-R6UcqLCNEA5qCbmpAQ/edit?usp=sharing'>Terms of Sevices</a>, and <a href="https://docs.google.com/document/d/1RitmjH_4bx2wNzq02sJiwnGXa-tTFRkYua-xMkaQFRA/edit?usp=sharing">Privacy Policy</a></p>
+<p style={{color: 'black',marginTop: '10px'}}>By Clicking Continue, You Agree And Consent To The <a href='https://docs.google.com/document/d/11_5uGWIL8whiue597KX_Tmdl-R6UcqLCNEA5qCbmpAQ/edit?usp=sharing'>Terms of Sevices</a>, and <a href="https://docs.google.com/document/d/1RitmjH_4bx2wNzq02sJiwnGXa-tTFRkYua-xMkaQFRA/edit?usp=sharing">Privacy Policy</a></p>
 
-{token ? (
-    <>
+
  {cprocessing ? <button type='button' className='vandore__button'>Creating Your Website</button> : <button type='submit' className='vandore__button'>Continue</button>}
-  </>
-) : (
- <>
- {nprocessing ? <button type='button'  className='vandore__button'>Please Wait....</button> : <button type='button' onClick={grantPermission} className='vandore__button'>Give Notification Access To Continue</button>}
 
- </>
-
-)}
+<div className='login__suggest' onClick={() => history.push('/signin')}>
+  Have a account ? Sign In Now 
+</div>
+<div className='login__suggest' onClick={() => history.push('/passwordReset')}>
+  Have a account But Forgot Your Password ? Reset Now ?
+</div>
 </>
 ) : ''}
 

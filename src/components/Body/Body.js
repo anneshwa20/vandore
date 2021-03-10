@@ -8,7 +8,7 @@ import DiscountRow from '../DiscountRow/DiscountRow';
 import { db } from '../../firebase';
 import Post from '../Post/Post';
 import { useStateValue } from '../../StateProvider';
-import { Chat, Fastfood, Home, PeopleAltOutlined, PhotoAlbum, Store } from '@material-ui/icons';
+import { Chat, Fastfood, Home, PeopleAltOutlined, PhotoAlbum, Search, Store } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import { Avatar } from '@material-ui/core';
 
@@ -20,6 +20,17 @@ function Body({pageId}) {
     const [{site_settings,site_info,site_colors,user,user_details,brand},dispatch]= useStateValue();
     const [youtubeLink,setYoutubeLink]= useState('');
     const history= useHistory();
+    const [search,setSearch]= useState('');
+    const [products,setProducts]= useState([]);
+
+    useEffect(() => {
+  
+        db.collection(pageId).doc('products').collection('products')
+        .onSnapshot(snapshot => (
+            setProducts(snapshot.docs.map(doc => doc.data()))
+        ))
+       
+        },[])
 
     useEffect(() => {
   
@@ -57,9 +68,16 @@ function Body({pageId}) {
         });
     
      },[])
+
+     let filteredProducts= [];
+
+  if(search){
+     filteredProducts= products?.filter(product => 
+      product.name.toLowerCase().includes(search.toLowerCase())); 
+  }
     return (
         <div className='body'>
-                  <div className='shortNav' >
+                {/*   <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -99,7 +117,7 @@ function Body({pageId}) {
            )}
            
 
-        </div>
+        </div> */}
         {site_settings.slider ? (
               <div className='slide' style={{margin: '10px auto'}}>
               <div className='slide1Slider'>
@@ -134,15 +152,37 @@ function Body({pageId}) {
            </div>
         ) : ''}
       
+      <div className="menu__input2">
+                 <Search fontSize="large"/>
+        
+                  <input placeholder={`Search Products in ${pageId.toLowerCase()} Store`} value={search} onChange={e => setSearch(e.target.value)} type="text" />
+              </div>
+              {filteredProducts.length > 0 ? (
+              <div className='search__results'>
+                 {filteredProducts.map(fproduct => (
+                   <div className='search__results--result' onClick={() => history.push(`/products/${pageId.toUpperCase()}/${fproduct.id}`)}>
+                     <img src={fproduct.image} />
+                     <p>{fproduct.name}</p>
+                     
+                   </div>
+                 ))}
+              </div>
+            ) : (
+             <>
+
+
+
+
+             </>
+            )}
        
-        {site_settings.store && site_settings.discount && brand.plan !== 'lite' ? (
+       {site_settings.store && site_settings.discount && brand.plan !== 'lite' ? (
                 <div className='item__preview'>
                 <DiscountRow />
                 </div>
         ) : ''}
          
   {youtubeLink != '' ?  <iframe  className='youtubePost' src={youtubeLink} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> : ''}
-   
    
 
      <div className='body__post--list'>

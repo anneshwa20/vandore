@@ -5,7 +5,7 @@ import './PriceCard.scss'
 import axios  from '../../axios';
 import { useEffect } from 'react';
 import { useStateValue } from '../../StateProvider';
-import { dbMain } from '../../firebase';
+import { db, dbMain } from '../../firebase';
 import firebase from 'firebase';
 
 
@@ -289,7 +289,7 @@ function PriceCard({plan}) {
 
 
       const options = {
-          key: __DEV__ ? 'rzp_test_Yw9rV4usIyk5O1' : 'PRODUCTION_KEY',
+          key: __DEV__ ? 'rzp_live_wlIDmWLjbK9t9Q' : 'rzp_live_wlIDmWLjbK9t9Q',
           currency: clientSecret.data.currency,
           amount: clientSecret.data.amount.toString(),
           order_id: clientSecret.data.id,
@@ -349,6 +349,14 @@ function PriceCard({plan}) {
                     sms: 100
                   });
 
+                  db.collection(user_details.business).doc("users").collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                    plan: plan,
+                    duration: planMonth,
+                    planActiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    planActive: true,
+                    sms: 900
+                  });
+
                   dbMain.collection('client_payments').add({
                     clientName: user_details.name,
                     clientPhone: user_details.phone,
@@ -376,6 +384,14 @@ function PriceCard({plan}) {
                     sms: 900
                   });
 
+                  db.collection(user_details.business).doc("users").collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                    plan: plan,
+                    duration: planMonth,
+                    planActiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+                    planActive: true,
+                    sms: 900
+                  });
+
                   dbMain.collection('client_payments').add({
                     clientName: user_details.name,
                     clientPhone: user_details.phone,
@@ -393,6 +409,10 @@ function PriceCard({plan}) {
               else if(plan === 'sms') {
                 dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
                      sms: user_details.sms + planSms
+                  });
+
+                  db.collection(user_details.business).doc("users").collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
+                    sms: user_details.sms + planSms
                   });
 
                   dbMain.collection('client_payments').add({

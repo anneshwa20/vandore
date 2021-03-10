@@ -36,10 +36,10 @@ function Header({home,cart,orders,store,account,login,pageId}) {
     {site_settings.store && brand.plan !== 'lite' ? (
  <Link to={`/vandore/${pageId}/checkout`} style={{textDecoration: 'none'}} className='headerCart'>
  <div className={`header__option  ${cart ? 'header__option--active' : ''}`} style={{borderBottom: `${cart ? `4px solid ${site_colors.icons}` : ''}`,position: 'relative'}}>
-        <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '15px',height:'15px',display: 'flex', justifyContent: 'center'}}>
+        <div className='cart__overview' style={{position: 'absolute', right: '20px',top: '-2px',borderRadius: '20px', backgroundColor: 'red',padding: '1px',color: 'white',fontWeight: 'bold',width: '20px',height:'20px',display: 'flex', justifyContent: 'center'}}>
           {basket.length}
         </div>
-             <ShoppingCartOutlined  style={{color: `${site_colors.icons}`,fontSize: '20px'}}/>
+             <ShoppingCartOutlined  style={{color: `${site_colors.icons}`,fontSize: '30px'}}/>
              
         </div> 
  </Link>

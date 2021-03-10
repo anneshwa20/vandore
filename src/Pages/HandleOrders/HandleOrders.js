@@ -145,7 +145,7 @@ function HandleOrders({id}) {
                     <td>Rs.{order.data.mode === 'Cash On Delivery' || order.data.mode === 'Take Away' ? order.data.amount : (order.data.amount / 100)}</td>
                     <td>{order.data?.phone}</td>
                     
-                    <td>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</td>
+                    <td>{new Date(order.data.created?.toDate()).toUTCString()}</td>
                    
                     <td>
                         {
@@ -195,7 +195,7 @@ function HandleOrders({id}) {
        Search Users Based On Names,Phone,Email
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Search Your Users,Start By Typing Name Or Phone Or Email.
        
      </div>
@@ -211,11 +211,11 @@ function HandleOrders({id}) {
 
 
       
-    <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+    <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
        Send Promotional Message To Your Regular Customers
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
       Now You Can Send Promotional Messages To Your Existing Customers
        
      </div>

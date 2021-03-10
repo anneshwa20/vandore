@@ -77,8 +77,8 @@ function Post({pageId,id,profilePic,username,timestamp,message,handleDelete,fcli
                <p><Linkify>{message}</Linkify></p>
            </div>
            {type==='image' ? (
-            <div className="post__image" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
-               <img src={link} alt="" style={{width: '100%',height: '400px'}} />
+            <div className="post__image2" onClick={() => history.push(`/posts/${pageId}/${id}`)}>
+               <img src={link} alt="" style={{width: '100%'}} />
 
            </div>
            ) : ''}

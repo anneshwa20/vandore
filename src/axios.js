@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance= axios.create({
-    baseURL:  'http://localhost:5001/vandore-ac2b8/us-central1/api' 
+    baseURL:  'https://vandore-backend.netlify.app/.netlify/functions/api' 
 });
 
 export default instance;

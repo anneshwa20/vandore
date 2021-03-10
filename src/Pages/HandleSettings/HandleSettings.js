@@ -520,8 +520,8 @@ function HandleSettings({id}) {
 
             <div className='setting__option'>
                    <div className='setting__option--left'>
-                    <h2>Discount Section</h2>
-                    <p>Turn on or turn off your discount section pluglin,based on your requirements </p>
+                    <h2>Discover Section</h2>
+                    <p>Turn on or turn off your discover section pluglin,based on your requirements </p>
                    </div>
                    <div className='setting__option--right'>
                     <Switch

@@ -131,7 +131,7 @@ function About({pageId}) {
               <div className='aboutMobile'>
               {sidebar ? <SidebarMobile pageId={pageId}/> : (
                 <div className='about__page'>
-                        <div className='shortNav' >
+                {/*         <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -171,7 +171,7 @@ function About({pageId}) {
            )}
            
 
-        </div>
+        </div> */}
               <div className='about__image' style={{backgroundColor: `${site_colors.primary}`}}>
                   <img src={image} />
               </div>
@@ -179,59 +179,7 @@ function About({pageId}) {
               <div className='about__desc'>
                   <p>{about}</p>
               </div>
-            {site_settings.feedback ? (
- <form>
- <h1>Rate Us</h1>
-     {!user ? (
-    <>
-    <div className='user__input'>
-           <p>Enter Your Name</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Name' value={name} onChange={e => setName(e.target.value)}/>
-           </div>
-       </div>
-
-       <div className='user__input'>
-           <p>Enter Your Phone</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Phone' value={phone} onChange={e => setPhone(e.target.value)} />
-           </div>
-       </div>
-    </>
-     ) : (
-       <>
-       <Avatar src={user_details.image} style={{width: '50px',height: '50px',marginTop: '15px',marginBottom: '15px'}}/> 
-       </>
-     )}
-       
-
-       <div className='user__input'>
-           <p>Enter Your Feedback</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Feedback'  value={message} onChange={e => setMessage(e.target.value)} />
-           </div>
-       </div>
-       <div>
-      
-        
-        <StyledRating
-          name="customized-icons"
-
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          getLabelText={(value) => customIcons[value].label}
-          IconContainerComponent={IconContainer}
-        />
-    
-       </div>
-
-
-       <button onClick={handleSubmit} style={{backgroundColor: `${site_colors.button}`,color: 'white'}}>Save</button>
-      
-        </form>
-            ) : ''}
+            
              
               </div>
               )}
@@ -245,59 +193,7 @@ function About({pageId}) {
               <div className='about__desc'>
                   <p>{about}</p>
               </div>
-              {site_settings.feedback ? (
- <form>
- <h1>Rate Us</h1>
-     {!user ? (
-    <>
-    <div className='user__input'>
-           <p>Enter Your Name</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Name' value={name} onChange={e => setName(e.target.value)}/>
-           </div>
-       </div>
-
-       <div className='user__input'>
-           <p>Enter Your Phone</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Phone' value={phone} onChange={e => setPhone(e.target.value)} />
-           </div>
-       </div>
-    </>
-     ) : (
-       <>
-       <Avatar src={user_details.image} style={{width: '50px',height: '50px',marginTop: '15px',marginBottom: '15px'}}/> 
-       </>
-     )}
-       
-
-       <div className='user__input'>
-           <p>Enter Your Feedback</p>
-           <div className='user__input--style' style={{borderColor: `${site_colors.primary}`}}>
-               <input type='text'  placeholder='Enter Your Feedback'  value={message} onChange={e => setMessage(e.target.value)} />
-           </div>
-       </div>
-       <div>
-      
-        
-        <StyledRating
-          name="customized-icons"
-
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          getLabelText={(value) => customIcons[value].label}
-          IconContainerComponent={IconContainer}
-        />
-    
-       </div>
-
-
-       <button onClick={handleSubmit} style={{backgroundColor: `${site_colors.button}`,color: 'white'}}>Save</button>
-      
-        </form>
-            ) : ''}
+             
              
              
               </div>

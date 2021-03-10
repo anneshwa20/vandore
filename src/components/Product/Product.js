@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useStateValue } from '../../StateProvider'
 import './Product.scss'
 
-function Product({id, title,image,price,rating}) {
+function Product({id, title,image,price,rating,description}) {
     const [{basket,site_colors},dispatch]= useStateValue();
     const [show,setShow]= useState(false);
 
@@ -34,7 +34,7 @@ function Product({id, title,image,price,rating}) {
         <div className='product'>
             <img src={image} />
            <h3>{title}</h3>
-           <p>This is a test description</p>
+           <p>{description}</p>
            <div className="product__rating">
                    {Array(5).fill().map((_,i) => (
                     <Star />

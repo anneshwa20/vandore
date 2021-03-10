@@ -173,6 +173,7 @@ function StateFill({id,authorization}) {
   
     useEffect(() => {
        db.collection(id).doc('store').collection('store')
+       .orderBy("timestamp","asc")
        .onSnapshot(snapshot => (
     
         dispatch({

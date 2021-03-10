@@ -31,14 +31,22 @@
 .post__topInfo > h3 {
     font-size: medium;
 }
-.post__image > img {
+
+.post__image2 {
     width: 100%;
-    height: 400px;
-   object-fit: contain;
+  
+    @include respond(tab-port){
+        width: 100vw;
+    }
+}
+.post__image2 > img {
+    width: 100%;
+    height: 600px;
+  
    
    @include respond(tab-port) {
-      max-height: 200px;
-    
+      max-height: 400px;
+      max-width: 100%;
    }
 }
 .post__youtube > iframe {

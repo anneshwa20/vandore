@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "in.vandore.twa",
+                   "sha256_cert_fingerprints": ["38:E3:3F:41:A6:71:BF:35:34:07:EB:7B:DA:07:8F:53:07:C5:06:E4:69:FD:74:34:6E:80:73:20:27:73:CA:88","88:A9:BA:65:AC:2C:9C:7D:0E:15:29:47:DB:BF:70:74:4B:4A:24:81:70:CE:C0:5E:E6:FD:F8:F9:32:6B:56:71"] }
+    }]

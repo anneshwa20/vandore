@@ -3,11 +3,11 @@ import './MobileAppHome.scss'
 import QrReader from 'react-qr-scanner';
 import { useStateValue } from '../../StateProvider';
 import { Avatar, Modal } from '@material-ui/core';
-import { db, dbMain, firebaseAppMain } from '../../firebase';
+import { authMain, db, dbMain, firebaseAppMain } from '../../firebase';
 import FileUploader from 'react-firebase-file-uploader';
 import CoolTabs from 'react-cool-tabs';
 import { useHistory } from 'react-router-dom';
-import { Add, ArrowRight, Close, Money, OpenInNew, Report, Search } from '@material-ui/icons';
+import { Add, ArrowRight, Close, ExitToApp, Money, OpenInNew, Report, Search } from '@material-ui/icons';
 import MapStore from './MapStore';
 import firebase from 'firebase';
 import PostVandore from '../../components/Post/PostVandore';
@@ -30,11 +30,15 @@ function MobileAppHome() {
     const [allPosts,setAllPosts]= useState([]);
     const history= useHistory();
 
-/* 
-   if(!user){
-     history.push('/signup')
+
+   if(user){
+     if(user_details){
+      if(user_details.business){
+        history.push(`/restro/dashboard/${user_details.business.toUpperCase()}`)
+       }
+     }  
    }
- */
+ 
 
      useEffect(() => {
     
@@ -354,11 +358,13 @@ function MobileAppHome() {
                 </div>
               ))}
             </div>
-       <h2>Referals And Business Accounts</h2>
-            <div className='vandore__brands--user--bottom'>
+       <h2>Referrals And Business Accounts</h2>
+            <div className='vandore__brands--user--bottom'> 
                <div className='vandore__sidebar--youtube'>
-               <iframe  src={'https://www.youtube.com/embed/k4PPVF_A0Yg'} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+               <iframe  src={'https://www.youtube.com/embed/2h_7ZHa4DRE'} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                </div>
+
+             
                
               
                {/* <div className='vandore__sidebar--button'>
@@ -403,6 +409,10 @@ function MobileAppHome() {
     }
 
     const handlePayment= () => {
+      if(calculateDue()===0){
+        alert('No Payment Due!');
+        return;
+      }
       dbMain.collection('users').doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
         paymentRequest: true,
         requestDate: firebase.firestore.FieldValue.serverTimestamp()
@@ -419,9 +429,9 @@ function MobileAppHome() {
     return (
    <div className='vandore__referals'>
           <div className='vandore__referals--top'>
-               <h2>Your Referal Code</h2>
+               <h2>Your Referral Code</h2>
                <div className='vandore__referals--code'>
-                {user_details.affiliation}
+                {user_details ? user_details.affiliation : ''}
                </div>
                <div className='vandore__referals--top--desc'>
               Share This With Interested Businesses And Get 2000 Rs Commision On Pro Plus Plan And 1000Rs On Vandore Plus plan.
@@ -623,6 +633,12 @@ dbMain.collection("userList").doc(user.uid).update({
 
 }
 
+const handleAuthentication= () => {
+  if(user){
+      authMain.signOut();
+      history.push('/');
+  }
+}
 
      
     return (
@@ -633,6 +649,10 @@ dbMain.collection("userList").doc(user.uid).update({
                 <img src='https://i.ibb.co/TbGQWXh/Vandore-Logo-3-4-removebg-preview.png'/>
                 <h2 style={{color: 'white'}}>ANDORE</h2>
             </div>
+            <div style={{marginRight: '10px'}} onClick={handleAuthentication}>
+            <ExitToApp style={{color: 'white'}}/>
+            </div>
+            
             </div>
             <div className='left__container'>
                  <div className='home__left--left'>

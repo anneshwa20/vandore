@@ -177,7 +177,7 @@ function HandlePayment({id}) {
        Search Users Based On Names,Phone,Email
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Search Your Users,Start By Typing Name Or Phone Or Email.
        
      </div>
@@ -193,21 +193,21 @@ function HandlePayment({id}) {
 
 
       
-    <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+    <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
        Send Promotional Message To Your Customers Who Pays Online
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Send your online customers  who pays you online, about your new offers, may be greet them or ask for feedbacks.
        
      </div>
      {user_details.sms < allUsers.length ? (
-          <div className='deleteAccount' style={{margin: '0 auto',width: '90%',color: 'green'}} >
+          <div className='deleteAccount' style={{margin: '10px auto',width: '90%',color: 'green'}} >
          You Don't Have Enough SMS Credits To Send Promotional Messages To All Users, Go To Pricing Tab To Buy Some SMS Credits
           
         </div>
      ) : (
-        <div className='deleteAccount' style={{color: 'green',margin: '0 auto',width: '90%'}} >
+        <div className='deleteAccount' style={{color: 'green',margin: '10px auto',width: '90%'}} >
        By Sending Promotional Messages To All Users You Will Spend {allUsers.length} SMS Credits in Total
         
       </div>

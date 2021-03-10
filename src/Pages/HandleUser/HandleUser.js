@@ -1,5 +1,5 @@
 import { Avatar, Modal } from '@material-ui/core';
-import { Delete, DoneAll, Menu } from '@material-ui/icons';
+import { Cloud, Delete, DoneAll, Menu } from '@material-ui/icons';
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom';
 import HeaderRestro from '../../components/HeaderRestro/HeaderRestro';
@@ -71,33 +71,32 @@ function HandleUser({id}) {
      const alltokens= `${users.map(user => user.notification)}`;
 
      const sendSMS= async () => {
-        if(plan!=='gold' || plan !== 'lite'){
+        if(plan==='free'){
+            
             setOpenPricing(true);
             return;
         }
      
-     if(user_details.plan === 'free'){
-         setOpenPricing(true);
-     }
+    
      else{
         const SMS = await axios({
             method: 'post',
             // Stripe expects the total in a currencies subunits
             url: `/orderSMS?phone=${allUsers}&message=${message}`
         });
+
+        console.log('SMS:',SMS);
      }
   
      
        }
 
     const sendNotification= async () => {
-        if(plan!=='gold' || plan !== 'lite'){
+        if(plan==='free'){
             setOpenPricing(true);
             return;
         }
-        if(user_details.plan === 'free'){
-         setOpenPricing(true);
-          }
+       
        else {
         const NOTIFY = await axios({
             method: 'post',
@@ -118,7 +117,7 @@ function HandleUser({id}) {
 
      const handleMessage= () => {
         sendSMS();
-         if(user_details.plan !== 'free'){
+         if(plan !== 'free'){
             dbMain.collection("users").doc(user.uid).collection('details').doc(`details_${user.uid}`).update({
                 sms: user_details.sms - users.length
                });
@@ -243,11 +242,11 @@ function HandleUser({id}) {
                  </div>
 
 
-     <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+     <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
        Search Users Based On Names,Phone,Email
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Search Your Users,Start By Typing Name Or Phone Or Email.
        
      </div>
@@ -263,21 +262,21 @@ function HandleUser({id}) {
 
 
       
-    <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+    <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
        Send Promotional Message To Your Customers
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Send your customers about your new offers, may be greet them or ask for feedbacks.
        
      </div>
      {user_details.sms < users.length ? (
-          <div className='deleteAccount' style={{margin: '0 auto',width: '90%',color: 'green'}} >
+          <div className='deleteAccount' style={{margin: '10px auto',width: '90%',color: 'green'}} >
          You Don't Have Enough SMS Credits To Send Promotional Messages To All Users, Go To Pricing Tab To Buy Some SMS Credits
           
         </div>
      ) : (
-        <div className='deleteAccount' style={{color: 'green',margin: '0 auto',width: '90%'}} >
+        <div className='deleteAccount' style={{color: 'green',margin: '10px auto',width: '90%'}} >
        By Sending Promotional Messages To All Users You Will Spend {users.length} SMS Credits in Total
         
       </div>
@@ -298,11 +297,11 @@ function HandleUser({id}) {
            </div>
 
 
-           <div className='dashboard__headerTitle'  style={{margin: '0 auto',width: '93%'}}>
+           <div className='dashboard__headerTitle'  style={{margin: '10px auto',width: '93%'}}>
        Send Promotional Notifications To Your Customers
         <hr></hr>
      </div>
-     <div className='deleteAccount' style={{color: 'white',margin: '0 auto',width: '90%'}} >
+     <div className='deleteAccount' style={{color: 'white',margin: '10px auto',width: '90%'}} >
        Send your customers about your new offers, may be greet them or ask for feedbacks.
        
      </div>
@@ -310,11 +309,11 @@ function HandleUser({id}) {
 
 
 
-                 <div className='handleStore__add'>
+                 <div className='handleStore__add' style={{flexDirection: 'column',alignItems: 'center'}}>
             <div className='notification__image--holder'>
         <img src={notificationImage} />
-        <label style={{backgroundColor: `green`, color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer'}}>
-                     Select Your Photo
+        <label style={{backgroundColor: `green`, color: 'white', padding: 10, borderRadius: 4, cursor: 'pointer',display: 'flex',flexDirection: 'column',justifyContent: 'center'}}>
+                     Select Photo
                      <FileUploader
                        hidden
                        accept="image/*"

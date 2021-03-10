@@ -19,7 +19,7 @@ import firebase from 'firebase';
 import axios from '../../axios';
 
 
-import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Home, Fastfood, AccountCircle, ExitToApp} from '@material-ui/icons'
+import { LocalHospital,EmojiFlags,People,Chat,Storefront,VideoLibrary,ExpandMoreOutlined, Home, Fastfood, AccountCircle, ExitToApp, Call, WhatsApp} from '@material-ui/icons'
 import { authMain, db } from '../../firebase';
 import { Avatar, Box, Modal, Typography, withStyles } from '@material-ui/core';
 import { useStateValue } from '../../StateProvider';
@@ -300,6 +300,16 @@ function SidebarMobile({page,pageId}) {
     }
 }
 
+const [cPhone,setCPhone]= useState('');
+  useEffect(() => {
+    db.collection(pageId).doc('site').collection("site").doc("site_info")
+    .onSnapshot(function(doc) {
+         if(doc.data().sitePhone){
+           setCPhone(doc.data().sitePhone);
+         }
+    });
+},[]); 
+
     return (
         <div className="sidebarMobile">
           {/* {youtubeLink==='' ? '' : (
@@ -377,6 +387,19 @@ function SidebarMobile({page,pageId}) {
            )}
             </>
         )  : '' }
+        {cPhone ? (
+             <>
+             
+             <div onClick={() => window.open(`tel:+91${cPhone}`)} >
+                   <SidebarRow Icon={Call} title="Call Us Now" page={page}/>
+           </div>
+
+           <div onClick={() => {window.location.href=`https://api.whatsapp.com/send?phone=91${cPhone}`}} >
+                   <SidebarRow Icon={WhatsApp} title="Whatsapp Now" page={page}/>
+           </div>
+
+             </>
+           ) : ''}
          </div>
           {site_settings.feedback ? (
  <div className='sidebar__ratings'>

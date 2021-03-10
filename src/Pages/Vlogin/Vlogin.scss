@@ -2,3 +2,19 @@
     display: flex;
     background-color: white;
 }
+
+.login__suggest{
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: medium;
+    background-color: rgba(60, 179, 113, 0.4);
+    margin: 10px auto;
+    cursor: pointer;
+}
+.login__suggest:hover{
+    background-color: rgba(60, 179, 113, 0.7);
+    
+}

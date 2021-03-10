@@ -13,7 +13,7 @@ function HandleGuide({id}) {
     const [open,setOpen]= useState(false);
     const [currentVideo,setCurrentVideo]= useState('');
     const [hindi,setHindi]= useState(false);
-    const [bannerVideo,setBannerVideo]= useState('https://www.youtube.com/embed/084LhrJ6VNY');
+    const [bannerVideo,setBannerVideo]= useState('https://www.youtube.com/embed/yBl9Y6ov2AA');
     const [bannerTitle,setBannerTitle]= useState('How to Handle Your Guides');
     const [bannerDescription,setBannerDescription]= useState('In this video, you are going to discover the Guides which helps to understand the system and it\'s utilisation in the best way possible.');
     const [bannerImage,setBannerImage]= useState('https://i.ibb.co/6WFrWKp/i-Phone-X-XS-11-Pro-9.jpg');
@@ -52,7 +52,7 @@ function HandleGuide({id}) {
             <h1>Guides</h1>
         </div>
               <Banner bannerVideo={bannerVideo} bannerImage={bannerImage} bannerTitle={bannerTitle} bannerDescription={bannerDescription}/>
-           <div className='handleGuide__switch'>
+          {/*  <div className='handleGuide__switch'>
             <p>English</p>
            <Switch
                     checked={hindi}
@@ -60,7 +60,7 @@ function HandleGuide({id}) {
                     name="language"
                   />
              <p>Hindi</p>
-           </div>
+           </div> */}
           
              <div className='handleGuide__category'>
               {!hindi && guides.length !== 0 ? guides.map(guide => (

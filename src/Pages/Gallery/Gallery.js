@@ -37,7 +37,7 @@ function Gallery({pageId}) {
            <div className='galleryMobile'>
             {sidebar ? <SidebarMobile pageId={pageId} /> : (
  <div className='gallery__page'>
-            <div className='shortNav' >
+    {/*         <div className='shortNav' >
              <div className='shortNavItem' onClick={() => history.push(`/vandore/${pageId}/home`)}>
             <Home style={{color: `${site_colors.icons}`}}/>
             <p>Home</p>
@@ -77,7 +77,7 @@ function Gallery({pageId}) {
            )}
            
 
-        </div>
+        </div> */}
  <h1 style={{marginTop: '10px',textTransform: 'uppercase',marginBottom: '10px'}}>Gallery</h1>
  <div className='gallery__container'>
    {images.map(image => (
